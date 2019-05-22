@@ -55,11 +55,12 @@ public class ShoppingController {
     }
 
     @GetMapping("/delete/{id_shop}")
-    public void deleteById(@PathVariable Long id_shop, Model model) {
+    public String deleteById(@PathVariable Long id_shop, Model model) {
         Shopping shopping = shoppingRepository.findById(id_shop)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +id_shop));
         shoppingRepository.delete(shopping);
         model.addAttribute("shoppings", shoppingRepository.findAll());
+        return "redirect:/";
     }
 
     @GetMapping("/detail/{id_shop}")

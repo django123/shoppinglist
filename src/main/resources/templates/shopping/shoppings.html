@@ -58,9 +58,9 @@
                 <td th:unless="${#lists.size(shopping.tasks)}<=0">
                     <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
                     <a th:href="@{/task/form}" class="btn"><i class="fa fa-plus"></i></a>
-                    <!--<a th:href="@{/task/detail/}+${task.task_id}"><i class="fa fa-eye"></i></a>-->
-                   <!-- <a th:href="@{/task/update/}+${task.task_id}"><i class="fa fa-pencil"></i></a>
-                    <a th:href="@{/task/delete/}+${task.task_id}"><i class="fa fa-trash"></i></a>-->
+                    <a th:href="@{/task/detail/}"><i class="fa fa-eye"></i></a>
+                    <a th:href="@{/task/update/}"><i class="fa fa-pencil"></i></a>
+                    <a th:href="@{/task/delete/}"><i class="fa fa-trash"></i></a>
                 </td>
                 <td>
                     <a th:href="@{/shopping/detail/}+${shopping.id_shop}" class="btn"><i class="fa fa-eye"></i></a>

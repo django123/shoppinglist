@@ -16,7 +16,10 @@
     <input type="text" id="defaultContactFormName" class="form-control mb-4" placeholder="Name" th:field="*{name}">
 
     <input type="text" id="description" class="form-control mb-4" placeholder="description" th:field="*{description}">
-    <input type="select" id="shopping" class="form-control mb-4" placeholder="" th:field="*{shopping}">
+    <!--<input type="select" id="shopping" class="form-control mb-4" placeholder="" th:field="*{shopping}">-->
+    <select th:field="*{shopping}" class="form-control">
+        <option th:each="shopping: ${tasks}" th:value="${shopping}" th:text="${shopping.name}"></option>
+    </select><br>
 
     <button class="btn btn-info btn-block" type="submit">Submit</button>
 
