@@ -25,26 +25,8 @@
 
 </head>
 <body class="userCrewWrapper">
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<div th:replace="fragments/header.html:: nav"></div>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/shopping/all}">Shopping</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<!-- navigation -->
-<!-- sidebar-->
-<!-- sidebar-->
 
 <div  id="content" style="padding-right: 15px;padding-left: 15px">
     <!--navigation-->
@@ -75,46 +57,18 @@
                 </td>
                 <td th:unless="${#lists.size(shopping.tasks)}<=0">
                     <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
-                    <a th:href="@{/task/form}"><i class="fa fa-plus"></i></a>
+                    <a th:href="@{/task/form}" class="btn"><i class="fa fa-plus"></i></a>
                     <!--<a th:href="@{/task/detail/}+${task.task_id}"><i class="fa fa-eye"></i></a>-->
                    <!-- <a th:href="@{/task/update/}+${task.task_id}"><i class="fa fa-pencil"></i></a>
                     <a th:href="@{/task/delete/}+${task.task_id}"><i class="fa fa-trash"></i></a>-->
                 </td>
-                <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${shopping.id_shop}" >
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header text-center alert-info">
-                                <h5 class="modal-title">modifier une tâche</h5>
-                            </div>
-                            <div class="modal-footer text-center">
-                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                <a  class="btn btn-success"  th:href="@{/shopping/update/} + ${shopping.id_shop}"><i class="fa fa-trash"></i></a>
-                            </div>
-                        </div>
-                    </div>
                 <td>
-                    <a  class="btn"><i class="fa fa-eye"></i></a>
-                    <a  class="btn"><i class="fa fa-pencil"></i></a>
-                    <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete' "  class="btn" >
+                    <a th:href="@{/shopping/detail/}+${shopping.id_shop}" class="btn"><i class="fa fa-eye"></i></a>
+                    <a th:href="@{/shopping/update/}+${shopping.id_shop}"  class="btn"><i class="fa fa-pencil"></i></a>
+                    <a class="btn" th:href="@{/shopping/delete/}+${shopping.id_shop}">
                         <i class="fa fa-trash" ></i>
                     </a>
                 </td>
-                <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${shopping.id_shop}" >
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header text-center alert-info">
-                                <h5 class="modal-title">Suppresion d'un element</h5>
-                            </div>
-                            <div class="modal-body text-center">
-                                <h3>Voulez vous vraiment supprimer cet element?</h3>
-                            </div>
-                            <div class="modal-footer text-center">
-                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                <a  class="btn btn-success"  th:href="@{/shopping/delete/} + ${shopping.id_shop}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </tr>
             </tbody>
         </table>

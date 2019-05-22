@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>formulaire d'ajout d'un role</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class=" container " style="padding: 3rem;">
+    <div class="text-center " style="margin-top: 5rem">
+        <div class="col-12 col-sm-6 col-lg-6" style="margin-left: 15rem">
+            <h2>Formulaire d'inscription d'un role</h2>
+            <form method="post" th:object="${form}" th:action="@{/utilisateur/role/save}">
+                <div class="form-group">
+                    <label for="sel1">Choisir un role a attribuer:</label>
+                    <select class="form-control" id="sel1" th:field="*{role_id}">
+                        <option th:each="role : *{roles}"
+                                th:text="${role.name}"
+                                th:value="${role.role_id}"></option>
+                    </select>
+                </div>
+                <div class="form-group" >
+                    <input type="hidden" class="form-control"  name="idUser" th:value="${session.user_id}">
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-lg-6" style="padding-right: 15px">
+                        <a class="btn btn-warning mt-3" th:href="@{/utilisateur/detail/}+*{utilisateur.user_id}" style="width: 100%">Retour</a>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-6" style="padding-left: 15px">
+                        <button type="submit" class="btn btn-primary mt-3" style="width: 100%">Valide</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
