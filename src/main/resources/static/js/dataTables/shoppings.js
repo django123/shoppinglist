@@ -1,7 +1,3 @@
-/**
- * Created by EDOUGA on 21/05/2019.
- */
-
 $(document).ready( function () {
 
     var theses = $('#shoppings').DataTable({

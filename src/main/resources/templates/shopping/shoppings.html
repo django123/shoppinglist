@@ -25,52 +25,73 @@
 
 </head>
 <body class="userCrewWrapper">
-<div th:replace="fragments/header.html:: nav"></div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/shopping/all}">Shopping</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!-- navigation -->
+<!-- sidebar-->
+<!-- sidebar-->
 
 <div  id="content" style="padding-right: 15px;padding-left: 15px">
     <!--navigation-->
-</div>
+    </div>
 
-<!-- showing theses-->
-<div  style="margin-top: 5.5rem;">
-    <table class="table text-center table-hover dt-responsive  table-lg display" id="shopping">
-        <thead class="text-white bg-secondary">
-        <tr>
-            <th>Name</th>
-            <th>Comment</th>
-            <th>Date</th>
-            <th>Tasks</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="shopping : ${shoppings}">
-            <td th:text="${shopping.name}"></td>
-            <td th:text="${shopping.comment}"></td>
-            <td th:text="${shopping.date}"></td>
-            <td th:if="${#lists.size(shopping.tasks)}<= 0">
-                <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
-                <a th:href="@{/task/form}"><i class="fa fa-plus"></i></a>
-            </td>
-            <td th:unless="${#lists.size(shopping.tasks)}<=0">
-                <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
-                <a th:href="@{/task/form}"><i class="fa fa-plus"></i></a>
-                <!--<a th:href="@{/task/detail/}+${task.task_id}"><i class="fa fa-eye"></i></a>-->
-                <!-- <a th:href="@{/task/update/}+${task.task_id}"><i class="fa fa-pencil"></i></a>
-                 <a th:href="@{/task/delete/}+${task.task_id}"><i class="fa fa-trash"></i></a>-->
-            </td>
-            <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${shopping.id_shop}" >
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header text-center alert-info">
-                            <h5 class="modal-title">modifier une tâche</h5>
-                        </div>
-                        <div class="modal-footer text-center">
-                            <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                            <a  class="btn btn-success"  th:href="@{/shopping/update/} + ${shopping.id_shop}"><i class="fa fa-trash"></i></a>
+    <!-- showing theses-->
+    <div  style="margin-top: 5.5rem;">
+        <table class="table text-center table-hover dt-responsive  table-lg display" id="shopping">
+            <thead class="text-white bg-secondary">
+            <tr>
+                <th>Name</th>
+                <th>Comment</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Tasks</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="shopping : ${shoppings}">
+                <td th:text="${shopping.name}"></td>
+                <td th:text="${shopping.comment}"></td>
+                <td th:text="${shopping.date}"></td>
+                <td th:text="${shopping.status}"></td>
+                <td th:if="${#lists.size(shopping.tasks)}<= 0">
+                    <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
+                    <a th:href="@{/task/form}"><i class="fa fa-plus"></i></a>
+                </td>
+                <td th:unless="${#lists.size(shopping.tasks)}<=0">
+                    <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
+                    <a th:href="@{/task/form}"><i class="fa fa-plus"></i></a>
+                    <!--<a th:href="@{/task/detail/}+${task.task_id}"><i class="fa fa-eye"></i></a>-->
+                   <!-- <a th:href="@{/task/update/}+${task.task_id}"><i class="fa fa-pencil"></i></a>
+                    <a th:href="@{/task/delete/}+${task.task_id}"><i class="fa fa-trash"></i></a>-->
+                </td>
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${shopping.id_shop}" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">modifier une tâche</h5>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                <a  class="btn btn-success"  th:href="@{/shopping/update/} + ${shopping.id_shop}"><i class="fa fa-trash"></i></a>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <td>
                     <a  class="btn"><i class="fa fa-eye"></i></a>
                     <a  class="btn"><i class="fa fa-pencil"></i></a>
@@ -94,16 +115,16 @@
                         </div>
                     </div>
                 </div>
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </tbody>
+        </table>
 
-</div>
+    </div>
 
-<!-- add these button -->
-<a  th:href="@{/shopping/form}" class="addButton btn btn-primary rounded-circle">
-    <i class="zmdi zmdi-plus"></i>
-</a>
+    <!-- add these button -->
+    <a  th:href="@{/shopping/form}" class="addButton btn btn-primary rounded-circle">
+        <i class="zmdi zmdi-plus"></i>
+    </a>
 
 </div>
 <!-- scripts-->
