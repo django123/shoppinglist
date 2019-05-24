@@ -53,14 +53,12 @@
                 <td th:text="${shopping.status}"></td>
                 <td th:if="${#lists.size(shopping.tasks)}<= 0">
                     <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
-                    <a th:href="@{/task/form}"><i class="fa fa-plus"></i></a>
+                    <a data-toggle="modal" data-target="#modal-add" th:attr="data-target='#modal-add'" ><i class="fa fa-plus"></i></a>
                 </td>
                 <td th:unless="${#lists.size(shopping.tasks)}<=0">
                     <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
-                    <a th:href="@{/task/form}" class="btn"><i class="fa fa-plus"></i></a>
-                    <a th:href="@{/task/detail/}"><i class="fa fa-eye"></i></a>
-                    <a th:href="@{/task/update/}"><i class="fa fa-pencil"></i></a>
-                    <a th:href="@{/task/delete/}"><i class="fa fa-trash"></i></a>
+                    <a class="btn" data-toggle="modal" data-target="#modal-add" th:attr="data-target='#modal-add'" ><i class="fa fa-plus"></i></a>
+                    <a class="btn" data-toggle="modal" data-target="#modal-list" th:attr="data-target='#modal-list'" ><i class="fa fa-eye"></i></a>
                 </td>
                 <td>
                     <a th:href="@{/shopping/detail/}+${shopping.id_shop}" class="btn"><i class="fa fa-eye"></i></a>
@@ -69,13 +67,81 @@
                         <i class="fa fa-trash" ></i>
                     </a>
                 </td>
+
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-add" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">Ajouter une tâche</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <form th:action="@{/task/save}" method="post">
+                                    <div class="form-group">
+                                        <label for="nom" class="col-form-label">Nom de la tâche:</label>
+                                        <input type="text" class="form-control" id="nom" name="name" value=""/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="author" class="col-form-label">description:</label>
+                                        <input type="text" class="form-control" id="author" name="description" value=""/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" class="form-control" id="id_shop" name="id_shop" th:value="${shopping.id_shop}">
+                                    </div>
+                                    <div class="modal-footer text-center">
+                                        <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Enregistrer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-list" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">Liste des tâches</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                    <ul th:each="task : ${shopping.tasks}">
+                                        <li th:text="${task.name}"></li><a class="btn"><i class="fa fa-pencil"></i></a>
+                                        <a class="btn"><i class="fa fa-plus"></i></a>
+                                        <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete' "class="btn"><i class="fa fa-trash"></i></a>
+                                    </ul>
+                                        <div class="modal-footer text-center">
+                                        <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${tasks.task_id}" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">Suppresion d'une tâche</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <h3>Voulez vous vraiment supprimer cette tâche?</h3>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                <a  class="btn btn-success"  th:href="@{/task/delete/} + ${tasks.task_id}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </tr>
             </tbody>
         </table>
-
     </div>
-
-    <!-- add these button -->
     <a  th:href="@{/shopping/form}" class="addButton btn btn-primary rounded-circle">
         <i class="zmdi zmdi-plus"></i>
     </a>

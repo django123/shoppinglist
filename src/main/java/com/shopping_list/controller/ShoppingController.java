@@ -2,6 +2,7 @@ package com.shopping_list.controller;
 
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.entities.Shopping;
+import com.shopping_list.entities.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ public class ShoppingController {
     @GetMapping("/all")
     public String findAll(Model model){
         model.addAttribute("shoppings", shoppingRepository.findAll());
+        model.addAttribute("tasks", new Task());
+
         return "shopping/shoppings";
     }
 

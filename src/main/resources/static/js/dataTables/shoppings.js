@@ -15,8 +15,8 @@ $(document).ready( function () {
             { "mData": "id_shop",
                 mRender: function (mData,type,row){
                     var str3='';
-                    // str3 += '<a href="shopping/detail'+mData+'" class="btn">&nbsp;&nbsp;<i class="fa fa-eye"></i></a>';
-                    // str3 += '<a href="shopping/update'+mData+'" class="btn">Editer&nbsp;&nbsp;<i class="fa fa-pencil"></i></a>';
+                    str3 += '<a href="/'+mData+'" class="btn">Ouvrir&nbsp;&nbsp;<i class="fa fa-eye"></i></a>';
+                    str3 += '<a href="edit/'+mData+'" class="btn">Editer&nbsp;&nbsp;<i class="fa fa-pencil"></i></a>';
                     return str3;
                 }}
 

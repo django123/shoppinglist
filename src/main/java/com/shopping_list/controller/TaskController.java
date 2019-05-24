@@ -1,6 +1,8 @@
 package com.shopping_list.controller;
 
+import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
+import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,9 @@ public class TaskController {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private ShoppingRepository shoppingRepository;
+
     @GetMapping("/all")
     public String findAll(Model model){
         model.addAttribute("tasks", taskRepository.findAll());
@@ -31,11 +36,16 @@ public class TaskController {
     @GetMapping("/form")
     public String form(Model model){
         model.addAttribute("task", new Task());
+//        model.addAttribute("shopping", shoppingRepository.findById(id_shop));
         return "task/form";
     }
 
     @PostMapping("/save")
-    public String save(Task task){
+    public String save(Task task, Long id_shop){
+        System.out.println(id_shop);
+        Shopping shopping = shoppingRepository.getOne(id_shop);
+        System.out.println(shopping);
+        task.setShopping(shopping);
         taskRepository.save(task);
         return "task/redirection";
     }
@@ -59,9 +69,9 @@ public class TaskController {
 
     @GetMapping("/delete/{task_id}")
     public void deleteById(@PathVariable Long task_id, Model model) {
-        Task shopping = taskRepository.findById(task_id)
+        Task task = taskRepository.findById(task_id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +task_id));
-        taskRepository.delete(shopping);
+        taskRepository.delete(task);
         model.addAttribute("tasks", taskRepository.findAll());
     }
 
