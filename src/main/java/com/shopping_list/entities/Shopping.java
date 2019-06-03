@@ -1,5 +1,7 @@
 package com.shopping_list.entities;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -21,7 +23,8 @@ public class Shopping implements Serializable {
     @ManyToOne
     @JoinColumn
     private Utilisateur utilisateur;
-    @OneToMany(mappedBy = "shopping")
+    @OneToMany(mappedBy = "shopping",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OnDelete(action=OnDeleteAction.CASCADE)
     private Collection<Task>tasks;
     @ManyToOne
     @JoinColumn

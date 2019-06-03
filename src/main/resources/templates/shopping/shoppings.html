@@ -99,7 +99,6 @@
                 </div>
 
 
-
                 <div class="modal card modal-warning alert-warning fade in" th:id="modal-list" >
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -108,13 +107,44 @@
                             </div>
                             <div class="modal-body text-center">
                                     <ul th:each="task : ${shopping.tasks}">
-                                        <li th:text="${task.name}"></li><a class="btn"><i class="fa fa-pencil"></i></a>
-                                        <a class="btn"><i class="fa fa-plus"></i></a>
+                                        <li th:text="${task.name}"></li>
+                                        <p th:text="${task.description}"></p>
+                                        <a data-toggle="modal" data-target="#modal-edit" th:attr="data-target='#modal-edit' " class="btn"><i class="fa fa-pencil"></i></a>
                                         <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete' "class="btn"><i class="fa fa-trash"></i></a>
                                     </ul>
                                         <div class="modal-footer text-center">
                                         <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
                                     </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-edit" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">Modifier une tâche</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <form th:object="${task}" th:action="@{/task/update/{task_id}}" method="post">
+                                    <div class="form-group">
+                                        <label for="nom" class="col-form-label">Nom de la tâche:</label>
+                                        <input type="text" class="form-control" id="nom" name="name" value=""/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="author" class="col-form-label">description:</label>
+                                        <input type="text" class="form-control" id="author" name="description" value=""/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" class="form-control" id="id_shop" name="id_shop" th:value="${shopping.id_shop}">
+                                    </div>
+                                    <div class="modal-footer text-center">
+                                        <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Enregistrer</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -133,7 +163,7 @@
                             </div>
                             <div class="modal-footer text-center">
                                 <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                <a  class="btn btn-success"  th:href="@{/task/delete/} + ${tasks.task_id}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
+                                <a  class="btn btn-success"  th:href="@{/task/delete/} +${tasks.task_id}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
                             </div>
                         </div>
                     </div>

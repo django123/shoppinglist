@@ -1,22 +1,27 @@
 package com.shopping_list.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
+@Entity
+public class AddRoleToUser implements Serializable {
 
-public class AddRoleToUser {
-
+    @Id
+    @GeneratedValue
+    private Long id;
     private Long user_id;
     private Long role_id;
-    private Collection<Role> roles;
-    private Utilisateur utilisateur;
 
-    public AddRoleToUser(Collection<Role> roles, Utilisateur utilisateur) {
-        this.roles = roles;
-        this.utilisateur = utilisateur;
+    public AddRoleToUser(Long user_id, Long role_id) {
+        this.user_id = user_id;
+        this.role_id = role_id;
     }
 
-
-    public AddRoleToUser() {
+    public AddRoleToUser(List<Role> all, Utilisateur utilisateur) {
     }
 
     public Long getUser_id() {
@@ -35,19 +40,11 @@ public class AddRoleToUser {
         this.role_id = role_id;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public Long getId() {
+        return id;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
-
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -1,5 +1,9 @@
 package com.shopping_list.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,8 +14,10 @@ public class Task implements Serializable{
     private Long task_id;
     private String name;
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY, optional = false)
     @JoinColumn
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Shopping shopping;
 
     public Task() {

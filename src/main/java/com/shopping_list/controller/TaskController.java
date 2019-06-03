@@ -57,12 +57,15 @@ public class TaskController {
         return "task/update";
     }
     @PostMapping("/update/{task_id}")
-    public String save(Task task, @PathVariable Long task_id, BindingResult result){
+    public String save(Task task, @PathVariable Long task_id, BindingResult result, @PathVariable Long id_shop){
 
         if(result.hasErrors()) {
             task.setTask_id(task_id);
             return "task/update";
         }
+        System.out.println(id_shop);
+        Shopping shopping = shoppingRepository.getOne(id_shop);
+        task.setShopping(shopping);
         Task task1 = taskRepository.save(task);
         return "redirect:/task/detail/" +task1.getTask_id() ;
     }
