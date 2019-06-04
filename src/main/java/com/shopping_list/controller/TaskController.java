@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +39,7 @@ public class TaskController {
     }
 
     @PostMapping("/save")
-    public String save(Task task, Long id_shop){
+    public String save(@Valid Task task, Long id_shop){
         System.out.println(id_shop);
         Shopping shopping = shoppingRepository.getOne(id_shop);
         System.out.println(shopping);
@@ -57,25 +55,38 @@ public class TaskController {
         return "task/update";
     }
     @PostMapping("/update/{task_id}")
-    public String save(Task task, @PathVariable Long task_id, BindingResult result, @PathVariable Long id_shop){
+    public String save(@Valid Task task, @PathVariable("task_id") Long task_id,
+                       BindingResult result, Model model, Long id_shop){
 
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             task.setTask_id(task_id);
             return "task/update";
         }
-        System.out.println(id_shop);
+        Shopping shopping = shoppingRepository.getOne(id_shop);
+        task.setShopping(shopping);
+        taskRepository.save(task);
+        model.addAttribute("tasks", taskRepository.findAll());
+        return "redirect:/shopping/all";
+
+/*        if(result.hasErrors()) {
+            task.setTask_id(task_id);
+            return "task/update";
+        }
+       System.out.println(id_shop);
         Shopping shopping = shoppingRepository.getOne(id_shop);
         task.setShopping(shopping);
         Task task1 = taskRepository.save(task);
-        return "redirect:/task/detail/" +task1.getTask_id() ;
+        return "redirect:/task/detail/" +task1.getTask_id() ;*/
     }
 
     @GetMapping("/delete/{task_id}")
-    public void deleteById(@PathVariable Long task_id, Model model) {
+    public String deleteById(@PathVariable Long task_id, Model model) {
         Task task = taskRepository.findById(task_id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +task_id));
+        System.out.println("task id: " + task.getTask_id());
         taskRepository.delete(task);
         model.addAttribute("tasks", taskRepository.findAll());
+        return "redirect:/shopping/all";
     }
 
     @GetMapping("/detail/{task_id}")

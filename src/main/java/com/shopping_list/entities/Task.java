@@ -17,7 +17,6 @@ public class Task implements Serializable{
     @ManyToOne(fetch=FetchType.LAZY, optional = false)
     @JoinColumn
     @JsonIgnore
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Shopping shopping;
 
     public Task() {

@@ -16,6 +16,7 @@ import java.util.Optional;
 
 
 @Controller
+@RequestMapping("/shopping")
 public class ShoppingController {
 
     @Autowired
@@ -24,7 +25,7 @@ public class ShoppingController {
     @Autowired
     private TaskRepository taskRepository;
 
-    @GetMapping("/shopping/all")
+    @GetMapping("/all")
     public String findAll(Model model){
         model.addAttribute("shoppings", shoppingRepository.findAll());
         model.addAttribute("tasks", new Task());
@@ -32,25 +33,25 @@ public class ShoppingController {
         return "shopping/shoppings";
     }
 
-    @GetMapping("/shopping/form")
+    @GetMapping("/form")
     public String form(Model model){
         model.addAttribute("shopping", new Shopping());
         return "shopping/form";
     }
 
-    @PostMapping("/shopping/save")
+    @PostMapping("/save")
     public String save(Shopping shopping){
         shoppingRepository.save(shopping);
         return "shopping/redirection";
     }
 
-    @GetMapping("/shopping/update/{id_shop}")
+    @GetMapping("/update/{id_shop}")
     public String updatedShopping(Model model, @PathVariable Long id_shop){
       Optional<Shopping> optional =  shoppingRepository.findById(id_shop);
         model.addAttribute("shopping", optional.get());
         return "shopping/update";
     }
-    @PostMapping("/shopping/update/{id_shop}")
+    @PostMapping("/update/{id_shop}")
     public String save(Shopping shopping, @PathVariable Long id_shop, BindingResult result){
 
         if(result.hasErrors()) {
@@ -61,9 +62,14 @@ public class ShoppingController {
         return "redirect:/shopping/detail/" +shop.getId_shop() ;
     }
 
-    @DeleteMapping("/task/{task_id}/shoppings/{id_shop}")
-    public String deleteById(@PathVariable Long id_shop, @PathVariable Long task_id, Model model) {
-        if(!taskRepository.existsById(task_id)) {
+    @GetMapping("/delete/{id_shop}")
+    public String deleteById(@PathVariable Long id_shop, Model model) {
+        Shopping shopping = shoppingRepository.findById(id_shop)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +id_shop));
+        shoppingRepository.delete(shopping);
+        model.addAttribute("shoppings", shoppingRepository.findAll());
+        return "redirect:/";
+        /*if(!taskRepository.existsById(task_id)) {
             throw new NotFoundException("Task not found with id " + task_id);
         }
 
@@ -71,10 +77,10 @@ public class ShoppingController {
                 .map(shopping -> {
                     shoppingRepository.delete(shopping);
                     return "redirect:/";
-                }).orElseThrow(() -> new NotFoundException("shopping not found with id" + id_shop));
+                }).orElseThrow(() -> new NotFoundException("shopping not found with id" + id_shop));*/
     }
 
-    @GetMapping("/shopping/detail/{id_shop}")
+    @GetMapping("/detail/{id_shop}")
     public String getShop(Model model, @PathVariable Long id_shop){
         Optional<Shopping> optional=shoppingRepository.findById(id_shop);
         model.addAttribute("shopping", optional.get());
@@ -82,14 +88,14 @@ public class ShoppingController {
 
     }
 
-    @GetMapping("/shopping/utilisateur/{user_id}")
+    @GetMapping("/utilisateur/{user_id}")
     public String findByUser(@PathVariable Long user_id, Model model){
         List<Shopping> shoppings = shoppingRepository.findAllByUtilisateurOrderById_shopDesc(user_id);
         model.addAttribute("shoppings", shoppings);
         return "shopping/utilisateur/shoppings";
     }
 
-    @GetMapping("/shopping/status/{status_id}")
+    @GetMapping("/status/{status_id}")
     public String findByStatus(@PathVariable Long status_id, Model model){
         List<Shopping>shoppings = shoppingRepository.findAllByStatusOrderById_shopDesc(status_id);
         model.addAttribute("shoppings", shoppings);

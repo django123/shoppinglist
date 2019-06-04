@@ -23,8 +23,8 @@ public class Shopping implements Serializable {
     @ManyToOne
     @JoinColumn
     private Utilisateur utilisateur;
-    @OneToMany(mappedBy = "shopping",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OnDelete(action=OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "shopping", cascade=CascadeType.ALL)
+    @OnDelete(action= OnDeleteAction.NO_ACTION)
     private Collection<Task>tasks;
     @ManyToOne
     @JoinColumn

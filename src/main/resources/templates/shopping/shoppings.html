@@ -61,13 +61,84 @@
                     <a class="btn" data-toggle="modal" data-target="#modal-list" th:attr="data-target='#modal-list'" ><i class="fa fa-eye"></i></a>
                 </td>
                 <td>
-                    <a th:href="@{/shopping/detail/}+${shopping.id_shop}" class="btn"><i class="fa fa-eye"></i></a>
-                    <a th:href="@{/shopping/update/}+${shopping.id_shop}"  class="btn"><i class="fa fa-pencil"></i></a>
-                    <a class="btn" th:href="@{/shopping/delete/}+${shopping.id_shop}">
+                    <a th:href="@{/shopping/detail/}+${shopping.id_shop}" ><i class="fa fa-eye"></i></a>
+                    <a class="btn" data-toggle="modal" data-target="#modal-edited" th:attr="data-target='#modal-edited'" th:href="@{/shopping/update/}+${shopping.id_shop}" ><i class="fa fa-pencil"></i></a>
+                    <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.id_shop}" th:href="@{/shopping/delete/{id_shop}(id_shop=${shopping.id_shop})}">
                         <i class="fa fa-trash" ></i>
                     </a>
                 </td>
+                <!--Modal pour les courses-->
+                <!--<div class="modal card modal-warning alert-warning fade in" th:id="modal-listed" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">Liste des tâches</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <ul th:each="task : ${shopping.tasks}">
+                                    <li th:text="${task.name}"></li>
+                                    <p th:text="${task.description}"></p>
+                                    <a class="btn" data-toggle="modal" data-target="#modal-edit" th:attr="data-target='#modal-edit' " ><i class="fa fa-pencil"></i></a>
+                                    <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'"  class="btn" >
+                                        <i class="fa fa-trash" ></i>
+                                    </a>
+                                </ul>
+                                <div class="modal-footer text-center">
+                                    <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-edited" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">modifier  une course</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <form th:object="${shopping}" th:action="@{/shopping/update/{id_shop}(id_shop = ${shopping.id_shop})}"method="post">
+                                    <div class="form-group">
+                                        <label for="nom" class="col-form-label">Nom de la course</label>
+                                        <input type="text" class="form-control" id="nom" name="name" value=""/>
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label for="author" class="col-form-label">Date:</label>
+                                        <input type="date" class="form-control" id="author" name="date" value=""/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="author" class="col-form-label">Comment:</label>
+                                        <textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3"  name="comment"></textarea>
+                                    </div>
+                                    <div class="modal-footer text-center">
+                                        <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Enregistrer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-deleted+${shopping.id_shop}" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">Suppresion d'une shopping</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <h3>Voulez vous vraiment supprimer cette shopping?</h3>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                <a  class="btn btn-success"  th:href="@{/shopping/delete/{id_shop}(id_shop=${shopping.id_shop})}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal pour les tâhes -->
                 <div class="modal card modal-warning alert-warning fade in" th:id="modal-add" >
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -109,8 +180,56 @@
                                     <ul th:each="task : ${shopping.tasks}">
                                         <li th:text="${task.name}"></li>
                                         <p th:text="${task.description}"></p>
-                                        <a data-toggle="modal" data-target="#modal-edit" th:attr="data-target='#modal-edit' " class="btn"><i class="fa fa-pencil"></i></a>
-                                        <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete' "class="btn"><i class="fa fa-trash"></i></a>
+                                        <a class="btn" data-toggle="modal" data-target="#modal-edit" th:attr="data-target='#modal-edit'" ><i class="fa fa-pencil"></i></a>
+                                        <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${task.task_id}"  class="btn" >
+                                            <i class="fa fa-trash" ></i>
+                                        </a>
+                                        <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${task.task_id}" >
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header text-center alert-info">
+                                                        <h5 class="modal-title">Suppresion d'une tâche</h5>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <h3>Voulez vous vraiment supprimer cette tâche?</h3>
+                                                    </div>
+                                                    <div class="modal-footer text-center">
+                                                        <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                                        <a  class="btn btn-success"  th:href="@{/task/delete/}+${task.task_id}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal card modal-warning alert-warning fade in" th:id="modal-edit" >
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header text-center alert-info">
+                                                        <h5 class="modal-title">Modifier une tâche</h5>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <form action="#" th:object="${task}" th:action="@{/task/update/{task_id}(task_id=${task.task_id})}" method="post">
+                                                            <div class="form-group">
+                                                                <label for="nom" class="col-form-label">Nom de la tâche:</label>
+                                                                <input type="text" class="form-control" id="nom" name="name" value=""/>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="author" class="col-form-label">description:</label>
+                                                                <input type="text" class="form-control" id="author" name="description" value=""/>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="hidden" class="form-control" id="id_shop" name="id_shop" th:value="${shopping.id_shop}">
+                                                            </div>
+
+                                                            <div class="modal-footer text-center">
+                                                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
+                                                                <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Enregistrer</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </ul>
                                         <div class="modal-footer text-center">
                                         <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
@@ -119,61 +238,12 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="modal card modal-warning alert-warning fade in" th:id="modal-edit" >
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header text-center alert-info">
-                                <h5 class="modal-title">Modifier une tâche</h5>
-                            </div>
-                            <div class="modal-body text-center">
-                                <form th:object="${task}" th:action="@{/task/update/{task_id}}" method="post">
-                                    <div class="form-group">
-                                        <label for="nom" class="col-form-label">Nom de la tâche:</label>
-                                        <input type="text" class="form-control" id="nom" name="name" value=""/>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="author" class="col-form-label">description:</label>
-                                        <input type="text" class="form-control" id="author" name="description" value=""/>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="hidden" class="form-control" id="id_shop" name="id_shop" th:value="${shopping.id_shop}">
-                                    </div>
-                                    <div class="modal-footer text-center">
-                                        <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Enregistrer</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${tasks.task_id}" >
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header text-center alert-info">
-                                <h5 class="modal-title">Suppresion d'une tâche</h5>
-                            </div>
-                            <div class="modal-body text-center">
-                                <h3>Voulez vous vraiment supprimer cette tâche?</h3>
-                            </div>
-                            <div class="modal-footer text-center">
-                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                <a  class="btn btn-success"  th:href="@{/task/delete/} +${tasks.task_id}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </tr>
             </tbody>
         </table>
     </div>
-    <a  th:href="@{/shopping/form}" class="addButton btn btn-primary rounded-circle">
-        <i class="zmdi zmdi-plus"></i>
+    <a  th:href="@{/shopping/form}" class="btn btn-primary nBtn " style="border-radius: 50%; position:fixed;bottom:1rem;right:8%;">
+        <i class="fa fa-plus"></i>
     </a>
 
 </div>
