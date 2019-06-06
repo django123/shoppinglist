@@ -43,6 +43,7 @@ public class TaskController {
         System.out.println(id_shop);
         Shopping shopping = shoppingRepository.getOne(id_shop);
         System.out.println(shopping);
+        task.setStatus(false);
         task.setShopping(shopping);
         taskRepository.save(task);
         return "task/redirection";
@@ -57,7 +58,6 @@ public class TaskController {
     @PostMapping("/update/{task_id}")
     public String save(@Valid Task task, @PathVariable("task_id") Long task_id,
                        BindingResult result, Model model, Long id_shop){
-
         if (result.hasErrors()) {
             task.setTask_id(task_id);
             return "task/update";
@@ -68,15 +68,6 @@ public class TaskController {
         model.addAttribute("tasks", taskRepository.findAll());
         return "redirect:/shopping/all";
 
-/*        if(result.hasErrors()) {
-            task.setTask_id(task_id);
-            return "task/update";
-        }
-       System.out.println(id_shop);
-        Shopping shopping = shoppingRepository.getOne(id_shop);
-        task.setShopping(shopping);
-        Task task1 = taskRepository.save(task);
-        return "redirect:/task/detail/" +task1.getTask_id() ;*/
     }
 
     @GetMapping("/delete/{task_id}")
@@ -102,5 +93,16 @@ public class TaskController {
         List<Task> tasks = taskRepository.findAllByShoppingOrderByTask_idDesc(user_id);
         model.addAttribute("tasks", tasks);
         return "task/utilisateur/tasks";
+    }
+    @GetMapping("/active/{task_id}")
+    public String active(@PathVariable Long task_id){
+        Task task = taskRepository.getOne(task_id);
+        if (task.getStatus()== true){
+            task.setStatus(false);
+        }else {
+            task.setStatus(true);
+        }
+        taskRepository.save(task);
+        return "redirect:/shopping/all";
     }
 }

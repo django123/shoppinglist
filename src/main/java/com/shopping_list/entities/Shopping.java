@@ -17,6 +17,7 @@ public class Shopping implements Serializable {
     private Long id_shop;
     private String name;
     private String comment;
+    private Boolean statut;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date date;
@@ -26,20 +27,17 @@ public class Shopping implements Serializable {
     @OneToMany(mappedBy = "shopping", cascade=CascadeType.ALL)
     @OnDelete(action= OnDeleteAction.NO_ACTION)
     private Collection<Task>tasks;
-    @ManyToOne
-    @JoinColumn
-    private Status status;
 
     public Shopping() {
     }
 
-    public Shopping(String name, String comment, Date date, Utilisateur utilisateur, Collection<Task> tasks, Status status) {
+    public Shopping(String name, String comment, Boolean statut, Date date, Utilisateur utilisateur, Collection<Task> tasks) {
         this.name = name;
         this.comment = comment;
+        this.statut = statut;
         this.date = date;
         this.utilisateur = utilisateur;
         this.tasks = tasks;
-        this.status = status;
     }
 
     public Long getId_shop() {
@@ -90,11 +88,11 @@ public class Shopping implements Serializable {
         this.tasks = tasks;
     }
 
-    public Status getStatus() {
-        return status;
+    public Boolean getStatut() {
+        return statut;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatut(Boolean statut) {
+        this.statut = statut;
     }
 }

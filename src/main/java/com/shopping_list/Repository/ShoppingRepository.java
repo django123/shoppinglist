@@ -12,7 +12,5 @@ public interface ShoppingRepository extends JpaRepository<Shopping,Long> {
 
     @Query("select s from Shopping as s join s.utilisateur su where su.user_id =: id order by s.id_shop desc ")
     List<Shopping>findAllByUtilisateurOrderById_shopDesc(@Param("id") Long user_id);
-    @Query("select s from Shopping as s join s.status se where se.status_id =: id order by s.id_shop desc ")
-    List<Shopping> findAllByStatusOrderById_shopDesc(@Param("id") Long status_id);
 
 }

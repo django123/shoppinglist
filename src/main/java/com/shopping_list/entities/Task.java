@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -14,6 +15,7 @@ public class Task implements Serializable{
     private Long task_id;
     private String name;
     private String description;
+    private Boolean status;
     @ManyToOne(fetch=FetchType.LAZY, optional = false)
     @JoinColumn
     @JsonIgnore
@@ -22,9 +24,10 @@ public class Task implements Serializable{
     public Task() {
     }
 
-    public Task(String name, String description, Shopping shopping) {
+    public Task(String name, String description, Boolean status, Shopping shopping) {
         this.name = name;
         this.description = description;
+        this.status = status;
         this.shopping = shopping;
     }
 
@@ -58,5 +61,13 @@ public class Task implements Serializable{
 
     public void setShopping(Shopping shopping) {
         this.shopping = shopping;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

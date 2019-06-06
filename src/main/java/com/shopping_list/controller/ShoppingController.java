@@ -69,15 +69,7 @@ public class ShoppingController {
         shoppingRepository.delete(shopping);
         model.addAttribute("shoppings", shoppingRepository.findAll());
         return "redirect:/";
-        /*if(!taskRepository.existsById(task_id)) {
-            throw new NotFoundException("Task not found with id " + task_id);
-        }
 
-        return shoppingRepository.findById(id_shop)
-                .map(shopping -> {
-                    shoppingRepository.delete(shopping);
-                    return "redirect:/";
-                }).orElseThrow(() -> new NotFoundException("shopping not found with id" + id_shop));*/
     }
 
     @GetMapping("/detail/{id_shop}")
@@ -95,10 +87,4 @@ public class ShoppingController {
         return "shopping/utilisateur/shoppings";
     }
 
-    @GetMapping("/status/{status_id}")
-    public String findByStatus(@PathVariable Long status_id, Model model){
-        List<Shopping>shoppings = shoppingRepository.findAllByStatusOrderById_shopDesc(status_id);
-        model.addAttribute("shoppings", shoppings);
-        return "shopping/status/shoppings";
-    }
 }
