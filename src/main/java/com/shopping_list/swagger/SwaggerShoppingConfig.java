@@ -1,4 +1,4 @@
-package com.shopping_list.config;
+package com.shopping_list.swagger;
 
 import com.shopping_list.RestController.ShoppingRestController;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @PropertySource("")
 @ComponentScan(basePackageClasses=ShoppingRestController.class)
 @Configuration
-public class SwaggerConfig {
+public class SwaggerShoppingConfig {
 
     private static final String SWAGGER_API_VERSION = "1.0";
     private static final String LICENE_TEXT = "License";
