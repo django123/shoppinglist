@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +26,23 @@ public class ShoppingController {
     private TaskRepository taskRepository;
 
     @GetMapping("/all")
-    public String findAll(Model model){
+    public String findAll(Model model,Long shopId){
+        List<Shopping>shoppings = shoppingRepository.findAll();
+        for(Shopping shopping: shoppings){
+             List<Task>tasks = new ArrayList<>();
+             tasks.addAll(shopping.getTasks());
+             List<Task>tasks1=new ArrayList<>();
+             for (Task task:tasks){
+                if (task.getStatus()==true){
+                    tasks1.add(task);
+                }
+             }
+             if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
+                 shopping.setStatut(true);
+             }
+        }
         model.addAttribute("shoppings", shoppingRepository.findAll());
         model.addAttribute("tasks", new Task());
-
         return "shopping/shoppings";
     }
 
@@ -44,44 +58,44 @@ public class ShoppingController {
         return "shopping/redirection";
     }
 
-    @GetMapping("/update/{id_shop}")
-    public String updatedShopping(Model model, @PathVariable Long id_shop){
-      Optional<Shopping> optional =  shoppingRepository.findById(id_shop);
+    @GetMapping("/update/{shopId}")
+    public String updatedShopping(Model model, @PathVariable Long shopId){
+      Optional<Shopping> optional =  shoppingRepository.findById(shopId);
         model.addAttribute("shopping", optional.get());
         return "shopping/update";
     }
-    @PostMapping("/update/{id_shop}")
-    public String save(Shopping shopping, @PathVariable Long id_shop, BindingResult result){
+    @PostMapping("/update/{shopId}")
+    public String save(Shopping shopping, @PathVariable Long shopId, BindingResult result){
 
         if(result.hasErrors()) {
-            shopping.setId_shop(id_shop);
+            shopping.setShopId(shopId);
             return "shopping/update";
         }
         Shopping shop = shoppingRepository.save(shopping);
-        return "redirect:/shopping/detail/" +shop.getId_shop() ;
+        return "redirect:/shopping/detail/" +shop.getShopId() ;
     }
 
-    @GetMapping("/delete/{id_shop}")
-    public String deleteById(@PathVariable Long id_shop, Model model) {
-        Shopping shopping = shoppingRepository.findById(id_shop)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +id_shop));
+    @GetMapping("/delete/{shopId}")
+    public String deleteById(@PathVariable Long shopId, Model model) {
+        Shopping shopping = shoppingRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +shopId));
         shoppingRepository.delete(shopping);
         model.addAttribute("shoppings", shoppingRepository.findAll());
         return "redirect:/";
 
     }
 
-    @GetMapping("/detail/{id_shop}")
-    public String getShop(Model model, @PathVariable Long id_shop){
-        Optional<Shopping> optional=shoppingRepository.findById(id_shop);
+    @GetMapping("/detail/{shopId}")
+    public String getShop(Model model, @PathVariable Long shopId){
+        Optional<Shopping> optional=shoppingRepository.findById(shopId);
         model.addAttribute("shopping", optional.get());
         return "shopping/detail";
 
     }
 
-    @GetMapping("/utilisateur/{user_id}")
-    public String findByUser(@PathVariable Long user_id, Model model){
-        List<Shopping> shoppings = shoppingRepository.findAllByUtilisateurOrderById_shopDesc(user_id);
+    @GetMapping("/utilisateur/{userId}")
+    public String findByUser(@PathVariable Long userId, Model model){
+        List<Shopping> shoppings = shoppingRepository.findAllByUtilisateurOrderByShopIdDesc(userId);
         model.addAttribute("shoppings", shoppings);
         return "shopping/utilisateur/shoppings";
     }

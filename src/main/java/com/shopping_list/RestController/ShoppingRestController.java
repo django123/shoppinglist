@@ -29,9 +29,9 @@ public class ShoppingRestController {
         return shoppingRepository.findAll();
     }
 
-    @GetMapping("/shopping/{id_shop}")
-    public Optional<Shopping> findShopping(@PathVariable Long id_shop){
-        return shoppingRepository.findById(id_shop);
+    @GetMapping("/shopping/{shopId}")
+    public Optional<Shopping> findShopping(@PathVariable Long shopId){
+        return shoppingRepository.findById(shopId);
     }
 
     @PostMapping("/create")
@@ -40,15 +40,15 @@ public class ShoppingRestController {
 
     }
 
-    @PutMapping("/update/{id_shop}")
-    public Shopping updateShopping(@RequestBody Shopping shopping, @PathVariable Long id_shop){
-        shoppingRepository.findById(id_shop);
+    @PutMapping("/update/{shopId}")
+    public Shopping updateShopping(@RequestBody Shopping shopping, @PathVariable Long shopId){
+        shoppingRepository.findById(shopId);
         return shoppingRepository.save(shopping);
 
     }
 
-    @DeleteMapping("/delete/{id_shop}")
-    public void deleteShopping(@PathVariable Long id_shop){
-       shoppingRepository.deleteById(id_shop);
+    @DeleteMapping("/delete/{shopId}")
+    public void deleteShopping(@PathVariable Long shopId){
+       shoppingRepository.deleteById(shopId);
     }
 }

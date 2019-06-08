@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task,Long> {
-    @Query("select t from Task as t join t.shopping ts where ts.id_shop =: id order by t.task_id desc ")
-    List<Task>findAllByShoppingOrderByTask_idDesc(@Param("id") Long id_shop);
+    @Query("select t from Task as t join t.shopping ts where ts.shopId =: id order by t.taskId desc ")
+    List<Task>findAllByShoppingOrderByTaskIdDesc(@Param("id") Long shopId);
 }

@@ -55,41 +55,19 @@
                     <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
                     <a data-toggle="modal" data-target="#modal-add" th:attr="data-target='#modal-add'" ><i class="fa fa-plus"></i></a>
                 </td>
-                <td th:unless="${#lists.size(shopping.tasks)}<=0">
+                <td th:unless="${#lists.size(shopping.tasks)}<= 0">
                     <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
                     <a class="btn" data-toggle="modal" data-target="#modal-add" th:attr="data-target='#modal-add'" ><i class="fa fa-plus"></i></a>
                     <a class="btn" data-toggle="modal" data-target="#modal-list" th:attr="data-target='#modal-list'" ><i class="fa fa-eye"></i></a>
                 </td>
                 <td>
-                    <a th:href="@{/shopping/detail/}+${shopping.id_shop}" ><i class="fa fa-eye"></i></a>
-                    <a class="btn" data-toggle="modal" data-target="#modal-edited" th:attr="data-target='#modal-edited'" th:href="@{/shopping/update/}+${shopping.id_shop}" ><i class="fa fa-pencil"></i></a>
-                    <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.id_shop}" th:href="@{/shopping/delete/{id_shop}(id_shop=${shopping.id_shop})}">
+                    <a th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
+                    <a class="btn" data-toggle="modal" data-target="#modal-edited" th:attr="data-target='#modal-edited'" th:href="@{/shopping/update/}+${shopping.shopId}" ><i class="fa fa-pencil"></i></a>
+                    <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}">
                         <i class="fa fa-trash" ></i>
                     </a>
                 </td>
-                <!--Modal pour les courses-->
-                <!--<div class="modal card modal-warning alert-warning fade in" th:id="modal-listed" >
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header text-center alert-info">
-                                <h5 class="modal-title">Liste des tâches</h5>
-                            </div>
-                            <div class="modal-body text-center">
-                                <ul th:each="task : ${shopping.tasks}">
-                                    <li th:text="${task.name}"></li>
-                                    <p th:text="${task.description}"></p>
-                                    <a class="btn" data-toggle="modal" data-target="#modal-edit" th:attr="data-target='#modal-edit' " ><i class="fa fa-pencil"></i></a>
-                                    <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'"  class="btn" >
-                                        <i class="fa fa-trash" ></i>
-                                    </a>
-                                </ul>
-                                <div class="modal-footer text-center">
-                                    <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
+
                 <div class="modal card modal-warning alert-warning fade in" th:id="modal-edited" >
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -97,7 +75,7 @@
                                 <h5 class="modal-title">modifier  une course</h5>
                             </div>
                             <div class="modal-body text-center">
-                                <form th:object="${shopping}" th:action="@{/shopping/update/{id_shop}(id_shop = ${shopping.id_shop})}"method="post">
+                                <form th:object="${shopping}" th:action="@{/shopping/update/{shopId}(shopId = ${shopping.shopId})}"method="post">
                                     <div class="form-group">
                                         <label for="nom" class="col-form-label">Nom de la course</label>
                                         <input type="text" class="form-control" id="nom" name="name" value=""/>
@@ -120,7 +98,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal card modal-warning alert-warning fade in" th:id="modal-deleted+${shopping.id_shop}" >
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-deleted+${shopping.shopId}" >
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header text-center alert-info">
@@ -131,7 +109,7 @@
                             </div>
                             <div class="modal-footer text-center">
                                 <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                <a  class="btn btn-success"  th:href="@{/shopping/delete/{id_shop}(id_shop=${shopping.id_shop})}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
+                                <a  class="btn btn-success"  th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
                             </div>
                         </div>
                     </div>
@@ -157,7 +135,7 @@
                                         <input type="text" class="form-control" id="author" name="description" value=""/>
                                     </div>
                                     <div class="form-group">
-                                        <input type="hidden" class="form-control" id="id_shop" name="id_shop" th:value="${shopping.id_shop}">
+                                        <input type="hidden" class="form-control" id="shopId" name="shopId" th:value="${shopping.shopId}">
                                     </div>
                                     <div class="modal-footer text-center">
                                         <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
@@ -182,21 +160,21 @@
                                         <p th:text="${task.description}"></p>
                                         <p th:if="${task.status}==true">
                                            <span>DONE</span>
-                                           <a th:href="@{/task/active/{task_id}(task_id=${task.task_id})}">
+                                           <a th:href="@{/task/active/{taskId}(taskId=${task.taskId})}">
                                            <i class="fa fa-check-circle-o"></i>
                                            </a>
                                        </p>
                                        <p th:unless="${task.status}==true">
                                            <span>TODO</span>
-                                           <a th:href="@{/task/active/{task_id}(task_id=${task.task_id})}">
+                                           <a th:href="@{/task/active/{taskId}(taskId=${task.taskId})}">
                                                <i class="fa fa-check-circle"></i>
                                            </a>
                                        </p>
                                         <a class="btn" data-toggle="modal" data-target="#modal-edit" th:attr="data-target='#modal-edit'" ><i class="fa fa-pencil"></i></a>
-                                        <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${task.task_id}"  class="btn" >
+                                        <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${task.taskId}"  class="btn" >
                                             <i class="fa fa-trash" ></i>
                                         </a>
-                                        <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${task.task_id}" >
+                                        <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${task.taskId}" >
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header text-center alert-info">
@@ -207,7 +185,7 @@
                                                     </div>
                                                     <div class="modal-footer text-center">
                                                         <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Retour</button>
-                                                        <a  class="btn btn-success"  th:href="@{/task/delete/}+${task.task_id}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
+                                                        <a  class="btn btn-success"  th:href="@{/task/delete/}+${task.taskId}"><i class="fa fa-trash"></i>&nbsp;Oui</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -219,7 +197,7 @@
                                                         <h5 class="modal-title">Modifier une tâche</h5>
                                                     </div>
                                                     <div class="modal-body text-center">
-                                                        <form action="#" th:object="${task}" th:action="@{/task/update/{task_id}(task_id=${task.task_id})}" method="post">
+                                                        <form action="#" th:object="${task}" th:action="@{/task/update/{taskId}(taskId=${task.taskId})}" method="post">
                                                             <div class="form-group">
                                                                 <label for="nom" class="col-form-label">Nom de la tâche:</label>
                                                                 <input type="text" class="form-control" id="nom" name="name" value=""/>
@@ -233,7 +211,7 @@
 
                                                             </div>
                                                             <div class="form-group">
-                                                                <input type="hidden" class="form-control" id="id_shop" name="id_shop" th:value="${shopping.id_shop}">
+                                                                <input type="hidden" class="form-control" id="shopId" name="shopId" th:value="${shopping.shopId}">
                                                             </div>
 
                                                             <div class="modal-footer text-center">

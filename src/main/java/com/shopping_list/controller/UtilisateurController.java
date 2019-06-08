@@ -70,28 +70,28 @@ public class UtilisateurController {
         return "redirect:/login";
     }
 
-    @GetMapping("/update/{user_id}")
+    @GetMapping("/update/{userId}")
     public String update(@PathVariable Long userId, Model model){
         Utilisateur utilisateur= utilisateurRepository.getOne(userId);
         model.addAttribute("utilisateur",utilisateur);
         return "utilisateur/update";
     }
 
-    @PostMapping("/update/{user_id}")
+    @PostMapping("/update/{userId}")
     public String update(Utilisateur utilisateur){
         utilisateurRepository.save(utilisateur);
         return "redirect:/logout";
     }
 
-    @GetMapping("/delete/{user_id}")
-    public String delete(@PathVariable Long user_id){
-        utilisateurRepository.deleteById(user_id);
+    @GetMapping("/delete/{userId}")
+    public String delete(@PathVariable Long userId){
+        utilisateurRepository.deleteById(userId);
         return "redirect:/utilisateur/utilisateurs";
     }
 
-    @GetMapping("/detail/{user_id}")
-    public String detail(@PathVariable Long user_id, Model model){
-        Utilisateur utilisateur = utilisateurRepository.getOne(user_id);
+    @GetMapping("/detail/{userId}")
+    public String detail(@PathVariable Long userId, Model model){
+        Utilisateur utilisateur = utilisateurRepository.getOne(userId);
         AddRoleToUser form= new AddRoleToUser(roleRepository.findAll(),utilisateur);
         model.addAttribute("form", form);
         model.addAttribute("utilisateur",utilisateur);
@@ -99,11 +99,11 @@ public class UtilisateurController {
     }
 
     @PostMapping("/role/save")
-    public String role(@PathVariable Long user_id, AddRoleToUser form){
-        Role role= roleRepository.getOne(form.getRole_id());
-        Utilisateur utilisateur=utilisateurRepository.getOne(user_id);
+    public String role(@PathVariable Long userId, AddRoleToUser form){
+        Role role= roleRepository.getOne(form.getRoleId());
+        Utilisateur utilisateur=utilisateurRepository.getOne(userId);
         utilisateur.addRoles(role);
         utilisateurRepository.save(utilisateur);
-        return "redirect:/utilisateur/detail/"+utilisateur.getUser_id();
+        return "redirect:/utilisateur/detail/"+utilisateur.getUserId();
     }
 }

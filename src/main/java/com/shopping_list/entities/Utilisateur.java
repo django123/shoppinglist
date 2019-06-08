@@ -13,7 +13,7 @@ public class Utilisateur implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long user_id;
+    private Long userId;
     @Column(name = "email")
     @Email(message = "*Please enter a valid email")
     @NotEmpty(message = "*enter your email")
@@ -26,7 +26,7 @@ public class Utilisateur implements Serializable {
     private String type;
     private String name;
     @ManyToMany
-    @JoinTable(name = "utilisateur_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "utilisateur_role", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Collection<Role> roles;
 
     @OneToMany(mappedBy = "utilisateur")
@@ -45,12 +45,12 @@ public class Utilisateur implements Serializable {
         this.shoppings = shoppings;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {

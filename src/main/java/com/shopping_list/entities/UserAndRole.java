@@ -11,15 +11,15 @@ public class UserAndRole implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    private Long user_id;
-    private Long role_id;
+    private Long userId;
+    private Long roleId;
 
     public UserAndRole() {
     }
 
-    public UserAndRole(Long user_id, Long role_id) {
-        this.user_id = user_id;
-        this.role_id = role_id;
+    public UserAndRole(Long userId, Long roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
     }
 
     public Long getId() {
@@ -30,19 +30,19 @@ public class UserAndRole implements Serializable {
         this.id = id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Long getRole_id() {
-        return role_id;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

@@ -21,15 +21,9 @@
         <div class="row user-left-part">
             <div class="col-md-3 col-sm-3 col-xs-12 user-profil-part pull-left">
                 <div class="row ">
-<!--                    <div class="col-md-12 col-md-12-sm-12 col-xs-12 user-image text-center " th:if="${user.avatar}">
-                        <img th:src="${user.avatar}" alt="avatar" class="rounded-circle">
-                    </div>
-                    <div class="col-md-12 col-md-12-sm-12 col-xs-12 user-image text-center " th:unless="${user.avatar}">
-                        <img th:src="@{/images/default.png}" alt="avatar" class="rounded-circle">
-                    </div>-->
                     <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
                         <button id="btn-contact" (click)="clearModal()" data-toggle="modal" data-target="#contact" class="btn btn-success btn-block follow">Contactarme</button>
-                        <a class="btn btn-warning btn-block" th:href="@{/utilisateur/update/}+${utilisateur.user_id}" style="width: 100%; height: 40px">Modifier</a>
+                        <a class="btn btn-warning btn-block" th:href="@{/utilisateur/update/}+${utilisateur.userId}" style="width: 100%; height: 40px">Modifier</a>
                     </div>
                 </div>
             </div>

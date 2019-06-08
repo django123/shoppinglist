@@ -20,15 +20,15 @@
                     <select class="form-control" id="sel1" th:field="*{role_id}">
                         <option th:each="role : *{roles}"
                                 th:text="${role.name}"
-                                th:value="${role.role_id}"></option>
+                                th:value="${role.roleId}"></option>
                     </select>
                 </div>
                 <div class="form-group" >
-                    <input type="hidden" class="form-control"  name="idUser" th:value="${session.user_id}">
+                    <input type="hidden" class="form-control"  name="idUser" th:value="${session.userId}">
                 </div>
                 <div class="row">
                     <div class="col-12 col-sm-6 col-lg-6" style="padding-right: 15px">
-                        <a class="btn btn-warning mt-3" th:href="@{/utilisateur/detail/}+*{utilisateur.user_id}" style="width: 100%">Retour</a>
+                        <a class="btn btn-warning mt-3" th:href="@{/utilisateur/detail/}+*{utilisateur.userId}" style="width: 100%">Retour</a>
                     </div>
                     <div class="col-12 col-sm-6 col-lg-6" style="padding-left: 15px">
                         <button type="submit" class="btn btn-primary mt-3" style="width: 100%">Valide</button>

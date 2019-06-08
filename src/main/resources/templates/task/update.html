@@ -9,7 +9,7 @@
 </head>
 <body>
 <div th:replace="fragments/header.html:: nav"></div>
-<form method="post" th:object="${task}" th:action="@{/task/update/{task_id}(task_id = ${task.task_id})}" enctype="multipart/form-data" class="text-center border border-light p-5">
+<form method="post" th:object="${task}" th:action="@{/task/update/{taskId}(taskId = ${task.taskId})}" enctype="multipart/form-data" class="text-center border border-light p-5">
 
     <p class="h4 mb-4">modification d'une tâche</p>
 
@@ -22,7 +22,7 @@
 
 </form>
 
-<a class="btn btn-unique" th:href="@{/task/detail/}+${task.task_id}">Retour</a>
+<a class="btn btn-unique" th:href="@{/task/detail/}+${task.taskId}">Retour</a>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>

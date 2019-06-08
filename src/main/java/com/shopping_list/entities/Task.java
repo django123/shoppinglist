@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class Task implements Serializable{
     @Id
     @GeneratedValue
-    private Long task_id;
+    private Long taskId;
     private String name;
     private String description;
     private Boolean status;
@@ -31,12 +31,12 @@ public class Task implements Serializable{
         this.shopping = shopping;
     }
 
-    public Long getTask_id() {
-        return task_id;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setTask_id(Long task_id) {
-        this.task_id = task_id;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public String getName() {

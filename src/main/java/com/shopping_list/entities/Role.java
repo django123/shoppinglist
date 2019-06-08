@@ -12,7 +12,7 @@ public class Role implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long role_id;
+    private Long roleId;
 
     private String name;
 
@@ -26,12 +26,12 @@ public class Role implements Serializable {
         this.name = name;
     }
 
-    public Long getRole_id() {
-        return role_id;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
     public String getName() {

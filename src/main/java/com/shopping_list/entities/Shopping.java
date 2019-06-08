@@ -14,7 +14,7 @@ public class Shopping implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id_shop;
+    private Long shopId;
     private String name;
     private String comment;
     private Boolean statut;
@@ -40,12 +40,12 @@ public class Shopping implements Serializable {
         this.tasks = tasks;
     }
 
-    public Long getId_shop() {
-        return id_shop;
+    public Long getShopId() {
+        return shopId;
     }
 
-    public void setId_shop(Long id_shop) {
-        this.id_shop = id_shop;
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 
     public String getName() {

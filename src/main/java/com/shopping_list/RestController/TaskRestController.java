@@ -25,35 +25,35 @@ public class TaskRestController {
        return  taskRepository.findAll();
     }
 
-    @GetMapping("/find/{task_id)")
-    public Optional<Task> findTaskById(@PathVariable Long task_id){
-        return taskRepository.findById(task_id);
+    @GetMapping("/find/{taskId)")
+    public Optional<Task> findTaskById(@PathVariable Long taskId){
+        return taskRepository.findById(taskId);
     }
 
     @PostMapping("/create")
-    public Task createTask(@RequestBody Task task, Long id_shop){
-        Shopping shopping = shoppingRepository.getOne(id_shop);
+    public Task createTask(@RequestBody Task task, Long shopId){
+        Shopping shopping = shoppingRepository.getOne(shopId);
         task.setStatus(false);
         task.setShopping(shopping);
         return taskRepository.save(task);
     }
 
-    @DeleteMapping("/delete/{task_id}")
-    public void deleteTask(@PathVariable Long task_id){
-        taskRepository.deleteById(task_id);
+    @DeleteMapping("/delete/{taskId}")
+    public void deleteTask(@PathVariable Long taskId){
+        taskRepository.deleteById(taskId);
     }
 
-    @PutMapping("/update/{task_id}")
-    public Task updateTask(@RequestBody Task task, Long task_id,Long id_shop){
+    @PutMapping("/update/{taskId}")
+    public Task updateTask(@RequestBody Task task, Long taskId,Long shopId){
 
-        return taskRepository.findById(task_id)
+        return taskRepository.findById(taskId)
                 .map(task1 -> {
                     task1.setName(task.getName());
                     return taskRepository.save(task1);
                 })
                 .orElseGet(() -> {
-                    task.setTask_id(task_id);
-                    Shopping shopping = shoppingRepository.getOne(id_shop);
+                    task.setTaskId(taskId);
+                    Shopping shopping = shoppingRepository.getOne(shopId);
                     task.setShopping(shopping);
                     return taskRepository.save(task);
                 });
