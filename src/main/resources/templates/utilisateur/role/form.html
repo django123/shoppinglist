@@ -17,7 +17,7 @@
             <form method="post" th:object="${form}" th:action="@{/utilisateur/role/save}">
                 <div class="form-group">
                     <label for="sel1">Choisir un role a attribuer:</label>
-                    <select class="form-control" id="sel1" th:field="*{role_id}">
+                    <select class="form-control" id="sel1" th:field="*{roleId}">
                         <option th:each="role : *{roles}"
                                 th:text="${role.name}"
                                 th:value="${role.roleId}"></option>

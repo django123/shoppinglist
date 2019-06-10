@@ -58,4 +58,16 @@ public class TaskRestController {
                     return taskRepository.save(task);
                 });
     }
+
+    @GetMapping("/active/{taskId}")
+    public Task activeTask(@PathVariable Long taskId){
+        Task task = taskRepository.getOne(taskId);
+        if (task.getStatus()== true){
+            task.setStatus(false);
+        }else {
+            task.setStatus(true);
+        }
+       return taskRepository.save(task);
+
+    }
 }

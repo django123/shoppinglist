@@ -1,11 +1,15 @@
 package com.shopping_list.controller;
 
 import com.shopping_list.Repository.RoleRepository;
+import com.shopping_list.Repository.UserAndRoleRepository;
 import com.shopping_list.Repository.UtilisateurRepository;
 import com.shopping_list.entities.AddRoleToUser;
 import com.shopping_list.entities.Role;
+import com.shopping_list.entities.UserAndRole;
 import com.shopping_list.entities.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +19,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 
 @Controller
@@ -25,6 +31,9 @@ public class UtilisateurController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private UserAndRoleRepository userAndRoleRepository;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
@@ -90,20 +99,47 @@ public class UtilisateurController {
     }
 
     @GetMapping("/detail/{userId}")
-    public String detail(@PathVariable Long userId, Model model){
-        Utilisateur utilisateur = utilisateurRepository.getOne(userId);
-        AddRoleToUser form= new AddRoleToUser(roleRepository.findAll(),utilisateur);
-        model.addAttribute("form", form);
+    public String detail(@PathVariable Long userId, Model model,HttpSession session){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(auth.getName());
         model.addAttribute("utilisateur",utilisateur);
+        UserAndRole form = new UserAndRole();
+        session.setAttribute("userId", utilisateur.getUserId());
+        UserAndRole editForm = userAndRoleRepository.findByUserId(utilisateur.getUserId());
+        List<Role> role1 = roleRepository.findAll();
+        model.addAttribute("form", form);
+        model.addAttribute("update",editForm);
+        model.addAttribute("role1", role1);
         return "utilisateur/detail";
     }
 
     @PostMapping("/role/save")
-    public String role(@PathVariable Long userId, AddRoleToUser form){
+    public String role(@PathVariable Long userId, UserAndRole form, HttpSession session){
         Role role= roleRepository.getOne(form.getRoleId());
         Utilisateur utilisateur=utilisateurRepository.getOne(userId);
         utilisateur.addRoles(role);
+        form.setUserId(utilisateur.getUserId());
+        userAndRoleRepository.save(form);
         utilisateurRepository.save(utilisateur);
         return "redirect:/utilisateur/detail/"+utilisateur.getUserId();
     }
+
+
+
+    @PostMapping("/role/update/{userId}")
+    public String updateRole(UserAndRole roleUser, @PathVariable Long userId){
+        Role role = roleRepository.getOne(roleUser.getRoleId());
+        Utilisateur user = utilisateurRepository.getOne(userId);
+        for (Role role1 : user.getRoles()){
+            user.removeRelation(role1);
+        }
+        user.setRoles(role);
+        roleUser.setUserId(user.getUserId());
+        userAndRoleRepository.save(roleUser);
+        utilisateurRepository.save(user);
+        return "redirect:/utilisateur/detail"+user.getUserId();
+    }
+
+
+
 }

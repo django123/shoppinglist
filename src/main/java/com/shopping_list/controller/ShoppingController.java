@@ -46,6 +46,14 @@ public class ShoppingController {
         return "shopping/shoppings";
     }
 
+    @GetMapping("/detail/{shopId}")
+    public String getShop(Model model, @PathVariable Long shopId){
+        Optional<Shopping> optional=shoppingRepository.findById(shopId);
+        model.addAttribute("shopping", optional.get());
+        return "shopping/detail";
+
+    }
+
     @GetMapping("/form")
     public String form(Model model){
         model.addAttribute("shopping", new Shopping());
@@ -85,13 +93,6 @@ public class ShoppingController {
 
     }
 
-    @GetMapping("/detail/{shopId}")
-    public String getShop(Model model, @PathVariable Long shopId){
-        Optional<Shopping> optional=shoppingRepository.findById(shopId);
-        model.addAttribute("shopping", optional.get());
-        return "shopping/detail";
-
-    }
 
     @GetMapping("/utilisateur/{userId}")
     public String findByUser(@PathVariable Long userId, Model model){

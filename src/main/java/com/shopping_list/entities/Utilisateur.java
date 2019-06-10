@@ -113,4 +113,12 @@ public class Utilisateur implements Serializable {
         roles.add(role);
     }
 
+    public void removeRelation(Role role) {
+        roles.remove(role);
+        role.getUtilisateurs().remove(this);
+    }
+
+    public void setRoles(Role role){
+        roles.add(role);
+    }
 }
