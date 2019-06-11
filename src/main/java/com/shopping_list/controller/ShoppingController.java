@@ -2,14 +2,20 @@ package com.shopping_list.controller;
 
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
+import com.shopping_list.Repository.UtilisateurRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
+import com.shopping_list.entities.Utilisateur;
+import com.shopping_list.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +30,9 @@ public class ShoppingController {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
 
     @GetMapping("/all")
     public String findAll(Model model,Long shopId){
@@ -61,8 +70,16 @@ public class ShoppingController {
     }
 
     @PostMapping("/save")
-    public String save(Shopping shopping){
+    public String save(Shopping shopping, HttpSession session){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Utilisateur user = utilisateurRepository.findByEmail(auth.getName());
         shoppingRepository.save(shopping);
+        MailService backMessage = new MailService();
+        backMessage.sendSimpleMessage(
+                "edougajean@gmail.com",
+                "Notification de l'ajout d'un shopping, Titre : "+ shopping.getName(),
+               user.getName() + " vous notifi qu'il vous a partager sa liste de course :  veuillez bien prendre connaissance de cette dernière " +shopping.getName()
+        );
         return "shopping/redirection";
     }
 

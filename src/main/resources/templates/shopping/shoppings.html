@@ -61,11 +61,12 @@
                     <a class="btn" data-toggle="modal" data-target="#modal-list" th:attr="data-target='#modal-list'" ><i class="fa fa-eye"></i></a>
                 </td>
                 <td>
-                    <a th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
+                    <a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
                     <a class="btn" data-toggle="modal" data-target="#modal-edited" th:attr="data-target='#modal-edited'" th:href="@{/shopping/update/}+${shopping.shopId}" ><i class="fa fa-pencil"></i></a>
                     <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}">
                         <i class="fa fa-trash" ></i>
                     </a>
+                    <a class="btn" href="#"><i class="fa fa-share-alt"></i></a>
                 </td>
 
                 <div class="modal card modal-warning alert-warning fade in" th:id="modal-edited" >
