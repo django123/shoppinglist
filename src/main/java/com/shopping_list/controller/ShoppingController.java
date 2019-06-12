@@ -90,9 +90,9 @@ public class ShoppingController {
         MailService backMessage = new MailService();
         backMessage.sendSimpleMessage(
                 user.getEmail(),
-                "Notification de l'ajout d'un shopping, Titre : "+ shopping.getName(),
-                user.getName() + " vous notifi qu'il vous a partagé sa liste de course : " + "\n"+
-                        " veuillez bien prendre connaissance de cette dernière intitulé:  " +"\n"
+                "Notification of the addition of a shopping, Title : "+ shopping.getName(),
+                user.getName() + " notifies you that he has shared his shopping list with you : " + "\n"+
+                        " please read this last one entitled:  " +"\n"
                         +shopping.getName()
         );
         return "email";
