@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class ShoppingController {
 
     @GetMapping("/all")
     public String findAll(Model model,Long shopId){
+
         List<Shopping>shoppings = shoppingRepository.findAll();
         for(Shopping shopping: shoppings){
              List<Task>tasks = new ArrayList<>();
@@ -52,6 +54,7 @@ public class ShoppingController {
         }
         model.addAttribute("shoppings", shoppingRepository.findAll());
         model.addAttribute("tasks", new Task());
+        model.addAttribute("utilisateur", utilisateurRepository.findAll());
         return "shopping/shoppings";
     }
 
@@ -70,17 +73,30 @@ public class ShoppingController {
     }
 
     @PostMapping("/save")
-    public String save(Shopping shopping, HttpSession session){
+    public String save(Shopping shopping){
+        shoppingRepository.save(shopping);
+        return "shopping/redirection";
+    }
+
+    @PostMapping("/email/user")
+    public String shareMail(Shopping shopping,Long id, String nom, String commentaire,  HttpSession session, String userId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = utilisateurRepository.findByEmail(auth.getName());
+        Utilisateur user = utilisateurRepository.getOne(Long.parseLong(userId));
+        shopping.setShopId(id);
+        shopping.setName(nom);
+        shopping.setComment(commentaire);
+        //shopping.setDate(dte);
         shoppingRepository.save(shopping);
         MailService backMessage = new MailService();
         backMessage.sendSimpleMessage(
-                "edougajean@gmail.com",
+                user.getEmail(),
                 "Notification de l'ajout d'un shopping, Titre : "+ shopping.getName(),
-               user.getName() + " vous notifi qu'il vous a partager sa liste de course :  veuillez bien prendre connaissance de cette dernière " +shopping.getName()
+                user.getName() + " vous notifi qu'il vous a partagé sa liste de course : " + "\n"+
+                        " veuillez bien prendre connaissance de cette dernière intitulé:  " +"\n"
+                        +shopping.getName()
         );
-        return "shopping/redirection";
+        return "email";
+
     }
 
     @GetMapping("/update/{shopId}")

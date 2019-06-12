@@ -66,9 +66,39 @@
                     <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}">
                         <i class="fa fa-trash" ></i>
                     </a>
-                    <a class="btn" href="#"><i class="fa fa-share-alt"></i></a>
+                    <a class="btn" href="#" data-toggle="modal" data-target="#modal-shared" th:attr="data-target='#modal-shared'">
+                        <i class="fa fa-share-alt"></i>
+                    </a>
                 </td>
+                <div class="modal" tabindex="-1" role="dialog" th:id="modal-shared">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Partage par Email</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/shopping/email/user}" method="post" th:object="${shopping}">
+                                    <input type="hidden" name="id" th:value="${shopping.shopId}" />
+                                    <div style="display: none">
+                                        <input type="text"  name="nom" th:value="${shopping.name}" />
+                                        <input type="text" name="commentaire" th:value="${shopping.comment}" />
+                                    </div>
+                                    <select name="userId" type="text" >
+                                        <option th:each="user : ${utilisateur}" th:value="${user.userId}" th:text="${user.name}">
+                                        </option>
+                                    </select>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                    </div>
+                                </form>
+                            </div>
 
+                        </div>
+                    </div>
+                </div>
                 <div class="modal card modal-warning alert-warning fade in" th:id="modal-edited" >
                     <div class="modal-dialog">
                         <div class="modal-content">
