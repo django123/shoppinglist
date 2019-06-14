@@ -36,9 +36,8 @@ public class ShoppingController {
     private UtilisateurRepository utilisateurRepository;
 
     @GetMapping("/all")
-    public String findAll(Model model,Long shopId){
-
-        List<Shopping>shoppings = shoppingRepository.findAll();
+    public String findAll(Model model){
+        List<Shopping>shoppings = shoppingRepository.findByArchived(false);
         for(Shopping shopping: shoppings){
              List<Task>tasks = new ArrayList<>();
              tasks.addAll(shopping.getTasks());
@@ -52,9 +51,9 @@ public class ShoppingController {
                  shopping.setStatut(true);
              }
         }
-        model.addAttribute("shoppings", shoppingRepository.findAll());
-        model.addAttribute("tasks", new Task());
         model.addAttribute("utilisateur", utilisateurRepository.findAll());
+        model.addAttribute("shoppings", shoppings);
+        model.addAttribute("tasks", new Task());
         return "shopping/shoppings";
     }
 
@@ -74,6 +73,7 @@ public class ShoppingController {
 
     @PostMapping("/save")
     public String save(Shopping shopping){
+        shopping.setArchived(false);
         shoppingRepository.save(shopping);
         return "shopping/redirection";
     }
@@ -133,5 +133,27 @@ public class ShoppingController {
         model.addAttribute("shoppings", shoppings);
         return "shopping/utilisateur/shoppings";
     }
+
+    @GetMapping("/archived/{shopId}")
+    public String archived(@PathVariable Long shopId){
+        List<Shopping> shoppings = shoppingRepository.findByArchived(true);
+        Shopping shopping = shoppingRepository.getOne(shopId);
+        if ( shopping.getArchived() == true){
+            shopping.setArchived(false);
+        }else {
+            shopping.setArchived(true);
+        }
+        //shopping.setStatut(true);
+        shoppingRepository.save(shopping);
+        return "redirect:/shopping/all";
+    }
+
+    @GetMapping("/archive")
+    public String findAllArchive(Model model){
+        List<Shopping>shoppings = shoppingRepository.findByArchived(true);
+        model.addAttribute("shoppings", shoppings);
+        return "shopping/archive";
+    }
+
 
 }

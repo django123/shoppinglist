@@ -18,6 +18,7 @@ public class Shopping implements Serializable {
     private String name;
     private String comment;
     private Boolean statut;
+    private Boolean archived;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date date;
@@ -31,13 +32,14 @@ public class Shopping implements Serializable {
     public Shopping() {
     }
 
-    public Shopping(String name, String comment, Boolean statut, Date date, Utilisateur utilisateur, Collection<Task> tasks) {
+    public Shopping(String name, String comment, Boolean statut, Date date, Utilisateur utilisateur, Collection<Task> tasks, Boolean archived) {
         this.name = name;
         this.comment = comment;
         this.statut = statut;
         this.date = date;
         this.utilisateur = utilisateur;
         this.tasks = tasks;
+        this.archived = archived;
     }
 
     public Long getShopId() {
@@ -94,5 +96,13 @@ public class Shopping implements Serializable {
 
     public void setStatut(Boolean statut) {
         this.statut = statut;
+    }
+
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
 }

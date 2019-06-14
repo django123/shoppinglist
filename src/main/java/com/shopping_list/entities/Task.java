@@ -18,7 +18,6 @@ public class Task implements Serializable{
     private Boolean status;
     @ManyToOne(fetch=FetchType.LAZY, optional = false)
     @JoinColumn
-    @JsonIgnore
     private Shopping shopping;
 
     public Task() {

@@ -37,7 +37,7 @@ public class ShoppingRestController {
     @GetMapping
     public List<Shopping> findAllShopping(){
         List<Shopping>shoppings = shoppingRepository.findAll();
-        for(Shopping shopping: shoppings){
+        /*for(Shopping shopping: shoppings){
             List<Task>tasks = new ArrayList<>();
             tasks.addAll(shopping.getTasks());
             List<Task>tasks1=new ArrayList<>();
@@ -49,7 +49,7 @@ public class ShoppingRestController {
             if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
                 shopping.setStatut(true);
             }
-        }
+        }*/
         return shoppingRepository.findAll();
     }
 

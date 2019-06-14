@@ -8,23 +8,34 @@
     <title></title>
 </head>
 <body>
-<!--Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-info">
+
+
+<nav class="mb-1 navbar navbar-expand-lg navbar-light bg-info">
     <a class="navbar-brand" th:href="@{/}">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
+            aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/shopping/all}">Shopping</a>
-            </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-3" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Shopping
+                </a>
+                <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-3">
+                    <a class="dropdown-item" th:href="@{/shopping/all}" >Unarchived shopping</a>
+                    <a class="dropdown-item" th:href="@{/shopping/archive}">Archived shopping</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto nav-flex-icons">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-user"></i> Profile </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
+                    <i class="fa fa-user"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                     aria-labelledby="navbarDropdownMenuLink-333">
                     <a class="dropdown-item" href="#">My account</a>
                     <a class="dropdown-item" th:href="@{/logout}">Log out</a>
                 </div>
@@ -32,6 +43,6 @@
         </ul>
     </div>
 </nav>
-<!--/.Navbar -->
+
 </body>
 </html>
