@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +25,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/shopping")
 public class ShoppingController {
+
 
     @Autowired
     private ShoppingRepository shoppingRepository;
@@ -39,18 +40,34 @@ public class ShoppingController {
     public String findAll(Model model){
         List<Shopping>shoppings = shoppingRepository.findByArchived(false);
         for(Shopping shopping: shoppings){
-             List<Task>tasks = new ArrayList<>();
-             tasks.addAll(shopping.getTasks());
-             List<Task>tasks1=new ArrayList<>();
-             for (Task task:tasks){
+            List<Task>tasks = new ArrayList<>();
+            tasks.addAll(shopping.getTasks());
+            List<Task>tasks1=new ArrayList<>();
+            for (Task task:tasks){
                 if (task.getStatus()==true){
                     tasks1.add(task);
                 }
-             }
-             if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
-                 shopping.setStatut(true);
-             }
+            }
+            if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
+                shopping.setStatut(true);
+            }
         }
+        List<Integer> numbers= new ArrayList<>();
+        for (Shopping shopping : shoppings){
+            Collection<Task> tasks= shopping.getTasks();
+            Collection<Task> tasks1=new ArrayList<>();
+
+            for (Task task:tasks){
+                if (task.getStatus() == true){
+                    tasks1.add(task);
+                }
+            }
+            int nombre = tasks1.size();
+            numbers.add(nombre);
+            System.out.println(numbers);
+        }
+
+        model.addAttribute("tasks_done",numbers);
         model.addAttribute("utilisateur", utilisateurRepository.findAll());
         model.addAttribute("shoppings", shoppings);
         model.addAttribute("tasks", new Task());
@@ -101,17 +118,21 @@ public class ShoppingController {
 
     @GetMapping("/update/{shopId}")
     public String updatedShopping(Model model, @PathVariable Long shopId){
-      Optional<Shopping> optional =  shoppingRepository.findById(shopId);
-        model.addAttribute("shopping", optional.get());
-        return "shopping/update";
+        Shopping shopping =  shoppingRepository.findById(shopId).get();
+        model.addAttribute("shopping", shopping);
+        return "shopping/edit";
     }
     @PostMapping("/update/{shopId}")
-    public String save(Shopping shopping, @PathVariable Long shopId, BindingResult result){
+    public String save(Shopping shopping, @PathVariable Long shopId, BindingResult result,
+                       String name, String comment, String archived){
 
         if(result.hasErrors()) {
             shopping.setShopId(shopId);
-            return "shopping/update";
+            return "shopping/edit";
         }
+        shopping.setName(name);
+        shopping.setComment(comment);
+        shopping.setArchived(Boolean.parseBoolean(archived));
         Shopping shop = shoppingRepository.save(shopping);
         return "redirect:/shopping/detail/" +shop.getShopId() ;
     }
@@ -122,16 +143,8 @@ public class ShoppingController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +shopId));
         shoppingRepository.delete(shopping);
         model.addAttribute("shoppings", shoppingRepository.findAll());
-        return "redirect:/";
+        return "redirect:/shopping/all";
 
-    }
-
-
-    @GetMapping("/utilisateur/{userId}")
-    public String findByUser(@PathVariable Long userId, Model model){
-        List<Shopping> shoppings = shoppingRepository.findAllByUtilisateurOrderByShopIdDesc(userId);
-        model.addAttribute("shoppings", shoppings);
-        return "shopping/utilisateur/shoppings";
     }
 
     @GetMapping("/archived/{shopId}")

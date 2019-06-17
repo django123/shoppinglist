@@ -41,28 +41,27 @@
             <th>Comment</th>
             <th>Date</th>
             <th>Status</th>
-            <th>Tasks</th>
+            <th>Tasks (Done)</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="shopping : ${shoppings}">
+        <tr th:each="shopping,i : ${shoppings}">
             <td th:text="${shopping.name}"></td>
             <td th:text="${shopping.comment}"></td>
             <td th:text="${shopping.date}"></td>
             <td th:text="${shopping.statut}"></td>
             <td th:if="${#lists.size(shopping.tasks)}<= 0">
-                <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
-                <a data-toggle="modal" data-target="#modal-add" th:attr="data-target='#modal-add'" ><i class="fa fa-plus"></i></a>
+                <span th:text="${#lists.size(shopping.tasks)}"></span>
+                <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
             </td>
             <td th:unless="${#lists.size(shopping.tasks)}<= 0">
-                <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
-                <a class="btn" data-toggle="modal" data-target="#modal-add" th:attr="data-target='#modal-add'" ><i class="fa fa-plus"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#modal-list" th:attr="data-target='#modal-list'" ><i class="fa fa-eye"></i></a>
+                <span th:text="${#lists.size(shopping.tasks)}"></span>
+                <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
             </td>
             <td>
                 <a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#modal-edited" th:attr="data-target='#modal-edited'" th:href="@{/shopping/update/}+${shopping.shopId}" ><i class="fa fa-pencil"></i></a>
+                <a class="btn" th:href="@{/shopping/update/{shopId}(shopId=${shopping.shopId})}" ><i class="fa fa-pencil"></i></a>
                 <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}">
                     <i class="fa fa-trash" ></i>
                 </a>
@@ -102,36 +101,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal card modal-warning alert-warning fade in" th:id="modal-edited" >
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header text-center alert-info">
-                            <h5 class="modal-title">Update Shopping</h5>
-                        </div>
-                        <div class="modal-body text-center">
-                            <form th:object="${shopping}" th:action="@{/shopping/update/{shopId}(shopId = ${shopping.shopId})}"method="post">
-                                <div class="form-group">
-                                    <label for="nom" class="col-form-label">Shopping Name</label>
-                                    <input type="text" class="form-control" id="nom" name="name" value=""/>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="author" class="col-form-label">Date:</label>
-                                    <input type="date" class="form-control" id="author" name="date" value=""/>
-                                </div>
-                                <div class="form-group">
-                                    <label for="author" class="col-form-label">Comment:</label>
-                                    <textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3"  name="comment"></textarea>
-                                </div>
-                                <div class="modal-footer text-center">
-                                    <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
-                                    <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="modal card modal-warning alert-warning fade in" th:id="modal-deleted+${shopping.shopId}" >
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -148,39 +117,6 @@
                     </div>
                 </div>
             </div>
-
-
-            <!-- Modal for task -->
-            <div class="modal card modal-warning alert-warning fade in" th:id="modal-add" >
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header text-center alert-info">
-                            <h5 class="modal-title">Add Task</h5>
-                        </div>
-                        <div class="modal-body text-center">
-                            <form th:action="@{/task/save}" method="post">
-                                <div class="form-group">
-                                    <label for="nom" class="col-form-label">Task name:</label>
-                                    <input type="text" class="form-control" id="nom" name="name" value=""/>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="author" class="col-form-label">Description:</label>
-                                    <input type="text" class="form-control" id="author" name="description" value=""/>
-                                </div>
-                                <div class="form-group">
-                                    <input type="hidden" class="form-control" id="shopId" name="shopId" th:value="${shopping.shopId}">
-                                </div>
-                                <div class="modal-footer text-center">
-                                    <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
-                                    <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Register</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
             <div class="modal card modal-warning alert-warning fade in" th:id="modal-list" >
                 <div class="modal-dialog">
@@ -204,10 +140,6 @@
                                         <i class="fa fa-check-circle"></i>
                                     </a>
                                 </p>
-                                <a class="btn" data-toggle="modal" data-target="#modal-edit" th:attr="data-target='#modal-edit'" ><i class="fa fa-pencil"></i></a>
-                                <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${task.taskId}"  class="btn" >
-                                    <i class="fa fa-trash" ></i>
-                                </a>
                                 <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${task.taskId}" >
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -224,39 +156,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal card modal-warning alert-warning fade in" th:id="modal-edit" >
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header text-center alert-info">
-                                                <h5 class="modal-title">Update task</h5>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <form action="#" th:object="${task}" th:action="@{/task/update/{taskId}(taskId=${task.taskId})}" method="post">
-                                                    <div class="form-group">
-                                                        <label for="nom" class="col-form-label">Task name:</label>
-                                                        <input type="text" class="form-control" id="nom" name="name" value=""/>
-                                                    </div>
 
-                                                    <div class="form-group">
-                                                        <label for="author" class="col-form-label">Description:</label>
-                                                        <input type="text" class="form-control" id="author" name="description" value=""/>
-                                                    </div>
-                                                    <div class="form-group">
-
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="hidden" class="form-control" id="shopId" name="shopId" th:value="${shopping.shopId}">
-                                                    </div>
-
-                                                    <div class="modal-footer text-center">
-                                                        <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
-                                                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Register</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </ul>
                             <div class="modal-footer text-center">
                                 <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
@@ -269,8 +169,9 @@
         </tbody>
     </table>
 </div>
-<a  th:href="@{/shopping/form}" class="btn btn-primary nBtn " style="border-radius: 50%; position:fixed;bottom:1rem;right:8%;">
-    <i class="fa fa-plus"></i>
+
+<a class="btn btn-primary" th:href="@{/shopping/form}" style="border-radius: 20%; position:fixed;bottom:1rem;right:6%;">
+    Add New Shopping</a>
 </a>
 
 </div>

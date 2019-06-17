@@ -22,24 +22,25 @@ public class Shopping implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date date;
-    @ManyToOne
-    @JoinColumn
-    private Utilisateur utilisateur;
     @OneToMany(mappedBy = "shopping", cascade=CascadeType.ALL)
     @OnDelete(action= OnDeleteAction.NO_ACTION)
     private Collection<Task>tasks;
 
+    @ManyToMany
+    @JoinTable(name = "shopping_utilisateur", joinColumns = @JoinColumn(name = "shopId"), inverseJoinColumns = @JoinColumn(name = "userId"))
+    private Collection<Utilisateur> utilisateurs;
+
     public Shopping() {
     }
 
-    public Shopping(String name, String comment, Boolean statut, Date date, Utilisateur utilisateur, Collection<Task> tasks, Boolean archived) {
+    public Shopping(String name, String comment, Boolean statut, Boolean archived, Date date, Collection<Task> tasks, Collection<Utilisateur> utilisateurs) {
         this.name = name;
         this.comment = comment;
         this.statut = statut;
-        this.date = date;
-        this.utilisateur = utilisateur;
-        this.tasks = tasks;
         this.archived = archived;
+        this.date = date;
+        this.tasks = tasks;
+        this.utilisateurs = utilisateurs;
     }
 
     public Long getShopId() {
@@ -74,13 +75,6 @@ public class Shopping implements Serializable {
         this.date = date;
     }
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
-
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
-    }
 
     public Collection<Task> getTasks() {
         return tasks;
@@ -104,5 +98,13 @@ public class Shopping implements Serializable {
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
+    }
+
+    public Collection<Utilisateur> getUtilisateurs() {
+        return utilisateurs;
+    }
+
+    public void setUtilisateurs(Collection<Utilisateur> utilisateurs) {
+        this.utilisateurs = utilisateurs;
     }
 }

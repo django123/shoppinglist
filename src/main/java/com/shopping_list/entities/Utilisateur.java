@@ -29,8 +29,9 @@ public class Utilisateur implements Serializable {
     @JoinTable(name = "utilisateur_role", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Collection<Role> roles;
 
-    @OneToMany(mappedBy = "utilisateur")
-    private Collection<Shopping>shoppings;
+    @ManyToMany(mappedBy = "utilisateurs")
+    private Collection<Shopping> shoppings;
+
 
     public Utilisateur() {
     }
@@ -93,13 +94,6 @@ public class Utilisateur implements Serializable {
         this.roles = roles;
     }
 
-    public Collection<Shopping> getShoppings() {
-        return shoppings;
-    }
-
-    public void setShoppings(Collection<Shopping> shoppings) {
-        this.shoppings = shoppings;
-    }
 
     public String getName() {
         return name;
@@ -120,5 +114,13 @@ public class Utilisateur implements Serializable {
 
     public void setRoles(Role role){
         roles.add(role);
+    }
+
+    public Collection<Shopping> getShoppings() {
+        return shoppings;
+    }
+
+    public void setShoppings(Collection<Shopping> shoppings) {
+        this.shoppings = shoppings;
     }
 }

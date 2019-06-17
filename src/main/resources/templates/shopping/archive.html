@@ -41,7 +41,6 @@
             <th>Name</th>
             <th>Comment</th>
             <th>Date</th>
-            <th>Status</th>
             <th>Tasks</th>
             <th>Actions</th>
         </tr>
@@ -51,7 +50,6 @@
             <td th:text="${shopping.name}"></td>
             <td th:text="${shopping.comment}"></td>
             <td th:text="${shopping.date}"></td>
-            <td th:text="${shopping.statut}"></td>
             <td th:if="${#lists.size(shopping.tasks)}<= 0">
                 <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
             </td>
@@ -60,7 +58,7 @@
             </td>
             <td>
                 <a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
-                <a class="btn" th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:if="${shopping.getStatut()}==true">
+                <a class="btn" th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:unless="${shopping.getStatut()}==true">
                     <i class="fa fa-file-archive-o"></i>
                 </a>
             </td>

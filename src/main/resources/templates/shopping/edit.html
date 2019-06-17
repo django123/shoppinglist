@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <title>Edit</title>
+</head>
+<body>
+<div th:replace="fragments/header.html:: nav"></div>
+
+    <form th:object="${shopping}" th:action="@{/shopping/update/{shopId}(shopId = ${shopping.shopId})}"method="post"  enctype="multipart/form-data" class=" border border-light p-5">
+        <p class="h4 mb-4 text-center">Edit  shopping</p>
+         <div class="form-group">
+             <label for="name" class="col-form-label">Shopping Name</label>
+             <input type="text" class="form-control" id="name" name="name" th:value="${shopping.name}"/>
+         </div>
+
+         <div class="form-group">
+             <label for="date" class="col-form-label">Date:</label>
+             <input type="date" class="form-control" id="date" name="date" th:value="${shopping.date}"/>
+        </div>
+         <div class="form-group">
+             <label for="comment" class="col-form-label">Comment:</label>
+                                    <textarea class="form-control rounded-0" id="comment" rows="3"  name="comment" th:value="${shopping.comment}"
+                                              th:text="${shopping.comment}"></textarea>
+         </div>
+         <div class="form-group">
+                <input type="text" class="form-control" id="archived" name="archived" style="display: none" value=""/>
+         </div>
+
+             <a type="button" class="btn btn-warning pull-left" data-dismiss="modal" th:href="@{/shopping/all}"><i class="fa fa-undo"></i>&nbsp;Back</a>&nbsp;
+             <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Save</button>
+
+    </form>
+
+</body>
+</html>

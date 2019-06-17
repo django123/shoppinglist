@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/task")
 public class TaskController {
+
 
     @Autowired
     private TaskRepository taskRepository;
@@ -32,41 +34,42 @@ public class TaskController {
     }
 
     @GetMapping("/form")
-    public String form(Model model){
-        model.addAttribute("task", new Task());
-//        model.addAttribute("shopping", shoppingRepository.findById(id_shop));
+    public String form(Model model, Long shopId){
+        model.addAttribute("tasks", new Task());
         return "task/form";
     }
 
     @PostMapping("/save")
-    public String save(@Valid Task task, Long shopId){
+    public String save(@Valid Task task, Long shopId, HttpSession session){
         System.out.println(shopId);
-        Shopping shopping = shoppingRepository.getOne(shopId);
+        Shopping shopping = shoppingRepository.findById(shopId).get();
         System.out.println(shopping);
         task.setStatus(false);
         task.setShopping(shopping);
+        session.setAttribute("shopId",shopId);
         taskRepository.save(task);
-        return "task/redirection";
+        return "redirect:/shopping/detail/" +session.getAttribute("shopId") ;
     }
 
     @GetMapping("/update/{taskId}")
     public String updatedTask(Model model, @PathVariable Long taskId){
-        Optional<Task> optional =  taskRepository.findById(taskId);
-        model.addAttribute("task", optional.get());
+        Task task =  taskRepository.findById(taskId).get();
+        model.addAttribute("task", task);
         return "task/update";
     }
     @PostMapping("/update/{taskId}")
     public String save(@Valid Task task, @PathVariable("taskId") Long taskId,
-                       BindingResult result, Model model, Long shopId){
+                       BindingResult result, Model model, Long shopId, HttpSession session){
         if (result.hasErrors()) {
             task.setTaskId(taskId);
             return "task/update";
         }
         Shopping shopping = shoppingRepository.getOne(shopId);
         task.setShopping(shopping);
+        session.setAttribute("shopId",shopId);
         taskRepository.save(task);
         model.addAttribute("tasks", taskRepository.findAll());
-        return "redirect:/shopping/all";
+        return "redirect:/shopping/detail/" +session.getAttribute("shopId") ;
 
     }
 
@@ -82,8 +85,8 @@ public class TaskController {
 
     @GetMapping("/detail/{taskId}")
     public String getTask(Model model, @PathVariable Long taskId){
-        Optional<Task> optional=taskRepository.findById(taskId);
-        model.addAttribute("task", optional.get());
+        Task task=taskRepository.findById(taskId).get();
+        model.addAttribute("task", task);
         return "task/detail";
 
     }

@@ -3,7 +3,6 @@ package com.shopping_list.controller;
 import com.shopping_list.Repository.RoleRepository;
 import com.shopping_list.Repository.UserAndRoleRepository;
 import com.shopping_list.Repository.UtilisateurRepository;
-import com.shopping_list.entities.AddRoleToUser;
 import com.shopping_list.entities.Role;
 import com.shopping_list.entities.UserAndRole;
 import com.shopping_list.entities.Utilisateur;
