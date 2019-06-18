@@ -21,6 +21,7 @@ import java.util.Optional;
 public class TaskController {
 
 
+
     @Autowired
     private TaskRepository taskRepository;
 
@@ -59,17 +60,16 @@ public class TaskController {
     }
     @PostMapping("/update/{taskId}")
     public String save(@Valid Task task, @PathVariable("taskId") Long taskId,
-                       BindingResult result, Model model, Long shopId, HttpSession session){
+                       BindingResult result, Model model, HttpSession session){
         if (result.hasErrors()) {
             task.setTaskId(taskId);
             return "task/update";
         }
-        Shopping shopping = shoppingRepository.getOne(shopId);
+        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         task.setShopping(shopping);
-        session.setAttribute("shopId",shopId);
         taskRepository.save(task);
         model.addAttribute("tasks", taskRepository.findAll());
-        return "redirect:/shopping/detail/" +session.getAttribute("shopId") ;
+        return "redirect:/shopping/detail/" +shopping.getShopId() ;
 
     }
 

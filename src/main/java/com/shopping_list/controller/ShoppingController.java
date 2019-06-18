@@ -27,6 +27,7 @@ import java.util.Optional;
 public class ShoppingController {
 
 
+
     @Autowired
     private ShoppingRepository shoppingRepository;
 
@@ -44,7 +45,7 @@ public class ShoppingController {
             tasks.addAll(shopping.getTasks());
             List<Task>tasks1=new ArrayList<>();
             for (Task task:tasks){
-                if (task.getStatus()==true){
+                if (task.getStatus()!=null && task.getStatus()){
                     tasks1.add(task);
                 }
             }
@@ -58,7 +59,7 @@ public class ShoppingController {
             Collection<Task> tasks1=new ArrayList<>();
 
             for (Task task:tasks){
-                if (task.getStatus() == true){
+                if (task.getStatus() != null  && task.getStatus() == true){
                     tasks1.add(task);
                 }
             }
@@ -75,8 +76,9 @@ public class ShoppingController {
     }
 
     @GetMapping("/detail/{shopId}")
-    public String getShop(Model model, @PathVariable Long shopId){
+    public String getShop(Model model, @PathVariable Long shopId, HttpSession session){
         Optional<Shopping> optional=shoppingRepository.findById(shopId);
+        session.setAttribute("shopId", optional.get().getShopId());
         model.addAttribute("shopping", optional.get());
         return "shopping/detail";
 
@@ -156,7 +158,6 @@ public class ShoppingController {
         }else {
             shopping.setArchived(true);
         }
-        //shopping.setStatut(true);
         shoppingRepository.save(shopping);
         return "redirect:/shopping/all";
     }
@@ -167,6 +168,7 @@ public class ShoppingController {
         model.addAttribute("shoppings", shoppings);
         return "shopping/archive";
     }
+
 
 
 }
