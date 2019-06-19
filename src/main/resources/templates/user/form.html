@@ -18,23 +18,23 @@
         <div class="row">
             <div class="col-md-4 login-sec">
                 <h2 class="text-center">Inscrivez-vous maintenant</h2>
-                <form method="post" th:object="${utilisateur}" th:action="@{/utilisateur/save}" enctype="multipart/form-data">
+                <form method="post" th:object="${user}" th:action="@{/user/save}" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="nom" class="col-4 col-form-label">Nom*</label>
+                        <label for="nom" class="col-4 col-form-label">Name*</label>
                         <input id="nom" name="name" placeholder="name" class="form-control here" required="required" type="text" th:field="*{name}">
                     </div>
                     <div class="form-group">
                         <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                         <label for="email" class="col-4 col-form-label">Email*</label>
-                        <input type="email"  id="email" placeholder="Enter email" class="form-control here" required="required"  th:field="*{email}">
+                        <input type="email"  id="email" placeholder="email" class="form-control here" required="required"  th:field="*{email}">
                     </div>
                     <div class="form-group">
                         <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-                        <label for="password" class="col-4 col-form-label">Mot de passe</label>
-                        <input id="password" name="password" placeholder="Mot de passe" class="form-control here" type="password"  th:field="*{password}">
+                        <label for="password" class="col-4 col-form-label">Password</label>
+                        <input id="password" name="password" placeholder="password" class="form-control here" type="password"  th:field="*{password}">
                     </div>
                     <div class="form-check mt-3">
-                        <button type="submit" class="btn btn-login float-right">Soumettre</button>
+                        <button type="submit" class="btn btn-login float-right">Submit</button>
                     </div>
                 </form>
                 <div class="copy-text">Créé avec <i class="fa fa-heart"></i> by <a href="#">JASSARL</a></div>

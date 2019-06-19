@@ -124,4 +124,5 @@ public class Utilisateur implements Serializable {
         this.shoppings = shoppings;
     }
 
+
 }

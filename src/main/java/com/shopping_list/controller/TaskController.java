@@ -91,11 +91,11 @@ public class TaskController {
 
     }
 
-    @GetMapping("/utilisateur/{userId}")
+    @GetMapping("/user/{userId}")
     public String findByUser(@PathVariable Long userId, Model model){
         List<Task> tasks = taskRepository.findAllByShoppingOrderByTaskIdDesc(userId);
         model.addAttribute("tasks", tasks);
-        return "task/utilisateur/tasks";
+        return "task/user/tasks";
     }
     @GetMapping("/active/{taskId}")
     public String active(@PathVariable Long taskId){

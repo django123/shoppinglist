@@ -1,7 +1,10 @@
 package com.shopping_list.Repository;
 
-/**
- * Created by EDOUGA on 19/06/2019.
- */
-public class ShareRepository {
+
+import com.shopping_list.entities.Share;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ShareRepository extends JpaRepository<Share,Long>{
 }

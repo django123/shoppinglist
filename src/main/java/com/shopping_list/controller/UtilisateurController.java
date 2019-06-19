@@ -27,7 +27,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/utilisateur")
+@RequestMapping("/user")
 public class UtilisateurController {
 
     @Autowired
@@ -47,8 +47,8 @@ public class UtilisateurController {
 
     @GetMapping("/registration")
     public String form(Model model){
-        model.addAttribute("utilisateur",  new Utilisateur());
-        return "utilisateur/form";
+        model.addAttribute("user",  new Utilisateur());
+        return "user/form";
     }
 
 
@@ -63,7 +63,7 @@ public class UtilisateurController {
         }
 
         if(bindingResult.hasErrors()) {
-            return  "utilisateur/form";
+            return  "user/form";
         }else{
             System.out.println(utilisateur.getPassword());
             userService.createUser(utilisateur);
@@ -76,8 +76,8 @@ public class UtilisateurController {
     @GetMapping("/update/{userId}")
     public String update(@PathVariable Long userId, Model model){
         Utilisateur utilisateur= utilisateurRepository.getOne(userId);
-        model.addAttribute("utilisateur",utilisateur);
-        return "utilisateur/update";
+        model.addAttribute("user",utilisateur);
+        return "user/update";
     }
 
     @PostMapping("/update/{userId}")
@@ -89,14 +89,14 @@ public class UtilisateurController {
     @GetMapping("/delete/{userId}")
     public String delete(@PathVariable Long userId){
         utilisateurRepository.deleteById(userId);
-        return "redirect:/utilisateur/utilisateurs";
+        return "redirect:/user/users";
     }
 
     @GetMapping("/detail/{userId}")
     public String detail(@PathVariable Long userId, Model model,HttpSession session){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur utilisateur = utilisateurRepository.findByEmail(auth.getName());
-        model.addAttribute("utilisateur",utilisateur);
+        model.addAttribute("user",utilisateur);
         UserAndRole form = new UserAndRole();
         session.setAttribute("userId", utilisateur.getUserId());
         UserAndRole editForm = userAndRoleRepository.findByUserId(utilisateur.getUserId());
@@ -104,7 +104,7 @@ public class UtilisateurController {
         model.addAttribute("form", form);
         model.addAttribute("update",editForm);
         model.addAttribute("role1", role1);
-        return "utilisateur/detail";
+        return "user/detail";
     }
 
     @PostMapping("/role/save")
@@ -115,7 +115,7 @@ public class UtilisateurController {
         form.setUserId(utilisateur.getUserId());
         userAndRoleRepository.save(form);
         utilisateurRepository.save(utilisateur);
-        return "redirect:/utilisateur/detail/"+utilisateur.getUserId();
+        return "redirect:/user/detail/"+utilisateur.getUserId();
     }
 
 
@@ -131,7 +131,7 @@ public class UtilisateurController {
         roleUser.setUserId(user.getUserId());
         userAndRoleRepository.save(roleUser);
         utilisateurRepository.save(user);
-        return "redirect:/utilisateur/detail"+user.getUserId();
+        return "redirect:/user/detail"+user.getUserId();
     }
 
 

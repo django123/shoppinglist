@@ -1,8 +1,10 @@
 package com.shopping_list.controller;
 
+import com.shopping_list.Repository.ShareRepository;
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.Repository.UtilisateurRepository;
+import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
 import com.shopping_list.entities.Utilisateur;
@@ -31,6 +33,8 @@ public class ShoppingController {
 
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ShareRepository shareRepository;
 
     @Autowired
     private UserService userService;
@@ -83,10 +87,10 @@ public class ShoppingController {
         }
 
         model.addAttribute("tasks_done",numbers);
-        model.addAttribute("utilisateur", utilisateurRepository.findAll());
+        model.addAttribute("user", utilisateurRepository.findAll());
         model.addAttribute("shoppings", shoppings);
         model.addAttribute("tasks", new Task());
-       // model.addAttribute("shoppings",shoppingRepository.findAllShoppingsByUtilisateurs(user.getUserId()));
+        model.addAttribute("share", new Share());
         return "shopping/shoppings";
     }
 
@@ -115,27 +119,18 @@ public class ShoppingController {
         return "shopping/redirection";
     }
 
-    @PostMapping("/email/user")
-    public String shareMail(Shopping shopping,Long id, String nom, String commentaire,  HttpSession session, String userId){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    @PostMapping("/share/user")
+    public String shareShopping(Share share, HttpSession session, String userId, String shopId){
         Utilisateur user = utilisateurRepository.getOne(Long.parseLong(userId));
-        shopping.setShopId(id);
-        shopping.setName(nom);
-        shopping.setComment(commentaire);
-        //shopping.setDate(dte);
+        Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
+        shopping.add(user);
+        share.setUserId(user.getUserId());
+        share.setShopId(shopping.getShopId());
         shoppingRepository.save(shopping);
-        MailService backMessage = new MailService();
-        backMessage.sendSimpleMessage(
-                user.getEmail(),
-                "Notification of the addition of a shopping, Title : "+ shopping.getName(),
-                user.getName() + " notifies you that he has shared his shopping list with you : " + "\n"+
-                        " please read this last one entitled:  " +"\n"
-                        +shopping.getName()
-        );
-        return "email";
+        shareRepository.save(share);
+        return "redirect:/shopping/all";
 
     }
-
     @GetMapping("/update/{shopId}")
     public String updatedShopping(Model model, @PathVariable Long shopId){
         Shopping shopping =  shoppingRepository.findById(shopId).get();

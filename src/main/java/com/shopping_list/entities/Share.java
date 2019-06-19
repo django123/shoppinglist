@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Created by EDOUGA on 17/06/2019.
  */
 @Entity
-public class Partager implements Serializable {
+public class Share implements Serializable {
 
     @Id
     @GeneratedValue
@@ -19,10 +19,10 @@ public class Partager implements Serializable {
 
     private Long shopId;
 
-    public Partager() {
+    public Share() {
     }
 
-    public Partager(Long shopId, Long userId) {
+    public Share(Long shopId, Long userId) {
         this.shopId = shopId;
         this.userId = userId;
     }

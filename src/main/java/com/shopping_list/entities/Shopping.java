@@ -107,4 +107,14 @@ public class Shopping implements Serializable {
     public void setUtilisateurs(Collection<Utilisateur> utilisateurs) {
         this.utilisateurs = utilisateurs;
     }
+
+    public void add(Utilisateur utilisateur){
+        utilisateurs.add(utilisateur);
+
+    }
+
+    public void remove(Utilisateur utilisateur){
+        utilisateurs.remove(utilisateur);
+        utilisateur.getShoppings().remove(this);
+    }
 }
