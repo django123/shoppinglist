@@ -7,6 +7,7 @@ import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
 import com.shopping_list.entities.Utilisateur;
 import com.shopping_list.service.MailService;
+import com.shopping_list.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,10 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Controller
@@ -35,11 +33,27 @@ public class ShoppingController {
     private TaskRepository taskRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private UtilisateurRepository utilisateurRepository;
 
     @GetMapping("/all")
     public String findAll(Model model){
-        List<Shopping>shoppings = shoppingRepository.findByArchived(false);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Utilisateur user = userService.findUserByEmail(auth.getName());
+        System.out.println(user.getName());
+        List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
+        List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+        List<Shopping> shoppings= new ArrayList<>();
+        for (Shopping shopping : shoppings1){
+            for (int i=0; i<shoppings2.size(); i++){
+                if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                    shoppings.add(shoppings2.get(i));
+
+                }
+            }
+        }
         for(Shopping shopping: shoppings){
             List<Task>tasks = new ArrayList<>();
             tasks.addAll(shopping.getTasks());
@@ -72,6 +86,7 @@ public class ShoppingController {
         model.addAttribute("utilisateur", utilisateurRepository.findAll());
         model.addAttribute("shoppings", shoppings);
         model.addAttribute("tasks", new Task());
+       // model.addAttribute("shoppings",shoppingRepository.findAllShoppingsByUtilisateurs(user.getUserId()));
         return "shopping/shoppings";
     }
 
@@ -92,6 +107,9 @@ public class ShoppingController {
 
     @PostMapping("/save")
     public String save(Shopping shopping){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Utilisateur user = userService.findUserByEmail(auth.getName());
+        shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
         shopping.setArchived(false);
         shoppingRepository.save(shopping);
         return "shopping/redirection";
@@ -158,6 +176,7 @@ public class ShoppingController {
         }else {
             shopping.setArchived(true);
         }
+
         shoppingRepository.save(shopping);
         return "redirect:/shopping/all";
     }

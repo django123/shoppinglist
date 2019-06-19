@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ShoppingRepository extends JpaRepository<Shopping,Long> {
 
-
+    List<Shopping>findByUtilisateurs_UserId(Long userId);
     List<Shopping> findByArchived(Boolean archived);
 
 }

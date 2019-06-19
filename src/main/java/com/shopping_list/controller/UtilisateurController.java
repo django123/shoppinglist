@@ -6,12 +6,14 @@ import com.shopping_list.Repository.UtilisateurRepository;
 import com.shopping_list.entities.Role;
 import com.shopping_list.entities.UserAndRole;
 import com.shopping_list.entities.Utilisateur;
+import com.shopping_list.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,9 @@ public class UtilisateurController {
     private RoleRepository roleRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private UserAndRoleRepository userAndRoleRepository;
 
     @Autowired
@@ -48,33 +53,23 @@ public class UtilisateurController {
 
 
     @PostMapping("/save")
-    public String save(Utilisateur utilisateur, Errors errors, Model model){
+    public String save(Utilisateur utilisateur, BindingResult bindingResult, Model model){
 
-
-        Utilisateur utilisateur1= utilisateurRepository.findByEmail(utilisateur.getEmail());
-
-        if (utilisateur1 != null){
-            errors.rejectValue("email", "utilisateur.error", "There is already a utilisateur registered with the email provided");
+        Utilisateur userExists = userService.findUserByEmail(utilisateur.getEmail());
+        if (userExists != null) {
+            bindingResult
+                    .rejectValue("email", "error.user",
+                            "there is already a user registered with a email provided");
         }
-        if (errors.hasErrors()){
-            model.addAttribute("errors","Il existe un Utililsateur avec le meme adresse email.");
-            return "utilisateur/form";
-        }else {
+
+        if(bindingResult.hasErrors()) {
+            return  "utilisateur/form";
+        }else{
             System.out.println(utilisateur.getPassword());
-            utilisateur.setPassword(bCryptPasswordEncoder.encode(utilisateur.getPassword()));
-            utilisateur.setActive(true);
-            Role role= roleRepository.findByName("USER");
-            if (utilisateur.getRoles() == null){
-                if (role == null){
-                    Role role1 = new Role("USER");
-                    roleRepository.save(role1);
-                    utilisateur.setRoles(new HashSet<Role>(Arrays.asList(role1)));
-                }else{
-                       utilisateur.setRoles(new HashSet<Role>(Arrays.asList(role)));
-                    }
-            }
-            utilisateurRepository.save(utilisateur);
+            userService.createUser(utilisateur);
+
         }
+
         return "redirect:/login";
     }
 

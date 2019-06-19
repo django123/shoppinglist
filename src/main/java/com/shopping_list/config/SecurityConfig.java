@@ -41,22 +41,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.
+       /* http.
                 authorizeRequests()
-                .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/utilisateur/registration").permitAll()
                 .antMatchers("/utilisateur/save").permitAll()
-                .antMatchers("/utilisateur/**").hasAuthority("ROOT").anyRequest()
+                .antMatchers("/shopping*//**").hasAuthority("USER").anyRequest()
                 .authenticated().and().csrf().disable().formLogin()
                 .loginPage("/login").failureUrl("/login?error=true")
-                .defaultSuccessUrl("/shopping/all")
+                .defaultSuccessUrl("/")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").and().exceptionHandling()
-                .accessDeniedPage("/access-denied");
+        ;*/
+//decommente l'autre ci-dessus et commente celui ci-dessous
+
+        http.
+                authorizeRequests()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/vendor/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/utilisateur/registration").permitAll()
+                .antMatchers("/utilisateur/save").permitAll()
+                .antMatchers("/shopping/**").hasAuthority("USER").anyRequest()
+                .authenticated().and().csrf().disable().formLogin()
+                .loginPage("/login").failureUrl("/login?error=true")
+                .defaultSuccessUrl("/")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .and().logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+        ;
     }
 
     @Override

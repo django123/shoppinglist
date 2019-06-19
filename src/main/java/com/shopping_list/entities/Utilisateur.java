@@ -123,4 +123,5 @@ public class Utilisateur implements Serializable {
     public void setShoppings(Collection<Shopping> shoppings) {
         this.shoppings = shoppings;
     }
+
 }
