@@ -46,7 +46,7 @@ public class ShoppingController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
         System.out.println(user.getName());
-        List<Shopping>shoppings1 = shoppingRepository.findByShared(false);
+        List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
         List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
         List<Shopping> shoppings= new ArrayList<>();
         for (Shopping shopping : shoppings1){
@@ -82,14 +82,12 @@ public class ShoppingController {
             }
             int nombre = tasks1.size();
             numbers.add(nombre);
-            System.out.println(numbers);
         }
 
         model.addAttribute("tasks_done",numbers);
         model.addAttribute("user", userRepository.findAll());
         model.addAttribute("shoppings", shoppings);
         model.addAttribute("tasks", new Task());
-        model.addAttribute("share", new Share());
         return "shopping/shoppings";
     }
 
@@ -119,20 +117,6 @@ public class ShoppingController {
         return "shopping/redirection";
     }
 
-    @PostMapping("/share/user")
-    public String shareShopping(Share share, String userId, String shopId){
-        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
-        Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
-        shopping.add(user);
-        share.setUserId(user.getUserId());
-        share.setShopId(shopping.getShopId());
-        shoppingRepository.save(shopping);
-        shareRepository.save(share);
-        return "redirect:/shopping/all";
-
-    }
-
-
     @GetMapping("/shared")
     public String sharedShopping(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -140,19 +124,34 @@ public class ShoppingController {
         System.out.println(user.getName());
         List<Shopping>shoppings1 = shoppingRepository.findByShared(true);
         List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
-        List<Shopping> shoppings= new ArrayList<>();
+        List<Shopping> shoppings3= new ArrayList<>();
         for (Shopping shopping: shoppings1){
             for (int i=0; i<shoppings2.size(); i++){
                 if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
-                    shoppings.add(shoppings2.get(i));
+                    shoppings3.add(shoppings2.get(i));
 
                 }
             }
 
         }
-        model.addAttribute("shoppings", shoppings);
+        model.addAttribute("shared", shoppings3);
         return "shared";
     }
+
+    @PostMapping("/share/user")
+    public String shareShopping(Share share, String userId, String shopId){
+        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
+        Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
+        shopping.add(user);
+        shopping.setShared(true);
+        share.setUserId(user.getUserId());
+        share.setShopId(shopping.getShopId());
+        shoppingRepository.save(shopping);
+        shareRepository.save(share);
+        return "redirect:/shopping/shared";
+
+    }
+
     @GetMapping("/update/{shopId}")
     public String updatedShopping(Model model, @PathVariable Long shopId){
         Shopping shopping =  shoppingRepository.findById(shopId).get();

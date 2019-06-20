@@ -57,7 +57,7 @@
                 <span th:text="${#lists.size(shopping.tasks)}"></span>&nbsp;
             </td>
             <td>
-                <a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
+                <!--<a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>-->
                 <a class="btn" th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:unless="${shopping.getStatut()}==true">
                     <i class="fa fa-file-archive-o"></i>
                 </a>
