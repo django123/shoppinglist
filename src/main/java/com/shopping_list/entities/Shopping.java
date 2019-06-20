@@ -19,6 +19,7 @@ public class Shopping implements Serializable {
     private String comment;
     private Boolean statut;
     private Boolean archived;
+    private Boolean shared;
     private String saverName;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
@@ -34,11 +35,12 @@ public class Shopping implements Serializable {
     public Shopping() {
     }
 
-    public Shopping(String name, String comment, Boolean statut, Boolean archived, String saverName, Date date, Collection<Task> tasks, Collection<Utilisateur> utilisateurs) {
+    public Shopping(String name, String comment, Boolean statut, Boolean archived, Boolean shared, String saverName, Date date, Collection<Task> tasks, Collection<Utilisateur> utilisateurs) {
         this.name = name;
         this.comment = comment;
         this.statut = statut;
         this.archived = archived;
+        this.shared = shared;
         this.saverName = saverName;
         this.date = date;
         this.tasks = tasks;
@@ -126,5 +128,13 @@ public class Shopping implements Serializable {
 
     public void setSaverName(String saverName) {
         this.saverName = saverName;
+    }
+
+    public Boolean getShared() {
+        return shared;
+    }
+
+    public void setShared(Boolean shared) {
+        this.shared = shared;
     }
 }

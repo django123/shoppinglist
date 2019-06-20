@@ -41,7 +41,7 @@
             <th>Comment</th>
             <th>Date</th>
             <th>Status</th>
-            <th>Tasks (Done)</th>
+            <!--<th>Tasks (Done)</th>-->
             <th>sharer</th>
             <th>Actions</th>
         </tr>
@@ -51,7 +51,7 @@
             <td th:text="${shopping.name}"></td>
             <td th:text="${shopping.comment}"></td>
             <td th:text="${shopping.date}"></td>
-            <td th:text="${shopping.statut}"></td>
+           <!-- <td th:text="${shopping.statut}"></td>
             <td th:if="${#lists.size(shopping.tasks)}<= 0">
                 <span th:text="${#lists.size(shopping.tasks)}"></span>
                 <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
@@ -59,7 +59,7 @@
             <td th:unless="${#lists.size(shopping.tasks)}<= 0">
                 <span th:text="${#lists.size(shopping.tasks)}"></span>
                 <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
-            </td>
+            </td>-->
             <td th:text="${shopping.saverName}"></td>
             <td>
                 <!--<a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>-->
@@ -68,9 +68,9 @@
                     <i class="fa fa-share-alt"></i>
                 </a>
 
-                <a class="btn" th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:if="${shopping.getStatut()}==true">
+<!--                <a class="btn" th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:if="${shopping.getStatut()}==true">
                     <i class="fa fa-file-archive-o"></i>
-                </a>
+                </a>-->
             </td>
             <div class="modal" tabindex="-1" role="dialog" th:id="modal-shared">
                 <div class="modal-dialog" role="document">
@@ -100,7 +100,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal card modal-warning alert-warning fade in" th:id="modal-deleted+${shopping.shopId}" >
+<!--            <div class="modal card modal-warning alert-warning fade in" th:id="modal-deleted+${shopping.shopId}" >
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header text-center alert-info">
@@ -163,7 +163,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </tr>
         </tbody>
     </table>

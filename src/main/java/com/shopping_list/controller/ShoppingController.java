@@ -46,7 +46,7 @@ public class ShoppingController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
         System.out.println(user.getName());
-        List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
+        List<Shopping>shoppings1 = shoppingRepository.findByShared(false);
         List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
         List<Shopping> shoppings= new ArrayList<>();
         for (Shopping shopping : shoppings1){
@@ -120,7 +120,7 @@ public class ShoppingController {
     }
 
     @PostMapping("/share/user")
-    public String shareShopping(Share share, HttpSession session, String userId, String shopId){
+    public String shareShopping(Share share, String userId, String shopId){
         Utilisateur user = userRepository.getOne(Long.parseLong(userId));
         Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
         shopping.add(user);
@@ -130,6 +130,28 @@ public class ShoppingController {
         shareRepository.save(share);
         return "redirect:/shopping/all";
 
+    }
+
+
+    @GetMapping("/shared")
+    public String sharedShopping(Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Utilisateur user = userService.findUserByEmail(auth.getName());
+        System.out.println(user.getName());
+        List<Shopping>shoppings1 = shoppingRepository.findByShared(true);
+        List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+        List<Shopping> shoppings= new ArrayList<>();
+        for (Shopping shopping: shoppings1){
+            for (int i=0; i<shoppings2.size(); i++){
+                if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                    shoppings.add(shoppings2.get(i));
+
+                }
+            }
+
+        }
+        model.addAttribute("shoppings", shoppings);
+        return "shared";
     }
     @GetMapping("/update/{shopId}")
     public String updatedShopping(Model model, @PathVariable Long shopId){
