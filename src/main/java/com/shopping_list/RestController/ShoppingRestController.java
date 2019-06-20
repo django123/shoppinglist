@@ -3,9 +3,8 @@ package com.shopping_list.RestController;
 
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
-import com.shopping_list.Repository.UtilisateurRepository;
+import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Shopping;
-import com.shopping_list.entities.Task;
 import com.shopping_list.entities.Utilisateur;
 import com.shopping_list.service.MailService;
 import io.swagger.annotations.Api;
@@ -16,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +29,7 @@ public class ShoppingRestController {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private UserRepository userRepository;
 
 
     @GetMapping
@@ -80,7 +78,7 @@ public class ShoppingRestController {
     @PostMapping("/email/user")
     public void sharedShopping(Shopping shopping, Long id, String nom, String commentaire, HttpSession session, String userId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = utilisateurRepository.getOne(Long.parseLong(userId));
+        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
         shopping.setShopId(id);
         shopping.setName(nom);
         shopping.setComment(commentaire);

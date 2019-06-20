@@ -1,14 +1,13 @@
 package com.shopping_list.service;
 
 import com.shopping_list.Repository.RoleRepository;
-import com.shopping_list.Repository.UtilisateurRepository;
+import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Role;
 import com.shopping_list.entities.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService{
 
     @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Override
@@ -36,7 +35,7 @@ public class UserServiceImpl implements UserService{
             roleRepository.save(role);
             user.setRoles(new HashSet<Role>(Arrays.asList(role)));
         }
-        utilisateurRepository.save(user);
+        userRepository.save(user);
 
     }
 
@@ -44,12 +43,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<Utilisateur> findByName(String name) {
-        return  utilisateurRepository.findByName(name);
+        return  userRepository.findByName(name);
     }
 
     @Override
     public Utilisateur findUserByEmail(String email) {
-        return utilisateurRepository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
 

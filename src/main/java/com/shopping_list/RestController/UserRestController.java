@@ -1,7 +1,6 @@
 package com.shopping_list.RestController;
 import com.shopping_list.Repository.RoleRepository;
-import com.shopping_list.Repository.UtilisateurRepository;
-import com.shopping_list.entities.Utilisateur;
+import com.shopping_list.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ public class UserRestController {
     private RoleRepository roleRepository;
 
     @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;

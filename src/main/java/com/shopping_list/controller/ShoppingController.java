@@ -3,12 +3,11 @@ package com.shopping_list.controller;
 import com.shopping_list.Repository.ShareRepository;
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
-import com.shopping_list.Repository.UtilisateurRepository;
+import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
 import com.shopping_list.entities.Utilisateur;
-import com.shopping_list.service.MailService;
 import com.shopping_list.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -40,7 +39,7 @@ public class ShoppingController {
     private UserService userService;
 
     @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private UserRepository userRepository;
 
     @GetMapping("/all")
     public String findAll(Model model){
@@ -87,7 +86,7 @@ public class ShoppingController {
         }
 
         model.addAttribute("tasks_done",numbers);
-        model.addAttribute("user", utilisateurRepository.findAll());
+        model.addAttribute("user", userRepository.findAll());
         model.addAttribute("shoppings", shoppings);
         model.addAttribute("tasks", new Task());
         model.addAttribute("share", new Share());
@@ -121,7 +120,7 @@ public class ShoppingController {
 
     @PostMapping("/share/user")
     public String shareShopping(Share share, HttpSession session, String userId, String shopId){
-        Utilisateur user = utilisateurRepository.getOne(Long.parseLong(userId));
+        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
         Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
         shopping.add(user);
         share.setUserId(user.getUserId());
