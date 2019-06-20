@@ -1,26 +1,191 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Required meta tags-->
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title Page-->
+    <title>Archived shopping list</title>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script th:src="@{/js/dataTables/shoppings.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <!-- thymeleaft -->
+    <link th:href="@{/css/dataTablesResponsive.css}" rel="stylesheet">
+    <style>
+        .pagination>li>a, .pagination>li>span { border-radius: 50% !important;margin: 0 5px;}
+    </style>
+
 </head>
-<body>
+<body class="userCrewWrapper">
 <div th:replace="fragments/header.html:: nav"></div>
-<div class="container">
-    <div class="row">
-        <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">Well done!</h4>
-            <p>Votre course a été partagé</p>
-            <hr>
-            <p class="mb-0">thank you for coming back to us.</p>
-        </div>
-    </div>
+
+
+<div  id="content" style="padding-right: 15px;padding-left: 15px">
+    <!--navigation-->
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<!-- showing theses-->
+<div  style="margin-top: 5.5rem;">
+    <table class="table text-center table-hover dt-responsive  table-lg display" id="shopping">
+        <thead class="text-white bg-secondary">
+        <tr>
+            <th>Name</th>
+            <th>Comment</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Tasks (Done)</th>
+            <th>sharer</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="shopping,i : ${shoppings}">
+            <td th:text="${shopping.name}"></td>
+            <td th:text="${shopping.comment}"></td>
+            <td th:text="${shopping.date}"></td>
+            <td th:text="${shopping.statut}"></td>
+            <td th:if="${#lists.size(shopping.tasks)}<= 0">
+                <span th:text="${#lists.size(shopping.tasks)}"></span>
+                <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
+            </td>
+            <td th:unless="${#lists.size(shopping.tasks)}<= 0">
+                <span th:text="${#lists.size(shopping.tasks)}"></span>
+                <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
+            </td>
+            <td th:text="${shopping.saverName}"></td>
+            <td>
+                <!--<a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>-->
+                <a class="btn" th:href="@{/shopping/update/{shopId}(shopId=${shopping.shopId})}" ><i class="fa fa-pencil"></i></a>
+                <a class="btn" href="#" data-toggle="modal" data-target="#modal-shared" th:attr="data-target='#modal-shared'">
+                    <i class="fa fa-share-alt"></i>
+                </a>
+
+                <a class="btn" th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:if="${shopping.getStatut()}==true">
+                    <i class="fa fa-file-archive-o"></i>
+                </a>
+            </td>
+            <div class="modal" tabindex="-1" role="dialog" th:id="modal-shared">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sharing by Email</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/shopping/share/user}" method="post" th:object="${share}">
+
+                                <div style="display: none">
+                                    <input type="text"  name="shopId" th:value="${shopping.shopId}"/>
+                                </div>
+                                <select name="userId" type="text">
+                                    <option th:each="user : ${user}" th:value="${user.userId}" th:text="${user.name}">
+                                    </option>
+                                </select>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal card modal-warning alert-warning fade in" th:id="modal-deleted+${shopping.shopId}" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header text-center alert-info">
+                            <h5 class="modal-title">Delete Shopping</h5>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h3>Do you want to delete this shopping?</h3>
+                        </div>
+                        <div class="modal-footer text-center">
+                            <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
+                            <a  class="btn btn-success"  th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}"><i class="fa fa-trash"></i>&nbsp;Yes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal card modal-warning alert-warning fade in" th:id="modal-list" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header text-center alert-info">
+                            <h5 class="modal-title">Task List</h5>
+                        </div>
+                        <div class="modal-body text-center">
+                            <ul th:each="task : ${shopping.tasks}">
+                                <li th:text="${task.name}"></li>
+                                <p th:text="${task.description}"></p>
+                                <p th:if="${task.status}==true">
+                                    <span>DONE</span>
+                                    <a th:href="@{/task/active/{taskId}(taskId=${task.taskId})}">
+                                        <i class="fa fa-check-circle-o"></i>
+                                    </a>
+                                </p>
+                                <p th:unless="${task.status}==true">
+                                    <span>TODO</span>
+                                    <a th:href="@{/task/active/{taskId}(taskId=${task.taskId})}">
+                                        <i class="fa fa-check-circle"></i>
+                                    </a>
+                                </p>
+                                <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${task.taskId}" >
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header text-center alert-info">
+                                                <h5 class="modal-title">Delete task</h5>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <h3>Do you want to delete this task?</h3>
+                                            </div>
+                                            <div class="modal-footer text-center">
+                                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
+                                                <a  class="btn btn-success"  th:href="@{/task/delete/}+${task.taskId}"><i class="fa fa-trash"></i>&nbsp;Yes</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </ul>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<a class="btn btn-primary" th:href="@{/shopping/form}" style="border-radius: 20%; position:fixed;bottom:1rem;right:6%;">
+    Add New Shopping</a>
+</a>
+
+</div>
+<!-- scripts-->
+<script th:src="@{/js/dataTablesResponsive.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+        $('#back').on('click', function(){
+            $('#sidebar').toggleClass('active')
+        });
+    });
+</script>
 </body>
+
 </html>

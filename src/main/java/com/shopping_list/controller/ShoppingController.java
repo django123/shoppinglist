@@ -113,11 +113,17 @@ public class ShoppingController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
         shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
+        shopping.setSaverName(user.getName());
         shopping.setArchived(false);
         shoppingRepository.save(shopping);
         return "shopping/redirection";
     }
 
+    @GetMapping("/share")
+    public String shareShopping(){
+
+        return "shared";
+    }
     @PostMapping("/share/user")
     public String shareShopping(Share share, HttpSession session, String userId, String shopId){
         Utilisateur user = userRepository.getOne(Long.parseLong(userId));
@@ -127,7 +133,7 @@ public class ShoppingController {
         share.setShopId(shopping.getShopId());
         shoppingRepository.save(shopping);
         shareRepository.save(share);
-        return "redirect:/shopping/all";
+        return "redirect:/shopping/share";
 
     }
     @GetMapping("/update/{shopId}")
@@ -177,8 +183,20 @@ public class ShoppingController {
 
     @GetMapping("/archive")
     public String findAllArchive(Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Utilisateur user = userService.findUserByEmail(auth.getName());
         List<Shopping>shoppings = shoppingRepository.findByArchived(true);
-        model.addAttribute("shoppings", shoppings);
+        List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+        List<Shopping>shoppings1 = new ArrayList<>();
+        for(Shopping shopping : shoppings){
+            for (int i=0; i<shoppings2.size(); i++ ){
+                if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                    System.out.println("je suis dedeans");
+                    shoppings1.add(shopping);
+                }
+            }
+        }
+        model.addAttribute("shoppings", shoppings1);
         return "shopping/archive";
     }
 
