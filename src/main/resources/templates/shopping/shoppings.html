@@ -42,6 +42,7 @@
             <th>Date</th>
             <th>Status</th>
             <th>Tasks (Done)</th>
+            <th>Sharer</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -59,10 +60,11 @@
                 <span th:text="${#lists.size(shopping.tasks)}"></span>
                 <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
             </td>
+            <td th:text="${shopping.saverName}"></td>
             <td>
                 <a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
                 <a class="btn" th:href="@{/shopping/update/{shopId}(shopId=${shopping.shopId})}" ><i class="fa fa-pencil"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}">
+                <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}" th:unless="${shopping.getShared()}==true">
                     <i class="fa fa-trash" ></i>
                 </a>
                 <a class="btn" href="#" data-toggle="modal" data-target="#modal-shared" th:attr="data-target='#modal-shared'">
@@ -151,7 +153,7 @@
                                             </div>
                                             <div class="modal-footer text-center">
                                                 <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
-                                                <a  class="btn btn-success"  th:href="@{/task/delete/}+${task.taskId}"><i class="fa fa-trash"></i>&nbsp;Yes</a>
+                                                <a  class="btn btn-success"  th:href="@{/task/delete/}+${task.taskId}" ><i class="fa fa-trash"></i>&nbsp;Yes</a>
                                             </div>
                                         </div>
                                     </div>

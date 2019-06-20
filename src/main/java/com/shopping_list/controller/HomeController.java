@@ -29,7 +29,7 @@ public class HomeController {
         model.addAttribute("userName", "Welcome " + user.getName());
 
 
-        return "index";
+        return "shopping/shoppings";
     }
 
     @GetMapping("/login")

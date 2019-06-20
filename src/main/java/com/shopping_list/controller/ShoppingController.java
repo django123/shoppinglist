@@ -114,7 +114,7 @@ public class ShoppingController {
         shopping.setSaverName(user.getName());
         shopping.setArchived(false);
         shoppingRepository.save(shopping);
-        return "shopping/redirection";
+        return "shopping/detail";
     }
 
     @GetMapping("/shared")

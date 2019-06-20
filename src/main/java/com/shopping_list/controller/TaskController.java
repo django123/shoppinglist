@@ -74,13 +74,14 @@ public class TaskController {
     }
 
     @GetMapping("/delete/{taskId}")
-    public String deleteById(@PathVariable Long taskId, Model model) {
+    public String deleteById(@PathVariable Long taskId, Model model, HttpSession session) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +taskId));
         System.out.println("task id: " + task.getTaskId());
+        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         taskRepository.delete(task);
         model.addAttribute("tasks", taskRepository.findAll());
-        return "redirect:/shopping/all";
+        return "redirect:/shopping/detail/"+shopping.getShopId() ;
     }
 
     @GetMapping("/detail/{taskId}")
@@ -98,14 +99,16 @@ public class TaskController {
         return "task/user/tasks";
     }
     @GetMapping("/active/{taskId}")
-    public String active(@PathVariable Long taskId){
+    public String active(@PathVariable Long taskId, HttpSession session){
         Task task = taskRepository.getOne(taskId);
         if (task.getStatus()== true){
             task.setStatus(false);
         }else {
             task.setStatus(true);
         }
+
+        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         taskRepository.save(task);
-        return "redirect:/shopping/all";
+        return "redirect:/shopping/detail/"+shopping.getShopId() ;
     }
 }
