@@ -119,11 +119,6 @@ public class ShoppingController {
         return "shopping/redirection";
     }
 
-    @GetMapping("/share")
-    public String shareShopping(){
-
-        return "shared";
-    }
     @PostMapping("/share/user")
     public String shareShopping(Share share, HttpSession session, String userId, String shopId){
         Utilisateur user = userRepository.getOne(Long.parseLong(userId));
@@ -133,7 +128,7 @@ public class ShoppingController {
         share.setShopId(shopping.getShopId());
         shoppingRepository.save(shopping);
         shareRepository.save(share);
-        return "redirect:/shopping/share";
+        return "redirect:/shopping/all";
 
     }
     @GetMapping("/update/{shopId}")
