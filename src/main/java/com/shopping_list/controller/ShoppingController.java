@@ -148,7 +148,7 @@ public class ShoppingController {
         share.setShopId(shopping.getShopId());
         shoppingRepository.save(shopping);
         shareRepository.save(share);
-        return "redirect:/shopping/shared";
+        return "redirect:/shopping/all";
 
     }
 

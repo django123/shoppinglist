@@ -35,7 +35,7 @@
     </div>
     <div class="card card-cascade col-md-8">
         <div class="card-body card-body-cascade text-center ">
-            <table class="table text-center table-hover table-lg display " id="task">
+            <table class="table text-left table-hover table-lg display " id="task">
                 <thead class="text-white bg-secondary">
                 <tr>
                     <th>Task name</th>
@@ -60,7 +60,7 @@
                         <a  th:href="@{/task/update/{taskId}(taskId=${task.taskId})}" >
                             <i class="fa fa-pencil"></i>
                         </a>
-                        <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${task.taskId}"  class="btn" >
+                        <a data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${task.taskId}"  class="btn" th:unless="${shopping.getShared()}==true">
                             <i class="fa fa-trash" ></i>
                         </a>
                     </td>

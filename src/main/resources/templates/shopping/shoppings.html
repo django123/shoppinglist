@@ -34,7 +34,7 @@
 
 <!-- showing theses-->
 <div  style="margin-top: 5.5rem;">
-    <table class="table text-center table-hover dt-responsive  table-lg display" id="shopping">
+    <table class="table text-left table-hover dt-responsive  table-lg display" id="shopping">
         <thead class="text-white bg-secondary">
         <tr>
             <th>Name</th>
@@ -51,7 +51,8 @@
             <td th:text="${shopping.name}"></td>
             <td th:text="${shopping.comment}"></td>
             <td th:text="${shopping.date}"></td>
-            <td th:text="${shopping.statut}"></td>
+            <td  th:if="${shopping.statut}==true"><span>DONE</span></td>
+            <td  th:unless="${shopping.statut}==true"><span>UNFINISHED</span></td>
             <td th:if="${#lists.size(shopping.tasks)}<= 0">
                 <span th:text="${#lists.size(shopping.tasks)}"></span>
                 <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
@@ -60,7 +61,8 @@
                 <span th:text="${#lists.size(shopping.tasks)}"></span>
                 <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
             </td>
-            <td th:text="${shopping.saverName}"></td>
+            <td th:text="${shopping.saverName}" th:if="${shopping.shared}==true"></td>
+            <td th:unless="${shopping.shared}==true"><span>Not shared</span></td>
             <td>
                 <a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
                 <a class="btn" th:href="@{/shopping/update/{shopId}(shopId=${shopping.shopId})}" ><i class="fa fa-pencil"></i></a>
