@@ -4,6 +4,7 @@ import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
+import com.shopping_list.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +17,21 @@ public class TaskRestController {
 
 
     @Autowired
+    private TaskService taskService;
+
+    @Autowired
     private TaskRepository taskRepository;
     @Autowired
     private ShoppingRepository shoppingRepository;
 
     @GetMapping
     public List<Task>findTasks(){
-       return  taskRepository.findAll();
+       return  taskService.findAllTask();
     }
 
     @GetMapping("/find/{taskId)")
-    public Optional<Task> findTaskById(@PathVariable Long taskId){
-        return taskRepository.findById(taskId);
+    public Task findTaskById(@PathVariable Long taskId){
+        return taskService.findTaskId(taskId);
     }
 
     @PostMapping("/create")
@@ -35,12 +39,12 @@ public class TaskRestController {
         Shopping shopping = shoppingRepository.getOne(shopId);
         task.setStatus(false);
         task.setShopping(shopping);
-        return taskRepository.save(task);
+        return taskService.createTask(task);
     }
 
     @DeleteMapping("/delete/{taskId}")
     public void deleteTask(@PathVariable Long taskId){
-        taskRepository.deleteById(taskId);
+        taskService.deleteTask(taskId);
     }
 
     @PutMapping("/update/{taskId}")
