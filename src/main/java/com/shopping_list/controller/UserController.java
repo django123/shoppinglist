@@ -25,7 +25,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/user")
-public class UtilisateurController {
+public class UserController {
 
     @Autowired
     private RoleRepository roleRepository;
