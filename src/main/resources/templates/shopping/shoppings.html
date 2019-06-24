@@ -66,7 +66,8 @@
             <td>
                 <a class="btn" th:href="@{/shopping/detail/}+${shopping.shopId}" ><i class="fa fa-eye"></i></a>
                 <a class="btn" th:href="@{/shopping/update/{shopId}(shopId=${shopping.shopId})}" ><i class="fa fa-pencil"></i></a>
-                <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}" th:unless="${shopping.getShared()}==true">
+                <a class="btn" data-toggle="modal" data-target="#modal-deleted" th:attr="data-target='#modal-deleted'+${shopping.shopId}" th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}"
+                   th:unless="${shopping.getShared()}==true">
                     <i class="fa fa-trash" ></i>
                 </a>
                 <a class="btn" href="#" data-toggle="modal" data-target="#modal-shared" th:attr="data-target='#modal-shared'">

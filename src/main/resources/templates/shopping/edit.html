@@ -32,9 +32,18 @@
                                     <textarea class="form-control rounded-0" id="comment" rows="3"  name="comment" th:value="${shopping.comment}"
                                               th:text="${shopping.comment}"></textarea>
          </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="saverName" name="saverName" th:value="${shopping.saverName}" style="display: none"/>
+        </div>
          <div class="form-group">
                 <input type="text" class="form-control" id="archived" name="archived" style="display: none" value=""/>
          </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="shared" name="shared" style="display: none" value=""/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="statut" name="statut" style="display: none" value=""/>
+        </div>
 
              <a type="button" class="btn btn-warning pull-left" data-dismiss="modal" th:href="@{/shopping/all}"><i class="fa fa-undo"></i>&nbsp;Back</a>&nbsp;
              <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Save</button>

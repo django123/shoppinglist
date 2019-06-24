@@ -42,9 +42,7 @@ public class TaskController {
 
     @PostMapping("/save")
     public String save(@Valid Task task, Long shopId, HttpSession session){
-        System.out.println(shopId);
         Shopping shopping = shoppingRepository.findById(shopId).get();
-        System.out.println(shopping);
         task.setStatus(false);
         task.setShopping(shopping);
         session.setAttribute("shopId",shopId);
@@ -58,6 +56,7 @@ public class TaskController {
         model.addAttribute("task", task);
         return "task/update";
     }
+
     @PostMapping("/update/{taskId}")
     public String save(@Valid Task task, @PathVariable("taskId") Long taskId,
                        BindingResult result, Model model, HttpSession session){

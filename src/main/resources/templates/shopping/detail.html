@@ -64,39 +64,7 @@
                             <i class="fa fa-trash" ></i>
                         </a>
                     </td>
-                    <!--<div class="modal card modal-warning alert-warning fade in" th:id="modal-edit" >
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header text-center alert-info">
-                                    <h5 class="modal-title">Edit task</h5>
-                                </div>
-                                <div class="modal-body text-center">
-                                    <form action="#" th:object="${task}" th:action="@{/task/update/{taskId}(taskId=${task.taskId})}" method="post">
-                                        <div class="form-group">
-                                            <label for="name" class="col-form-label">Task name:</label>
-                                            <input type="text" class="form-control" id="name" name="name" th:value="${task.name}"/>
-                                        </div>
 
-                                        <div class="form-group">
-                                            <label for="description" class="col-form-label">Description:</label>
-                                            <input type="text" class="form-control" id="description" name="description" th:value="${task.description}"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="status" name="status" style="display: none" th:value="${task.status}"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="hidden" class="form-control" id="shopId" name="shopId" th:value="${shopping.shopId}">
-                                        </div>
-
-                                        <div class="modal-footer text-center">
-                                            <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
-                                            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Register</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
                     <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${task.taskId}" >
                         <div class="modal-dialog">
                             <div class="modal-content">

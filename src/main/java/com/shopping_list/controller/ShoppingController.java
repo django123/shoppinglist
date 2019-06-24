@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.*;
 
 
@@ -45,7 +46,6 @@ public class ShoppingController {
     public String findAll(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
-        System.out.println(user.getName());
         List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
         List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
         List<Shopping> shoppings= new ArrayList<>();
@@ -56,6 +56,7 @@ public class ShoppingController {
 
                 }
             }
+
         }
         for(Shopping shopping: shoppings){
             List<Task>tasks = new ArrayList<>();
@@ -69,6 +70,7 @@ public class ShoppingController {
             if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
                 shopping.setStatut(true);
             }
+            System.out.println(shoppings);
         }
         List<Integer> numbers= new ArrayList<>();
         for (Shopping shopping : shoppings){
@@ -87,6 +89,7 @@ public class ShoppingController {
         model.addAttribute("tasks_done",numbers);
         model.addAttribute("user", userRepository.findAll());
         model.addAttribute("shoppings", shoppings);
+
         model.addAttribute("tasks", new Task());
         return "shopping/shoppings";
     }
@@ -107,14 +110,16 @@ public class ShoppingController {
     }
 
     @PostMapping("/save")
-    public String save(Shopping shopping){
+    public String save(Shopping shopping, HttpSession session){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
         shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
         shopping.setSaverName(user.getName());
         shopping.setArchived(false);
+        shopping.setStatut(false);
+        shopping.setShared(false);
         shoppingRepository.save(shopping);
-        return "shopping/detail";
+        return "redirect:/shopping/all";
     }
 
     @GetMapping("/shared")
@@ -159,8 +164,10 @@ public class ShoppingController {
         return "shopping/edit";
     }
     @PostMapping("/update/{shopId}")
-    public String save(Shopping shopping, @PathVariable Long shopId, BindingResult result,
-                       String name, String comment, String archived){
+    public String save(@Valid Shopping shopping, @PathVariable("shopId") Long shopId, BindingResult result,
+                       String name, String comment, String archived, String statut, String saverName,
+                       String shared, Model model){
+
 
         if(result.hasErrors()) {
             shopping.setShopId(shopId);
@@ -169,8 +176,12 @@ public class ShoppingController {
         shopping.setName(name);
         shopping.setComment(comment);
         shopping.setArchived(Boolean.parseBoolean(archived));
-        Shopping shop = shoppingRepository.save(shopping);
-        return "redirect:/shopping/detail/" +shop.getShopId() ;
+        shopping.setShared(Boolean.parseBoolean(shared));
+        shopping.setStatut(Boolean.parseBoolean(statut));
+        shopping.setSaverName(saverName);
+        shoppingRepository.save(shopping);
+        model.addAttribute("shoppings", shoppingRepository.findAll());
+        return "redirect:/shopping/all";
     }
 
     @GetMapping("/delete/{shopId}")
@@ -207,7 +218,6 @@ public class ShoppingController {
         for(Shopping shopping : shoppings){
             for (int i=0; i<shoppings2.size(); i++ ){
                 if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
-                    System.out.println("je suis dedeans");
                     shoppings1.add(shopping);
                 }
             }
