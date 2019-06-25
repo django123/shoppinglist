@@ -49,6 +49,7 @@
                         <div style="display: none">
                             <input type="text"  name="shopId" th:value="${shopping.shopId}"/>
                         </div>
+                        <div></div>
                         <select name="userId" type="text">
                             <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.name}">
                             </option>
