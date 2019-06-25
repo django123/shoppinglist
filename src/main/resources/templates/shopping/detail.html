@@ -31,6 +31,35 @@
         </div>
         <div class="card-footer text-muted text-center">
             <h3 th:text="${shopping.date}"></h3>
+            <button type="button" class=" btn-primary"data-toggle="modal" data-target="#modal-shared">Shared</button>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" th:id="modal-shared">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sharing by Email</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/shopping/share/user}" method="post" th:object="${share}">
+
+                        <div style="display: none">
+                            <input type="text"  name="shopId" th:value="${shopping.shopId}"/>
+                        </div>
+                        <select name="userId" type="text">
+                            <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.name}">
+                            </option>
+                        </select>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary ">Send</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
     <div class="card card-cascade col-md-8">

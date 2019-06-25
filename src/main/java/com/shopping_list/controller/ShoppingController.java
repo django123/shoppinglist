@@ -87,7 +87,8 @@ public class ShoppingController {
         }
 
         model.addAttribute("tasks_done",numbers);
-        model.addAttribute("user", userRepository.findAll());
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("user", user);
         model.addAttribute("shoppings", shoppings);
 
         model.addAttribute("tasks", new Task());
@@ -99,6 +100,7 @@ public class ShoppingController {
         Optional<Shopping> optional=shoppingRepository.findById(shopId);
         session.setAttribute("shopId", optional.get().getShopId());
         model.addAttribute("shopping", optional.get());
+        model.addAttribute("users",userRepository.findAll());
         return "shopping/detail";
 
     }
@@ -123,10 +125,9 @@ public class ShoppingController {
     }
 
     @GetMapping("/shared")
-    public String sharedShopping(Model model){
+    public String sharedShopping(Model model, HttpSession session){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
-        System.out.println(user.getName());
         List<Shopping>shoppings1 = shoppingRepository.findByShared(true);
         List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
         List<Shopping> shoppings3= new ArrayList<>();
@@ -140,7 +141,7 @@ public class ShoppingController {
 
         }
         model.addAttribute("shared", shoppings3);
-        return "shared";
+        return "shopping/shared";
     }
 
     @PostMapping("/share/user")
