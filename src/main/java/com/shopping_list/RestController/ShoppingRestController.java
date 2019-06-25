@@ -7,6 +7,8 @@ import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Utilisateur;
 import com.shopping_list.service.MailService;
+import com.shopping_list.service.ShoppingService;
+import com.shopping_list.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,71 +29,46 @@ public class ShoppingRestController {
     private ShoppingRepository shoppingRepository;
 
     @Autowired
+    private ShoppingService shoppingService;
+
+    @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
 
     @GetMapping
     public List<Shopping> findAllShopping(){
-        List<Shopping>shoppings = shoppingRepository.findAll();
-        /*for(Shopping shopping: shoppings){
-            List<Task>tasks = new ArrayList<>();
-            tasks.addAll(shopping.getTasks());
-            List<Task>tasks1=new ArrayList<>();
-            for (Task task:tasks){
-                if (task.getStatus()==true){
-                    tasks1.add(task);
-                }
-            }
-            if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
-                shopping.setStatut(true);
-            }
-        }*/
-        return shoppingRepository.findAll();
+        List<Shopping>shoppings = shoppingService.findAllShopping();
+        return shoppingService.findAllShopping();
     }
 
     @GetMapping("/shopping/{shopId}")
-    public Optional<Shopping> findShopping(@PathVariable Long shopId){
+    public Shopping findShopping(@PathVariable Long shopId){
 
-        return shoppingRepository.findById(shopId);
+        return shoppingService.findShoppingId(shopId);
     }
 
     @PostMapping("/create")
     public Shopping createShopping(@RequestBody Shopping shopping){
-        return shoppingRepository.save(shopping);
+        return shoppingService.createShopping(shopping);
 
     }
 
     @PutMapping("/update/{shopId}")
     public Shopping updateShopping(@RequestBody Shopping shopping, @PathVariable Long shopId){
-        shoppingRepository.findById(shopId);
-        return shoppingRepository.save(shopping);
+        Shopping currentShopping = shoppingService.findShoppingId(shopId);
+        currentShopping.setName(shopping.getName());
+        currentShopping.setComment(shopping.getComment());
+        currentShopping.setDate(shopping.getDate());
 
+        return shoppingService.updateShopping(currentShopping);
     }
 
     @DeleteMapping("/delete/{shopId}")
     public void deleteShopping(@PathVariable Long shopId){
-       shoppingRepository.deleteById(shopId);
+       shoppingService.deleteShopping(shopId);
     }
 
-    @PostMapping("/email/user")
-    public void sharedShopping(Shopping shopping, Long id, String nom, String commentaire, HttpSession session, String userId){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
-        shopping.setShopId(id);
-        shopping.setName(nom);
-        shopping.setComment(commentaire);
-        //shopping.setDate(dte);
-        shoppingRepository.save(shopping);
-        MailService backMessage = new MailService();
-        backMessage.sendSimpleMessage(
-                user.getEmail(),
-                "Notification de l'ajout d'un shopping, Titre : "+ shopping.getName(),
-                user.getName() + " vous notifi qu'il vous a partagé sa liste de course : " + "\n"+
-                        " veuillez bien prendre connaissance de cette dernière intitulé:  " +"\n"
-                        +shopping.getName()
-        );
 
-    }
 }
