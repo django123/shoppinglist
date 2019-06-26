@@ -134,6 +134,30 @@ public class ShoppingController {
 
     }
 
+
+
+    @GetMapping("/edit/{shopId}")
+    public String showUpdatedForm(Model model, @PathVariable Long shopId){
+        Shopping shopping =  shoppingRepository.findById(shopId).get();
+        model.addAttribute("shopping", shopping);
+        return "shoppings/edit";
+    }
+    @PostMapping("/update/{shopId}")
+    public String updateShopping(@Valid Shopping shopping, @PathVariable("shopId") Long shopId, BindingResult result,
+                       String name, String comment, String archived, String statut, String saverName,
+                       String shared, Model model){
+        shopping.setName(name);
+        shopping.setComment(comment);
+        shopping.setArchived(Boolean.parseBoolean(archived));
+        shopping.setShared(Boolean.parseBoolean(shared));
+        shopping.setStatut(Boolean.parseBoolean(statut));
+        shopping.setSaverName(saverName);
+        Utilisateur user = userRepository.findByName(shopping.getSaverName());
+        shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
+        shoppingRepository.save(shopping);
+        return "redirect:/shopping/all";
+    }
+
     @GetMapping("/shared")
     public String sharedShopping(Model model, HttpSession session){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -167,30 +191,6 @@ public class ShoppingController {
         return "redirect:/shopping/all";
 
     }
-
-    @GetMapping("/edit/{shopId}")
-    public String showUpdatedForm(Model model, @PathVariable Long shopId){
-        Shopping shopping =  shoppingRepository.findById(shopId).get();
-        model.addAttribute("shopping", shopping);
-        return "shoppings/edit";
-    }
-    @PostMapping("/update/{shopId}")
-    public String updateShopping(@Valid Shopping shopping, @PathVariable("shopId") Long shopId, BindingResult result,
-                       String name, String comment, String archived, String statut, String saverName,
-                       String shared, Model model){
-        shopping.setName(name);
-        shopping.setComment(comment);
-        shopping.setArchived(Boolean.parseBoolean(archived));
-        shopping.setShared(Boolean.parseBoolean(shared));
-        shopping.setStatut(Boolean.parseBoolean(statut));
-        shopping.setSaverName(saverName);
-        Utilisateur user = userRepository.findByName(shopping.getSaverName());
-        shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
-        shoppingRepository.save(shopping);
-        return "redirect:/shopping/all";
-    }
-
-
 
     @GetMapping("/archived/{shopId}")
     public String archived(@PathVariable Long shopId){

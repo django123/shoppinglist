@@ -52,14 +52,14 @@ public class TaskController {
         task.setShopping(shopping);
         session.setAttribute("shopId",shopId);
         taskRepository.save(task);
-        return "redirect:/shopping/show/" +session.getAttribute("shopId") ;
+        return "redirect:/shopping/detail/" +session.getAttribute("shopId") ;
     }
 
     @GetMapping("/update/{taskId}")
     public String updatedTask(Model model, @PathVariable Long taskId){
         Task task =  taskRepository.findById(taskId).get();
         model.addAttribute("task", task);
-        return "task/update";
+        return "tasks/edit";
     }
 
     @PostMapping("/update/{taskId}")

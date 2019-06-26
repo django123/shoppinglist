@@ -12,7 +12,7 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-<div th:replace="fragments/header.html:: nav"></div>
+
 <section class="login-block">
     <div class="container">
         <div class="row">
@@ -32,7 +32,12 @@
                         <label for="password" class="col-4 col-form-label">Password</label>
                         <input id="password" name="password" placeholder="password" class="form-control here" type="password"  th:field="*{password}">
                     </div>
-                    <div class="form-check mt-3">
+                    <div class="form-check ">
+                        <label class="form-check-label mt-1">
+                            <p  class="form-check-input">are you already registered?
+                                <a th:href="@{/login}"><strong>Login</strong></a>
+                            </p>
+                        </label>
                         <button type="submit" class="btn btn-login float-right">Submit</button>
                     </div>
                 </form>

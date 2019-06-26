@@ -14,13 +14,16 @@
                 <div class="row">
                     <div class="col-md-12">
                         <th:block th:include="shoppingTemplate/showSingle"></th:block>
+                        <th:block th:include="fragments/button"></th:block>
+
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-
+    <th:block th:include="fragments/taskModal"></th:block>
+    <th:block th:include="fragments/shareModal"></th:block>
     <th:block th:include="fragments/footer"></th:block>
 </div>
 

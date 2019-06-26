@@ -1,6 +1,6 @@
 <div class="card">
     <div class="header">
-        <h4 class="title">Shoppings</h4>
+        <h4 class="title"><strong>Shoppings</strong></h4>
         <p class="category">shows all available Shoppings</p>
     </div>
 
@@ -37,12 +37,12 @@
                 <td th:unless="${shopping.shared}==true"><span>Not shared</span></td>
                 <td>
                     <a  th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:if="${shopping.getStatut()}==true" class="btn btn-warning">
-
+                      Archive
                     </a>
                 </td>
                 <td><a th:href="@{/shopping/detail/}+${shopping.shopId}" class="btn btn-primary">View</a></td>
                 <td><a th:href="@{/shopping/edit/{shopId}(shopId=${shopping.shopId})}" class="btn btn-default">Edit</a></td>
-                <td><a  th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}" class="btn btn-danger">Delete</a></td>
+                <td><a  th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}" th:if="${shopping.saverName} == ${user.name}" class="btn btn-danger">Delete</a></td>
             </tr>
             </tbody>
         </table>
