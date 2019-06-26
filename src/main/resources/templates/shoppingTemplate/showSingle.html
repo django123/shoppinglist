@@ -1,0 +1,129 @@
+<div class="card">
+    <div class="content">
+        <p th:text="${shopping.name}"></p>
+        <p th:date="${shopping.date}"></p>
+        <p th:text="${shopping.comment}"></p>
+    </div>
+    <a class="btn btn-info"data-toggle="modal" data-target="#modal-shared">Shared</a>
+    <hr>
+    <div class="content table-responsive table-full-width">
+        <table class="table table-striped">
+            <thead>
+            <th>Task name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th></th>
+            <th></th>
+            </thead>
+            <tbody>
+            <tr th:each="task : ${shopping.tasks}">
+                <td th:text="${task.name}"></td>
+                <td th:text="${task.description}"></td>
+                <td th:if="${task.status}==true">
+                    <span>DONE</span>
+                    <a th:href="@{/task/active/{taskId}(taskId=${task.taskId})}"> <i class="fa fa-check-circle"></i></a>
+                </td>
+                <td th:unless="${task.status}==true">
+                    <span>TODO</span>
+                    <a th:href="@{/task/active/{taskId}(taskId=${task.taskId})}"><i class="fa fa-check-circle-o"></i></a>
+                </td>
+                <td><a th:href="@{/shopping/detail/}+${shopping.shopId}" class="btn btn-primary">View</a></td>
+                <td><a th:href="@{/task/update/{taskId}(taskId=${task.taskId})}"  class="btn btn-default">Edit</a></td>
+                <td>
+                    <a  data-toggle="modal" data-target="#modal-delete" th:attr="data-target='#modal-delete'+${task.taskId}" class="btn btn-danger">Delete</a>
+                </td>
+                <div class="modal card modal-warning alert-warning fade in" th:id="modal-delete+${task.taskId}" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header text-center alert-info">
+                                <h5 class="modal-title">Delete task</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <h3>Do you want to delete this task?</h3>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">Back</button>
+                                <a  class="btn btn-success"  th:href="@{/task/delete/}+${task.taskId}"><i class="fa fa-trash"></i>&nbsp;Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+        <a  class="btn btn-primary newBtn"><i class="fa fa-plus-circle"></i> Add Task</i></a>
+
+    </div>
+</div>
+
+
+<div class="col-xl-8 col-lg-7">
+    <div class="newTaskForm">
+        <form th:action="@{/task/save}" method="post" th:object="${tasks}">
+            <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input value="" type="text" class="form-control" id="name" name="name"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="content">Description:</label>
+                                <textarea value="" class="form-control" name="description"
+                                          id="content" rows="5">
+                            </textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="shopId" name="shopId" th:value="${shopping.shopId}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="save"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="modal" tabindex="-1" role="dialog" th:id="modal-shared">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Share Shopping</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/shopping/share/user}" method="post" th:object="${share}">
+
+                    <div style="display: none">
+                        <input type="text"  name="shopId" th:value="${shopping.shopId}"/>
+                    </div>
+                    <div></div>
+                    <select name="userId" type="text">
+                        <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.name}">
+                        </option>
+                    </select>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary ">Send</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+

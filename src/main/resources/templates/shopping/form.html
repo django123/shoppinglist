@@ -9,19 +9,49 @@
 </head>
 <body>
 <div th:replace="fragments/header.html:: nav"></div>
-<form method="post" th:object="${shopping}" th:action="@{/shopping/save}" enctype="multipart/form-data" class="text-center border border-light p-5">
+<div class="container my-5">
+    <h3> Add Shopping</h3>
+    <div class="card">
+        <div class="card-body">
+            <div class="col-md-10">
+                <form method="post" th:object="${shopping}" th:action="@{/shopping/save}">
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <label for="name" class="col-form-label">Name</label>
+                            <input type="text" id="name" class="form-control mb-4" placeholder="Name" th:field="*{name}">
+                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label for="date" class="col-form-label">Date</label>
+                            <input type="date" id="date" class="form-control mb-4" placeholder="date" th:field="*{date}">
 
-    <p class="h4 mb-4">Add  shopping</p>
+                        </div>
 
-    <input type="text" id="defaultContactFormName" class="form-control mb-4" placeholder="Name" th:field="*{name}">
+                        <div class="form-group col-md-8">
+                            <label for="comment" class="col-form-label">Comment</label>
+                            <textarea class="form-control rounded-0" id="comment" rows="3"  th:field="*{comment}"></textarea>
+                        </div>
 
-    <input type="date" id="defaultDate" class="form-control mb-4" placeholder="date" th:field="*{date}">
+                        <div class="col-md-6">
+                            <input type="submit" class="btn btn-primary" value="Add Shopping">
+                        </div>
 
-    <div class="form-group">
-        <textarea class="form-control rounded-0" id="exampleFormControlTextarea2" rows="3" placeholder="comment" th:field="*{comment}"></textarea>
+                        <div class="form-group col-md-8"></div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <button class="btn btn-info btn-block" type="submit">Submit</button>
+
+
+
+
+
+
+
 
 </form>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

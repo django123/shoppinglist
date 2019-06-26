@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="header">
+        <h4 class="title">Shoppings</h4>
+        <p class="category">shows all available Shoppings</p>
+    </div>
+
+    <div class="content table-responsive table-full-width">
+        <table class="table table-striped">
+            <thead>
+            <th>Name</th>
+            <th>Comment</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Tasks (Done)</th>
+            <th>Sharer</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            </thead>
+            <tbody>
+            <tr th:each="shopping,i : ${shoppings}">
+                <td th:text="${shopping.name}"></td>
+                <td th:text="${shopping.comment}"></td>
+                <td th:text="${shopping.date}"></td>
+                <td  th:if="${shopping.statut}==true"><span>DONE</span></td>
+                <td  th:unless="${shopping.statut}==true"><span>UNFINISHED</span></td>
+                <td th:if="${#lists.size(shopping.tasks)}<= 0">
+                    <span th:text="${#lists.size(shopping.tasks)}"></span>
+                    <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
+                </td>
+                <td th:unless="${#lists.size(shopping.tasks)}<= 0">
+                    <span th:text="${#lists.size(shopping.tasks)}"></span>
+                    <span>(<span th:text="${tasks_done[i.index]}"></span>)</span>
+                </td>
+                <td th:text="${shopping.saverName}" th:if="${shopping.shared}==true"></td>
+                <td th:unless="${shopping.shared}==true"><span>Not shared</span></td>
+                <td>
+                    <a  th:href="@{/shopping/archived/{shopId}(shopId=${shopping.shopId})}" th:if="${shopping.getStatut()}==true" class="btn btn-warning">
+
+                    </a>
+                </td>
+                <td><a th:href="@{/shopping/detail/}+${shopping.shopId}" class="btn btn-primary">View</a></td>
+                <td><a th:href="@{/shopping/edit/{shopId}(shopId=${shopping.shopId})}" class="btn btn-default">Edit</a></td>
+                <td><a  th:href="@{/shopping/delete/{shopId}(shopId=${shopping.shopId})}" class="btn btn-danger">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

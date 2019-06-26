@@ -10,9 +10,38 @@ import java.util.List;
 public interface ShoppingService {
 
 
-   List<Shopping>findAllShopping();
+    /**
+     * gets all Shoppings from Database
+     * @return  a List containing Shoppings
+     */
+    List<Shopping>findAllShopping();
+
+
+
+    /**
+     * finds a shopping  in DB by its ID
+     * @param shopId    Database ID of shopping
+     * @return          Book with ID = shopId
+     */
     Shopping findShoppingId(Long shopId);
-    Shopping createShopping(Shopping shopping);
-    Shopping updateShopping(Shopping shopping);
+
+
+
+    Long createShopping(Shopping shopping);
+
+
+
+    /**
+     * Updates a shopping  with
+     * @param shopId               ID of shopping
+     * @param shopping           shopping  details from EDIT FORM
+     */
+    void updateShopping(Shopping shopping, Long shopId);
+
+
+    /**
+     * delete a shopping from DB
+     * @param shopId    ID of Shopping
+     */
     void deleteShopping(Long shopId);
 }

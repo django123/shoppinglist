@@ -49,7 +49,7 @@ public class ShoppingRestController {
         return shoppingService.findShoppingId(shopId);
     }
 
-    @PostMapping("/create")
+/*    @PostMapping("/create")
     public Shopping createShopping(@RequestBody Shopping shopping){
         return shoppingService.createShopping(shopping);
 
@@ -63,7 +63,7 @@ public class ShoppingRestController {
         currentShopping.setDate(shopping.getDate());
 
         return shoppingService.updateShopping(currentShopping);
-    }
+    }*/
 
     @DeleteMapping("/delete/{shopId}")
     public void deleteShopping(@PathVariable Long shopId){

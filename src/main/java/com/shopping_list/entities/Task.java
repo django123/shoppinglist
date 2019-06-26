@@ -5,6 +5,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -13,6 +15,8 @@ public class Task implements Serializable{
     @Id
     @GeneratedValue
     private Long taskId;
+    @Column(name = "name")
+    @NotEmpty(message = "*Please enter name of task")
     private String name;
     private String description;
     private Boolean status;

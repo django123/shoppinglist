@@ -5,6 +5,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -15,6 +17,8 @@ public class Shopping implements Serializable {
     @Id
     @GeneratedValue
     private Long shopId;
+    @Column(name = "name")
+    @NotEmpty(message = "*Please enter name of shopping")
     private String name;
     private String comment;
     private Boolean statut;
@@ -137,4 +141,5 @@ public class Shopping implements Serializable {
     public void setShared(Boolean shared) {
         this.shared = shared;
     }
+
 }

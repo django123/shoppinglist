@@ -4,7 +4,11 @@ import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
+import com.shopping_list.entities.Utilisateur;
+import com.shopping_list.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +25,6 @@ import java.util.Optional;
 public class TaskController {
 
 
-
     @Autowired
     private TaskRepository taskRepository;
 
@@ -36,8 +39,10 @@ public class TaskController {
 
     @GetMapping("/form")
     public String form(Model model, Long shopId){
-        model.addAttribute("tasks", new Task());
-        return "task/form";
+        List<Shopping>shoppings=shoppingRepository.findAll();
+        model.addAttribute("task", new Task());
+        model.addAttribute("shoppings", shoppings);
+        return "tasks/new";
     }
 
     @PostMapping("/save")
@@ -47,7 +52,7 @@ public class TaskController {
         task.setShopping(shopping);
         session.setAttribute("shopId",shopId);
         taskRepository.save(task);
-        return "redirect:/shopping/detail/" +session.getAttribute("shopId") ;
+        return "redirect:/shopping/show/" +session.getAttribute("shopId") ;
     }
 
     @GetMapping("/update/{taskId}")
@@ -60,10 +65,6 @@ public class TaskController {
     @PostMapping("/update/{taskId}")
     public String save(@Valid Task task, @PathVariable("taskId") Long taskId,
                        BindingResult result, Model model, HttpSession session){
-        if (result.hasErrors()) {
-            task.setTaskId(taskId);
-            return "task/update";
-        }
         Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         task.setShopping(shopping);
         taskRepository.save(task);

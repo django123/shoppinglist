@@ -15,40 +15,52 @@
 </head>
 <body>
 <div th:replace="fragments/header.html:: nav"></div>
-
-    <form th:object="${shopping}" th:action="@{/shopping/update/{shopId}(shopId = ${shopping.shopId})}"method="post"  enctype="multipart/form-data" class=" border border-light p-5">
-        <p class="h4 mb-4 text-center">Edit  shopping</p>
-         <div class="form-group">
-             <label for="name" class="col-form-label">Shopping Name</label>
-             <input type="text" class="form-control" id="name" name="name" th:value="${shopping.name}"/>
-         </div>
-
-         <div class="form-group">
-             <label for="date" class="col-form-label">Date:</label>
-             <input type="date" class="form-control" id="date" name="date" th:value="${shopping.date}"/>
-        </div>
-         <div class="form-group">
-             <label for="comment" class="col-form-label">Comment:</label>
+<div class="container my-5">
+    <h3> Update Shopping</h3>
+    <div class="card">
+        <div class="card-body">
+            <div class="col-md-8">
+                <form th:object="${shopping}" th:action="@{/shopping/update/{shopId}(shopId = ${shopping.shopId})}"method="post" >
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="name" class="col-form-label">Name</label>
+                            <input type="text" id="name" class="form-control mb-4" placeholder="Name" th:field="*{name}"th:value="${shopping.name}">
+                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label for="date" class="col-form-label">Date:</label>
+                            <input type="date" class="form-control" id="date" name="date" th:value="${shopping.date}" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="comment" class="col-form-label">Comment:</label>
                                     <textarea class="form-control rounded-0" id="comment" rows="3"  name="comment" th:value="${shopping.comment}"
                                               th:text="${shopping.comment}"></textarea>
-         </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="saverName" name="saverName" th:value="${shopping.saverName}" style="display: none"/>
-        </div>
-         <div class="form-group">
-                <input type="text" class="form-control" id="archived" name="archived" style="display: none" value=""/>
-         </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="shared" name="shared" style="display: none" value=""/>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="statut" name="statut" style="display: none" value=""/>
-        </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" id="saverName" name="saverName" th:value="${shopping.saverName}" style="display: none"/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" id="archived" name="archived" style="display: none" value=""/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" id="shared" name="shared" style="display: none" value=""/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" id="statut" name="statut" style="display: none" value=""/>
+                        </div>
 
-             <a type="button" class="btn btn-warning pull-left" data-dismiss="modal" th:href="@{/shopping/all}"><i class="fa fa-undo"></i>&nbsp;Back</a>&nbsp;
-             <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Save</button>
+                        <div class="form-group col-md-8">
+                            <a type="button" class="btn btn-warning pull-left" data-dismiss="modal" th:href="@{/shopping/all}"><i class="fa fa-undo"></i>&nbsp;Back</a>&nbsp;
+                            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    </form>
+
 
 </body>
 </html>

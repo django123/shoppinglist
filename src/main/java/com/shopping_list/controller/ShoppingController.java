@@ -27,7 +27,6 @@ import java.util.*;
 public class ShoppingController {
 
 
-
     @Autowired
     private ShoppingRepository shoppingRepository;
 
@@ -92,7 +91,7 @@ public class ShoppingController {
         model.addAttribute("shoppings", shoppings);
 
         model.addAttribute("tasks", new Task());
-        return "shopping/shoppings";
+        return "index";
     }
 
     @GetMapping("/detail/{shopId}")
@@ -101,14 +100,14 @@ public class ShoppingController {
         session.setAttribute("shopId", optional.get().getShopId());
         model.addAttribute("shopping", optional.get());
         model.addAttribute("users",userRepository.findAll());
-        return "shopping/detail";
+        return "shoppings/showById";
 
     }
 
     @GetMapping("/form")
     public String form(Model model){
         model.addAttribute("shopping", new Shopping());
-        return "shopping/form";
+        return "shoppings/new";
     }
 
     @PostMapping("/save")
@@ -121,7 +120,18 @@ public class ShoppingController {
         shopping.setStatut(false);
         shopping.setShared(false);
         shoppingRepository.save(shopping);
+        return "redirect:/shopping/detail/" +shopping.getShopId();
+    }
+
+
+    @GetMapping("/delete/{shopId}")
+    public String deleteById(@PathVariable Long shopId, Model model) {
+        Shopping shopping = shoppingRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +shopId));
+        shoppingRepository.delete(shopping);
+        model.addAttribute("shoppings", shoppingRepository.findAll());
         return "redirect:/shopping/all";
+
     }
 
     @GetMapping("/shared")
@@ -158,42 +168,29 @@ public class ShoppingController {
 
     }
 
-    @GetMapping("/update/{shopId}")
-    public String updatedShopping(Model model, @PathVariable Long shopId){
+    @GetMapping("/edit/{shopId}")
+    public String showUpdatedForm(Model model, @PathVariable Long shopId){
         Shopping shopping =  shoppingRepository.findById(shopId).get();
         model.addAttribute("shopping", shopping);
-        return "shopping/edit";
+        return "shoppings/edit";
     }
     @PostMapping("/update/{shopId}")
-    public String save(@Valid Shopping shopping, @PathVariable("shopId") Long shopId, BindingResult result,
+    public String updateShopping(@Valid Shopping shopping, @PathVariable("shopId") Long shopId, BindingResult result,
                        String name, String comment, String archived, String statut, String saverName,
                        String shared, Model model){
-
-
-        if(result.hasErrors()) {
-            shopping.setShopId(shopId);
-            return "shopping/edit";
-        }
         shopping.setName(name);
         shopping.setComment(comment);
         shopping.setArchived(Boolean.parseBoolean(archived));
         shopping.setShared(Boolean.parseBoolean(shared));
         shopping.setStatut(Boolean.parseBoolean(statut));
         shopping.setSaverName(saverName);
+        Utilisateur user = userRepository.findByName(shopping.getSaverName());
+        shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
         shoppingRepository.save(shopping);
-        model.addAttribute("shoppings", shoppingRepository.findAll());
         return "redirect:/shopping/all";
     }
 
-    @GetMapping("/delete/{shopId}")
-    public String deleteById(@PathVariable Long shopId, Model model) {
-        Shopping shopping = shoppingRepository.findById(shopId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid shopping id:" +shopId));
-        shoppingRepository.delete(shopping);
-        model.addAttribute("shoppings", shoppingRepository.findAll());
-        return "redirect:/shopping/all";
 
-    }
 
     @GetMapping("/archived/{shopId}")
     public String archived(@PathVariable Long shopId){
@@ -224,9 +221,6 @@ public class ShoppingController {
             }
         }
         model.addAttribute("shoppings", shoppings1);
-        return "shopping/archive";
+        return "shoppings/archive";
     }
-
-
-
 }

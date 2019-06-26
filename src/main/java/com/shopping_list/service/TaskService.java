@@ -9,9 +9,35 @@ import java.util.List;
  */
 public interface TaskService {
 
+
+    /**
+     * gets all Tasks from Database
+     * @return  a List containing Tasks
+     */
     List<Task> findAllTask();
+
+    /**
+     * finds a task  in DB by its ID
+     * @param taskId   Database ID of task
+     * @return          Book with ID = taskId
+     */
     Task findTaskId(Long taskId);
+
+
     Task createTask(Task task);
-    Task updateTask(Task task);
+
+    /**
+     * Updates a task  with
+     * @param taskId               ID of task
+     * @param task           task  details from EDIT FORM
+     */
+    Task updateTask(Task task,Long taskId);
+
+
+
+    /**
+     * delete a task from DB
+     * @param taskId    ID of task
+     */
     void deleteTask(Long taskId);
 }
