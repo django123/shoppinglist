@@ -19,7 +19,7 @@ public interface TaskService {
     /**
      * finds a task  in DB by its ID
      * @param taskId   Database ID of task
-     * @return          Book with ID = taskId
+     * @return          Task with ID = taskId
      */
     Task findTaskId(Long taskId);
 

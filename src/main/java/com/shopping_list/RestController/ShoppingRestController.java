@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,21 +50,20 @@ public class ShoppingRestController {
         return shoppingService.findShoppingId(shopId);
     }
 
-/*    @PostMapping("/create")
+   @PostMapping("/create")
     public Shopping createShopping(@RequestBody Shopping shopping){
-        return shoppingService.createShopping(shopping);
+        return shoppingService.createOrUpdateShopping(shopping);
 
     }
 
     @PutMapping("/update/{shopId}")
-    public Shopping updateShopping(@RequestBody Shopping shopping, @PathVariable Long shopId){
+    public Shopping updateShopping(@Valid @RequestBody Shopping shopping, @PathVariable Long shopId){
         Shopping currentShopping = shoppingService.findShoppingId(shopId);
         currentShopping.setName(shopping.getName());
         currentShopping.setComment(shopping.getComment());
         currentShopping.setDate(shopping.getDate());
-
-        return shoppingService.updateShopping(currentShopping);
-    }*/
+        return shoppingService.createOrUpdateShopping(currentShopping);
+    }
 
     @DeleteMapping("/delete/{shopId}")
     public void deleteShopping(@PathVariable Long shopId){

@@ -21,22 +21,20 @@ public interface ShoppingService {
     /**
      * finds a shopping  in DB by its ID
      * @param shopId    Database ID of shopping
-     * @return          Book with ID = shopId
+     * @return          Shopping with ID = shopId
      */
     Shopping findShoppingId(Long shopId);
 
 
 
-    Long createShopping(Shopping shopping);
 
 
 
     /**
-     * Updates a shopping  with
-     * @param shopId               ID of shopping
+     * Create and Updates a shopping  with
      * @param shopping           shopping  details from EDIT FORM
      */
-    void updateShopping(Shopping shopping, Long shopId);
+    Shopping createOrUpdateShopping(Shopping shopping);
 
 
     /**
@@ -44,4 +42,5 @@ public interface ShoppingService {
      * @param shopId    ID of Shopping
      */
     void deleteShopping(Long shopId);
+
 }

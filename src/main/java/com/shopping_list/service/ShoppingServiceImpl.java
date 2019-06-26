@@ -26,11 +26,6 @@ public class ShoppingServiceImpl implements ShoppingService{
 
 
 
-    /**
-     * finds a Shopping in DB by its ID
-     * @param shopId    Database ID of Shopping
-     * @return          Book with ID = shopId
-     */
 
     @Override
     public Shopping findShoppingId(Long shopId) {
@@ -43,31 +38,11 @@ public class ShoppingServiceImpl implements ShoppingService{
     }
 
     @Override
-    public Long createShopping(Shopping shopping) {
-        shoppingRepository.save(shopping);
-        return shopping.getShopId() ;
-    }
-
-    @Override
-    public void updateShopping(Shopping shopping, Long shopId) {
-
-        Shopping currentShopping = findShoppingId(shopId);
-        currentShopping.setName(shopping.getName());
-        currentShopping.setComment(shopping.getComment());
-        currentShopping.setDate(shopping.getDate());
-        currentShopping.setShared(shopping.getShared());
-        currentShopping.setStatut(shopping.getStatut());
-        currentShopping.setSaverName(shopping.getSaverName());
-
-        shoppingRepository.save(currentShopping);
-
+    public Shopping createOrUpdateShopping(Shopping shopping) {
+        return shoppingRepository.save(shopping);
     }
 
 
-    /**
-     * delete a Shopping from DB
-     * @param shopId     ID of Shopping
-     */
     @Override
     public void deleteShopping(Long shopId) {
        shoppingRepository.deleteById(shopId);
