@@ -15,7 +15,7 @@
                     </div>
                     <div></div>
                     <select name="userId" type="text">
-                        <option value="">select user to share</option>
+                        <option value="">--select user to share--</option>
                         <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.name}">
                         </option>
                     </select>

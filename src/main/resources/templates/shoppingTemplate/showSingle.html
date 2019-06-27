@@ -37,7 +37,9 @@
                     <span>TODO</span>
                     <a th:href="@{/task/active/{taskId}(taskId=${task.taskId})}"><i class="fa fa-check-circle-o"></i></a>
                 </td>
-                <td><a th:href="@{/task/update/{taskId}(taskId=${task.taskId})}"  class="btn btn-default">Edit</a></td>
+                <td>
+                    <a th:href="@{/task/update/{taskId}(taskId=${task.taskId})}" class="btn btn-default">Edit</a>
+                </td>
                 <td>
                     <a  th:href="@{/task/delete/}+${task.taskId}" class="btn btn-danger">Delete</a>
                 </td>
