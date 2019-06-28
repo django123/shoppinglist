@@ -64,8 +64,11 @@ public class TaskController {
 
     @PostMapping("/update/{taskId}")
     public String save(@Valid Task task, @PathVariable("taskId") Long taskId,
-                       BindingResult result, Model model, HttpSession session){
+                       BindingResult result, Model model, HttpSession session, String name, String description, String status ){
         Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
+        task.setName(name);
+        task.setDescription(description);
+        task.setStatus(Boolean.parseBoolean(status));
         task.setShopping(shopping);
         taskRepository.save(task);
         model.addAttribute("tasks", taskRepository.findAll());
@@ -111,4 +114,5 @@ public class TaskController {
         taskRepository.save(task);
         return "redirect:/shopping/detail/"+shopping.getShopId() ;
     }
+
 }

@@ -26,7 +26,6 @@ import java.util.*;
 @RequestMapping("/shopping")
 public class ShoppingController {
 
-
     @Autowired
     private ShoppingRepository shoppingRepository;
 
@@ -97,8 +96,11 @@ public class ShoppingController {
     @GetMapping("/detail/{shopId}")
     public String getShop(Model model, @PathVariable Long shopId, HttpSession session){
         Optional<Shopping> optional=shoppingRepository.findById(shopId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Utilisateur user = userService.findUserByEmail(auth.getName());
         session.setAttribute("shopId", optional.get().getShopId());
         model.addAttribute("shopping", optional.get());
+        model.addAttribute("user", user);
         model.addAttribute("users",userRepository.findAll());
         return "shoppings/showById";
 
@@ -144,8 +146,8 @@ public class ShoppingController {
     }
     @PostMapping("/update/{shopId}")
     public String updateShopping(@Valid Shopping shopping, @PathVariable("shopId") Long shopId, BindingResult result,
-                       String name, String comment, String archived, String statut, String saverName,
-                       String shared, Model model){
+                                 String name, String comment, String archived, String statut, String saverName,
+                                 String shared, Model model){
         shopping.setName(name);
         shopping.setComment(comment);
         shopping.setArchived(Boolean.parseBoolean(archived));
