@@ -3,6 +3,7 @@ package com.shopping_list.service;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
+import com.shopping_list.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 
 @Service
-public class TaskServiceImpl implements TaskService{
+public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskRepository taskRepository;

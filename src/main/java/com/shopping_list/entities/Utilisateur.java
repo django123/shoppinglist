@@ -1,31 +1,33 @@
 package com.shopping_list.entities;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-public class Utilisateur implements Serializable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId")
+public class Utilisateur implements Serializable,UserDetails{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long userId;
-    @Column(name = "email")
     @Email(message = "*Please enter a valid email")
     @NotEmpty(message = "*enter your email")
     private String email;
-    @Column(name = "password")
-    @Length(min = 8, message = "*the password would have less 8 caracters")
-    @NotEmpty(message = "*enter your password")
+    private String username;
     private String password;
     private Boolean active;
-    private String type;
-    private String name;
+    @JsonBackReference
     @ManyToMany
     @JoinTable(name = "utilisateur_role", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Collection<Role> roles;
@@ -37,12 +39,11 @@ public class Utilisateur implements Serializable {
     public Utilisateur() {
     }
 
-    public Utilisateur(@Email(message = "*Please enter a valid email") @NotEmpty(message = "*enter your email") String email, @Length(min = 8, message = "*the password would have less 8 caracters") @NotEmpty(message = "*enter your password") String password, Boolean active, String type, String name, Collection<Role> roles, Collection<Shopping> shoppings) {
+    public Utilisateur(@Email(message = "*Please enter a valid email") @NotEmpty(message = "*enter your email") String email, String username, String password, Boolean active, Collection<Role> roles, Collection<Shopping> shoppings) {
         this.email = email;
+        this.username = username;
         this.password = password;
         this.active = active;
-        this.type = type;
-        this.name = name;
         this.roles = roles;
         this.shoppings = shoppings;
     }
@@ -63,6 +64,17 @@ public class Utilisateur implements Serializable {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities= new HashSet<>();
+        for(Role role: roles) {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
+            authorities.add(grantedAuthority);
+        }
+
+        return authorities;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -79,14 +91,6 @@ public class Utilisateur implements Serializable {
         this.active = active;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public Collection<Role> getRoles() {
         return roles;
     }
@@ -96,12 +100,32 @@ public class Utilisateur implements Serializable {
     }
 
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void addRoles(Role role){
@@ -113,6 +137,8 @@ public class Utilisateur implements Serializable {
         role.getUtilisateurs().remove(this);
     }
 
+    @JsonIgnore
+    @JsonBackReference
     public void setRoles(Role role){
         roles.add(role);
     }

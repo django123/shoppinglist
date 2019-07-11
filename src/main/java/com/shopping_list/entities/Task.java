@@ -1,6 +1,9 @@
 package com.shopping_list.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,6 +14,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "taskId")
 public class Task implements Serializable{
     @Id
     @GeneratedValue
@@ -20,6 +25,7 @@ public class Task implements Serializable{
     private String name;
     private String description;
     private Boolean status;
+    @JsonBackReference
     @ManyToOne(fetch=FetchType.LAZY, optional = false)
     @JoinColumn
     private Shopping shopping;

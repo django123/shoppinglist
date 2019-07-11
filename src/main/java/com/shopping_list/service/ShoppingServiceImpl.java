@@ -2,6 +2,7 @@ package com.shopping_list.service;
 
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.entities.Shopping;
+import com.shopping_list.service.ShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  * Created by EDOUGA on 21/06/2019.
  */
 @Service
-public class ShoppingServiceImpl implements ShoppingService{
+public class ShoppingServiceImpl implements ShoppingService {
 
 
     @Autowired

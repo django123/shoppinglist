@@ -1,5 +1,8 @@
 package com.shopping_list.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +15,8 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "shopId")
 public class Shopping implements Serializable {
 
     @Id
@@ -28,6 +33,8 @@ public class Shopping implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date date;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "shopping", cascade=CascadeType.ALL)
     @OnDelete(action= OnDeleteAction.NO_ACTION)
     private Collection<Task>tasks;

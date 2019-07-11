@@ -62,7 +62,7 @@ public class UserController {
         if(bindingResult.hasErrors()) {
             return  "user/form";
         }else{
-            System.out.println(utilisateur.getPassword());
+            System.out.println(utilisateur.getUsername());
             userService.createUser(utilisateur);
 
         }

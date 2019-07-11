@@ -117,7 +117,7 @@ public class ShoppingController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
         shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
-        shopping.setSaverName(user.getName());
+        shopping.setSaverName(user.getUsername());
         shopping.setArchived(false);
         shopping.setStatut(false);
         shopping.setShared(false);
@@ -154,7 +154,7 @@ public class ShoppingController {
         shopping.setShared(Boolean.parseBoolean(shared));
         shopping.setStatut(Boolean.parseBoolean(statut));
         shopping.setSaverName(saverName);
-        Utilisateur user = userRepository.findByName(shopping.getSaverName());
+        Utilisateur user = userRepository.findByUsername(shopping.getSaverName());
         shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
         shoppingRepository.save(shopping);
         return "redirect:/shopping/all";

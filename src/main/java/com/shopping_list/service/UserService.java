@@ -10,9 +10,10 @@ import java.util.List;
 
 public interface UserService {
 
-    public void createUser(Utilisateur user);
+    public Utilisateur createUser(Utilisateur user);
 
-
-    public List<Utilisateur>findByName(String name);
+    Utilisateur addUser(Utilisateur user);
+    public Utilisateur findByUsername(String name);
     public Utilisateur findUserByEmail(String email);
+    List<Utilisateur>findAllUtilisateur();
 }

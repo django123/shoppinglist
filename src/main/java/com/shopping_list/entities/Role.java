@@ -1,5 +1,9 @@
 package com.shopping_list.entities;
 
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,6 +12,8 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "roleId")
 public class Role implements Serializable {
 
     @Id

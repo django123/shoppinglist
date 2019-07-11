@@ -23,7 +23,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/shoppings")
-@Api(value="ShoppingsControllerApi", produces=MediaType.APPLICATION_JSON_VALUE)
 public class ShoppingRestController {
 
     @Autowired
@@ -50,7 +49,7 @@ public class ShoppingRestController {
         return shoppingService.findShoppingId(shopId);
     }
 
-   @PostMapping("/create")
+   @PostMapping
     public Shopping createShopping(@RequestBody Shopping shopping){
         return shoppingService.createOrUpdateShopping(shopping);
 
