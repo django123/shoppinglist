@@ -26,7 +26,7 @@ public class ShoppingListApplication implements CommandLineRunner {
     private RoleRepository roleRepository;
     @Override
     public void run(String... args) throws Exception {
-      BCryptPasswordEncoder encoder = new  BCryptPasswordEncoder();
+    /*  BCryptPasswordEncoder encoder = new  BCryptPasswordEncoder();
         Utilisateur user = new Utilisateur();
         user.setUsername("kenza");
         user.setPassword("bonjour");
@@ -41,7 +41,7 @@ public class ShoppingListApplication implements CommandLineRunner {
             roleRepository.save(role);
             user.setRoles(new HashSet<Role>(Arrays.asList(role)));
         }
-        userService.createUser(user);
+        userService.createUser(user);*/
     }
 
 }
