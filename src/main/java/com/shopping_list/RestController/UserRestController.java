@@ -14,7 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-
+@CrossOrigin(origins = {"http://localhost:8080","http://localhost:8100"})
 @RestController
 @RequestMapping("/api/user")
 public class UserRestController {

@@ -62,14 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
         http.
                 authorizeRequests()
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/vendor/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/user/registration").permitAll()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/user/auth").permitAll()
                 .antMatchers("/token").permitAll()
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/save").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers(PUBLIC_MATCHES).permitAll().anyRequest().authenticated()
                 .antMatchers("/shopping/**").hasAuthority("USER").anyRequest()
                 .authenticated().and().csrf().disable().cors().disable().httpBasic().and().formLogin()

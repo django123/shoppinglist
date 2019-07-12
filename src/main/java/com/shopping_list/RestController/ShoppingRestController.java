@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/shoppings")
+@RequestMapping("/api/shopping")
 public class ShoppingRestController {
 
     @Autowired
