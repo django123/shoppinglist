@@ -31,10 +31,16 @@ public interface ShoppingService {
 
 
     /**
-     * Create and Updates a shopping  with
+     * Create  a shopping  with
      * @param shopping           shopping  details from EDIT FORM
      */
-    Shopping createOrUpdateShopping(Shopping shopping);
+    Shopping createShopping(Shopping shopping);
+
+    /**
+     * Update a shopping  with
+     * @param shopping           shopping  details from EDIT FORM
+     */
+    Shopping updateShopping(Shopping shopping);
 
 
     /**

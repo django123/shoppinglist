@@ -39,8 +39,17 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public Shopping createOrUpdateShopping(Shopping shopping) {
+    public Shopping createShopping(Shopping shopping) {
         return shoppingRepository.save(shopping);
+    }
+
+    @Override
+    public Shopping updateShopping(Shopping shopping) {
+        Shopping shopping1 = findShoppingId(shopping.getShopId());
+        if (shopping1 != null){
+            shoppingRepository.save(shopping1);
+        }
+        return shopping;
     }
 
 

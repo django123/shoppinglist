@@ -43,7 +43,7 @@ public class ShoppingRestController {
         return shoppingService.findAllShopping();
     }
 
-    @GetMapping("/shopping/{shopId}")
+    @GetMapping("/{shopId}")
     public Shopping findShopping(@PathVariable Long shopId){
 
         return shoppingService.findShoppingId(shopId);
@@ -51,21 +51,23 @@ public class ShoppingRestController {
 
    @PostMapping
     public Shopping createShopping(@RequestBody Shopping shopping){
-        return shoppingService.createOrUpdateShopping(shopping);
+        return shoppingService.createShopping(shopping);
 
     }
 
-    @PutMapping("/update/{shopId}")
+    @PutMapping("/{shopId}")
     public Shopping updateShopping(@Valid @RequestBody Shopping shopping, @PathVariable Long shopId){
         Shopping currentShopping = shoppingService.findShoppingId(shopId);
         currentShopping.setName(shopping.getName());
         currentShopping.setComment(shopping.getComment());
         currentShopping.setDate(shopping.getDate());
-        return shoppingService.createOrUpdateShopping(currentShopping);
+        return shoppingService.updateShopping(currentShopping);
     }
 
-    @DeleteMapping("/delete/{shopId}")
-    public void deleteShopping(@PathVariable Long shopId){
+    @RequestMapping(value = "/{shopId}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteShopping(@PathVariable("shopId") Long shopId){
        shoppingService.deleteShopping(shopId);
     }
 
