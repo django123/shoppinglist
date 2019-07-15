@@ -48,7 +48,7 @@ public class UserRestController {
         Utilisateur result = userService.createUser(user);
 
         return ResponseEntity.created(new URI("/api/user/" + result.getUserId()))
-                .headers(HeaderUtil.createEntityCreationAlert("livre", result.getUserId().toString()))
+                .headers(HeaderUtil.createEntityCreationAlert("user", result.getUserId().toString()))
                 .body(result);
     }
 
@@ -56,7 +56,7 @@ public class UserRestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Utilisateur>> findAllUtilisateur() throws URISyntaxException{
-        log.debug("REST request to get a page of livre");
+        log.debug("REST request to get user");
         List<Utilisateur> user = userService.findAllUtilisateur();
         return new ResponseEntity<>(user, null,HttpStatus.OK);
     }
