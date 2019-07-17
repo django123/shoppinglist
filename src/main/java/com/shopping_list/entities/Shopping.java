@@ -1,29 +1,27 @@
 package com.shopping_list.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import org.hibernate.annotations.Cache;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "shopId")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Shopping implements Serializable {
 
     @Id
     @GeneratedValue
     private Long shopId;
     @Column(name = "name")
-    @NotEmpty(message = "*Please enter name of shopping")
+    @NotNull
     private String name;
     private String comment;
     private Boolean statut;
@@ -33,10 +31,9 @@ public class Shopping implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date date;
-
-    @JsonManagedReference
     @OneToMany(mappedBy = "shopping", cascade=CascadeType.ALL)
     @OnDelete(action= OnDeleteAction.NO_ACTION)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Collection<Task>tasks;
 
     @ManyToMany

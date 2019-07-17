@@ -4,21 +4,31 @@ import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
-import com.shopping_list.messages.NotFoundException;
+import com.shopping_list.exception.BadRequestAlertException;
+import com.shopping_list.exception.HeaderUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.shopping_list.service.ShoppingService;
 import com.shopping_list.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
+import static org.hibernate.id.IdentifierGenerator.ENTITY_NAME;
+
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api")
 public class TaskRestController {
 
-
+    private final Logger log = LoggerFactory.getLogger(TaskRestController.class);
+    private static final String ENTITY_NAME = "task";
     @Autowired
     private TaskService taskService;
 
@@ -39,7 +49,7 @@ public class TaskRestController {
         return taskService.findTaskId(taskId);
     }
 
-    @RequestMapping(value = "/{shopId}/task",
+/*    @RequestMapping(value = "/{shopId}/task",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Task createTask(@Valid @RequestBody Task task, @PathVariable Long shopId){
@@ -48,9 +58,29 @@ public class TaskRestController {
                     task.setShopping(shopping);
                     return taskRepository.save(task);
                 }).orElseThrow(() -> new NotFoundException("Shopping not found!"));
+    }*/
+
+    /**
+     * {@code POST  /tasks} : Create a new operation.
+     *
+     * @param task the task to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new task, or with status {@code 400 (Bad Request)} if the task has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/tasks")
+    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) throws URISyntaxException {
+        log.debug("REST request to save Task : {}", task);
+        if (task.getTaskId() != null) {
+            throw new BadRequestAlertException("A new operation cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        System.out.println(task.getName());
+        Task result = taskRepository.save(task);
+        return ResponseEntity.created(new URI("/api/tasks/" + result.getTaskId()))
+                .headers(HeaderUtil.createEntityCreationAlert("task",  result.getTaskId().toString()))
+                .body(result);
     }
 
-    @DeleteMapping("/delete/{taskId}")
+    @DeleteMapping("/{taskId}")
     public void deleteTask(@PathVariable Long taskId){
         taskService.deleteTask(taskId);
     }
