@@ -4,10 +4,14 @@ import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
+import com.shopping_list.messages.NotFoundException;
+import com.shopping_list.service.ShoppingService;
 import com.shopping_list.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,8 @@ public class TaskRestController {
     private TaskRepository taskRepository;
     @Autowired
     private ShoppingRepository shoppingRepository;
+    @Autowired
+    private ShoppingService shoppingService;
 
     @GetMapping
     public List<Task>findTasks(){
@@ -33,12 +39,15 @@ public class TaskRestController {
         return taskService.findTaskId(taskId);
     }
 
-    @PostMapping("/create")
-    public Task createTask(@RequestBody Task task, Long shopId){
-        Shopping shopping = shoppingRepository.getOne(shopId);
-        task.setStatus(false);
-        task.setShopping(shopping);
-        return taskService.createTask(task);
+    @RequestMapping(value = "/{shopId}/task",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Task createTask(@Valid @RequestBody Task task, @PathVariable Long shopId){
+        return shoppingRepository.findById(shopId)
+                .map(shopping -> {
+                    task.setShopping(shopping);
+                    return taskRepository.save(task);
+                }).orElseThrow(() -> new NotFoundException("Shopping not found!"));
     }
 
     @DeleteMapping("/delete/{taskId}")

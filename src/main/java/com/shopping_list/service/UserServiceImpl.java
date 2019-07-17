@@ -49,15 +49,6 @@ public class UserServiceImpl implements UserService {
    @Override
     @Transactional
     public Utilisateur addUser(Utilisateur user) {
-        /*Utilisateur localUser = userRepository.findByUsername(user.getUsername());
-        user.setActive(true);
-        if(localUser != null) {
-            LOG.info("User with username {} already exist. Nothing will be done. ", user.getUsername());
-        }else{
-            Role role=new Role("USER");
-            roleRepository.save(role);
-            user.setRoles(new HashSet<Role>(Arrays.asList(role)));
-        }*/
         Utilisateur localUser = new Utilisateur();
         localUser.setUsername(user.getUsername());
         localUser.setPassword(passwordEncoder.encode(user.getPassword()));

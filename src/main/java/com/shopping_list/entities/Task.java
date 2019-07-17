@@ -27,7 +27,7 @@ public class Task implements Serializable{
     private Boolean status;
     @JsonBackReference
     @ManyToOne(fetch=FetchType.LAZY, optional = false)
-    @JoinColumn
+    @JoinColumn(name = "shop_id", nullable = false)
     private Shopping shopping;
 
     public Task() {
