@@ -61,13 +61,12 @@ public class ShoppingRestController {
         List<Shopping>shoppings = shoppingService.findAllShopping();
         return shoppings;
     }*/
-@GetMapping // tu as vu sur postman la requête passe mais sur la console erreur
+@GetMapping
 public List<Object> findAllShopping(){
     List<Object> objects= new ArrayList<Object>();
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    Utilisateur user = userService.findUserByEmail(auth.getName());//alors vas y je tecout tu dis qu'on doit do quoi ici
-    // tjr le même pb montre moi ton postman
-    List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);//fait d'abord le test pour voir ce que sa recupere au niveau de la liste la
+    Utilisateur user = userService.findUserByEmail(auth.getName());
+    List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
     List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
     System.out.println(shoppings2);
     List<Shopping> shoppings= new ArrayList<>();
@@ -154,28 +153,7 @@ public List<Object> findAllShopping(){
         shopping1.setArchived(Boolean.parseBoolean(archived));
         shopping1.setStatut(Boolean.parseBoolean(statut));
         shopping1.setSaverName(saverName);
-        /*if (shopping1.getName() != null)
-            shopping.setName(shopping1.getName());
-        if (shopping1.getName() != null)
-            shopping.setName(shopping1.getName());
-        if (shopping1.getName() != null)
-            shopping.setName(shopping1.getName());*/
-
-        /*log.debug("REST request to update shopping: {}", shopping1);
-        if (shopping1.getShopId() == null){
-
-        }
-
-        shopping1.setName(name);
-        shopping1.setComment(comment);
-        shopping1.setArchived(Boolean.parseBoolean(archived));
-        shopping1.setStatut(Boolean.parseBoolean(statut));
-        shopping1.setSaverName(saverName);
-        shopping1.setShared(Boolean.parseBoolean(shared));
-        Utilisateur user = userRepository.findByUsername(shopping1.getSaverName());
-        shopping1.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
-        Shopping shopping = shoppingService.updateShopping(shopping1);
-        return new ResponseEntity<>(shopping, null, HttpStatus.OK);*/
+        
         shoppingService.updateShopping(shopping);
         return shopping1;
     }
