@@ -1,33 +1,26 @@
 package com.shopping_list.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "taskId")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Task implements Serializable{
     @Id
     @GeneratedValue
     private Long taskId;
     @Column(name = "name")
-    @NotEmpty(message = "*Please enter name of task")
+    @NotNull
     private String name;
     private String description;
     private Boolean status;
-    @JsonBackReference
     @ManyToOne(fetch=FetchType.LAZY, optional = false)
-    @JoinColumn(name = "shop_id", nullable = false)
+    @JsonIgnoreProperties("tasks")
     private Shopping shopping;
 
     public Task() {

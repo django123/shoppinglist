@@ -84,6 +84,8 @@ public class ShoppingRestController {
             shopping.setName(shopping1.getName());
         if (shopping1.getComment() != null)
             shopping.setComment(shopping1.getComment());
+        if (shopping1.getDate() != null)
+            shopping.setDate(shopping1.getDate());
         /*if (shopping1.getStatut() != null)
             shopping.setArchived(shopping1.getArchived());
         if (shopping1.getName() != null)
