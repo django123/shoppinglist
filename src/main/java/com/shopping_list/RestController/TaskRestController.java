@@ -67,20 +67,20 @@ public class TaskRestController {
         taskService.deleteTask(taskId);
     }
 
-    @PutMapping("/update/{taskId}")
-    public Task updateTask(@RequestBody Task task, Long taskId,Long shopId){
+    @RequestMapping(value = "/update/{taskId}",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Task updateTask(@Valid @RequestBody Task task, @PathVariable Long taskId){
 
-        return taskRepository.findById(taskId)
-                .map(task1 -> {
-                    task1.setName(task.getName());
-                    return taskRepository.save(task1);
-                })
-                .orElseGet(() -> {
-                    task.setTaskId(taskId);
-                    Shopping shopping = shoppingRepository.getOne(shopId);
-                    task.setShopping(shopping);
-                    return taskRepository.save(task);
-                });
+        Task  task1 = taskService.findTaskId(taskId);
+        if (task.getName() != null)
+            task1.setName(task.getName());
+        if (task.getStatus() != null)
+            task1.setStatus(task.getStatus());
+        if (task.getDescription() != null)
+            task1.setDescription(task.getDescription());
+        taskService.updateTask(task1);
+        return task;
     }
 
     @GetMapping("/active/{taskId}")

@@ -43,14 +43,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTask(Task task, Long taskId) {
+    public Task updateTask(Task task) {
 
-        Task currentTask = findTaskId(taskId);
-        currentTask.setName(task.getName());
-        currentTask.setDescription(task.getDescription());
-        currentTask.setStatus(task.getStatus());
-        taskRepository.save(currentTask);
-        return null;
+        Task currentTask = findTaskId(task.getTaskId());
+       if (currentTask != null){
+           taskRepository.save(currentTask);
+       }
+       return task;
     }
 
     @Override
