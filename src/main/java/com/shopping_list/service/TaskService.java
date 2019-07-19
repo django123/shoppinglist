@@ -31,10 +31,9 @@ public interface TaskService {
 
     /**
      * Updates a task  with
-     * @param taskId               ID of task
      * @param task           task  details from EDIT FORM
      */
-    Task updateTask(Task task,Long taskId);
+    Task updateTask(Task task);
 
 
 
