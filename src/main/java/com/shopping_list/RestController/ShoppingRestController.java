@@ -1,9 +1,11 @@
 package com.shopping_list.RestController;
 
 
+import com.shopping_list.Repository.ShareRepository;
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.Repository.UserRepository;
+import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Utilisateur;
 
@@ -20,11 +22,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import org.slf4j.Logger;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/shopping")
@@ -45,12 +49,14 @@ public class ShoppingRestController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ShareRepository shareRepository;
 
 
     @GetMapping
     public List<Shopping> findAllShopping(){
         List<Shopping>shoppings = shoppingService.findAllShopping();
-        return shoppingService.findAllShopping();
+        return shoppings;
     }
 
     @RequestMapping(value = "/{shopId}",
@@ -64,11 +70,13 @@ public class ShoppingRestController {
     }
 
    @PostMapping
-    public Shopping createShopping(@RequestBody Shopping shopping){
+   public Shopping createShopping(@RequestBody Shopping shopping){
        shopping.setArchived(false);
        shopping.setStatut(false);
        shopping.setShared(false);
-        return shoppingService.createShopping(shopping);
+       Shopping shopping1 =shoppingService.createShopping(shopping);
+
+       return shopping1;
 
     }
 
@@ -86,9 +94,14 @@ public class ShoppingRestController {
             shopping.setComment(shopping1.getComment());
         if (shopping1.getDate() != null)
             shopping.setDate(shopping1.getDate());
-        /*if (shopping1.getStatut() != null)
-            shopping.setArchived(shopping1.getArchived());
-        if (shopping1.getName() != null)
+        if (shopping1.getStatut() != null)
+            shopping.setStatut(shopping1.getStatut());
+        shopping1.setName(name);
+        shopping1.setComment(comment);
+        shopping1.setArchived(Boolean.parseBoolean(archived));
+        shopping1.setStatut(Boolean.parseBoolean(statut));
+        shopping1.setSaverName(saverName);
+        /*if (shopping1.getName() != null)
             shopping.setName(shopping1.getName());
         if (shopping1.getName() != null)
             shopping.setName(shopping1.getName());
@@ -121,5 +134,17 @@ public class ShoppingRestController {
        shoppingService.deleteShopping(shopId);
     }
 
+    @PostMapping("/share/user")
+    public List<Shopping>shareShopping(Share share, String userId, String shopId){
+        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
+        Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
+        shopping.add(user);
+        shopping.setShared(true);
+        share.setUserId(user.getUserId());
+        share.setShopId(shopping.getShopId());
+        shoppingRepository.save(shopping);
+        shareRepository.save(share);
+        return shoppingService.findAllShopping();
+    }
 
 }
