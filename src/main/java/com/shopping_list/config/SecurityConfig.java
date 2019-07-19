@@ -54,6 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
             "/css/**",
             "/js/**",
             "/image/**",
+            "/api/user/**",
+            "/api/shopping/**",
+            "/api/tasks/**"
+
 
     };
 
@@ -67,7 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/token", "/api/user/auth").permitAll()
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/save").permitAll()
-                .antMatchers("/api/**").permitAll()
                 .antMatchers(PUBLIC_MATCHES).permitAll().anyRequest().authenticated()
                 .antMatchers("/shopping/**").hasAuthority("USER").anyRequest()
                 .authenticated().and().csrf().disable().cors().disable().httpBasic().and().formLogin()

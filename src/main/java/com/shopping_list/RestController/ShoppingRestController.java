@@ -7,6 +7,7 @@ import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
+import com.shopping_list.entities.Task;
 import com.shopping_list.entities.Utilisateur;
 
 import com.shopping_list.service.ShoppingService;
@@ -18,15 +19,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -53,11 +56,61 @@ public class ShoppingRestController {
     private ShareRepository shareRepository;
 
 
-    @GetMapping
+/*    @GetMapping
     public List<Shopping> findAllShopping(){
         List<Shopping>shoppings = shoppingService.findAllShopping();
         return shoppings;
+    }*/
+@GetMapping // tu as vu sur postman la requête passe mais sur la console erreur
+public List<Object> findAllShopping(){
+    List<Object> objects= new ArrayList<Object>();
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    Utilisateur user = userService.findUserByEmail(auth.getName());//alors vas y je tecout tu dis qu'on doit do quoi ici
+    // tjr le même pb montre moi ton postman
+    List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);//fait d'abord le test pour voir ce que sa recupere au niveau de la liste la
+    List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+    System.out.println(shoppings2);
+    List<Shopping> shoppings= new ArrayList<>();
+    for (Shopping shopping : shoppings1){
+        for (int i=0; i<shoppings2.size(); i++){
+            if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                shoppings.add(shoppings2.get(i));
+
+            }
+        }
+
     }
+    for(Shopping shopping: shoppings){
+        List<Task>tasks = new ArrayList<>();
+        tasks.addAll(shopping.getTasks());
+        List<Task>tasks1=new ArrayList<>();
+        for (Task task:tasks){
+            if (task.getStatus()!=null && task.getStatus()){
+                tasks1.add(task);
+            }
+        }
+        if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
+            shopping.setStatut(true);
+        }
+        System.out.println(shoppings);
+    }
+    List<Integer> numbers= new ArrayList<>();
+    for (Shopping shopping : shoppings){
+        Collection<Task> tasks= shopping.getTasks();
+        Collection<Task> tasks1=new ArrayList<>();
+
+        for (Task task:tasks){
+            if (task.getStatus() != null  && task.getStatus() == true){
+                tasks1.add(task);
+            }
+        }
+        int nombre = tasks1.size();
+        numbers.add(nombre);
+    }
+    Stream.of(numbers,userService.findAllUtilisateur(),shoppings).forEach(objects::addAll);
+
+    return objects;
+}
 
     @RequestMapping(value = "/{shopId}",
             method = RequestMethod.GET,
