@@ -11,10 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import static org.apache.logging.log4j.MarkerManager.exists;
 
 /**
  * Created by EDOUGA on 19/06/2019.
@@ -46,20 +47,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-   @Override
-    @Transactional
-    public Utilisateur addUser(Utilisateur user) {
-        Utilisateur localUser = new Utilisateur();
-        localUser.setUsername(user.getUsername());
-        localUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        localUser.setEmail(user.getEmail());
-        Role role = new Role();
-        localUser.setActive(true);
-        role.setName("USER");
-         return userRepository.save(localUser);
-    }
-
-
     @Override
     public Utilisateur findByUsername(String name) {
         return  userRepository.findByUsername(name);
@@ -74,6 +61,7 @@ public class UserServiceImpl implements UserService {
     public List<Utilisateur> findAllUtilisateur() {
         return userRepository.findAll();
     }
+
 
 
 }

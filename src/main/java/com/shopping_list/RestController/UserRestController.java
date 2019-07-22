@@ -1,63 +1,60 @@
 package com.shopping_list.RestController;
-import com.shopping_list.Repository.RoleRepository;
+
 import com.shopping_list.entities.Utilisateur;
-import com.shopping_list.exception.HeaderUtil;
+import com.shopping_list.security.JwtProvider;
 import com.shopping_list.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.shopping_list.vo.JwtResponse;
+import com.shopping_list.vo.LoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = {"http://localhost:8080","http://localhost:8100"})
+@CrossOrigin
 @RestController
-@RequestMapping("/api/user")
 public class UserRestController {
-    private final Logger log = LoggerFactory.getLogger(UserRestController.class);
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private RoleRepository roleRepository;
+    JwtProvider jwtProvider;
 
-    /**
-     * POST /User : Creer un nouveau user.
-     *
-     * @param user the compte to create
-     * @return the ResponseEntity with status 201 (Created) and with body the
-     * new compte, or with status 400 (Bad Request) if the compte has already an
-     * ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
+    @Autowired
+    AuthenticationManager authenticationManager;
 
-    @RequestMapping(value = "/auth",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Utilisateur> createUser(@RequestBody Utilisateur user) throws URISyntaxException {
-        log.debug("REST request to save user : {}", user);
-        if (user.getUserId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("compte", "idexists", "A new compte cannot already have an ID")).body(null);
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginForm loginForm) {
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtProvider.generate(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Utilisateur user = userService.findByUsername(userDetails.getUsername());
+            return ResponseEntity.ok(new JwtResponse(jwt, user.getUsername()));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        System.out.println(user.getUsername());
-        Utilisateur result = userService.createUser(user);
-
-        return ResponseEntity.created(new URI("/api/user/" + result.getUserId()))
-                .headers(HeaderUtil.createEntityCreationAlert("user", result.getUserId().toString()))
-                .body(result);
     }
 
-    @RequestMapping(value = "/all",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Utilisateur>> findAllUtilisateur() throws URISyntaxException{
-        log.debug("REST request to get user");
-        List<Utilisateur> user = userService.findAllUtilisateur();
-        return new ResponseEntity<>(user, null,HttpStatus.OK);
+    @PostMapping("/register")
+    public ResponseEntity<Utilisateur> createUser(@RequestBody Utilisateur user) {
+        try {
+            return ResponseEntity.ok(userService.createUser(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

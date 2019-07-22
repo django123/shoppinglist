@@ -7,6 +7,7 @@ import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
+import com.shopping_list.entities.Task;
 import com.shopping_list.entities.Utilisateur;
 
 import com.shopping_list.service.ShoppingService;
@@ -18,17 +19,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+
 
 @RestController
 @RequestMapping("/api/shopping")
@@ -53,11 +58,63 @@ public class ShoppingRestController {
     private ShareRepository shareRepository;
 
 
-    @GetMapping
+  @GetMapping
     public List<Shopping> findAllShopping(){
         List<Shopping>shoppings = shoppingService.findAllShopping();
         return shoppings;
     }
+
+/*@GetMapping
+public List<Object> findAllShopping(Authentication authentication){
+    List<Object> objects= new ArrayList<Object>();
+   String username = authentication.getName();
+    System.out.println(username);
+
+    Utilisateur user = userService.findByUsername(username);
+    List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
+    List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+    System.out.println(shoppings2);
+    List<Shopping> shoppings= new ArrayList<>();
+    for (Shopping shopping : shoppings1){
+        for (int i=0; i<shoppings2.size(); i++){
+            if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                shoppings.add(shoppings2.get(i));
+
+            }
+        }
+
+    }
+    for(Shopping shopping: shoppings){
+        List<Task>tasks = new ArrayList<>();
+        tasks.addAll(shopping.getTasks());
+        List<Task>tasks1=new ArrayList<>();
+        for (Task task:tasks){
+            if (task.getStatus()!=null && task.getStatus()){
+                tasks1.add(task);
+            }
+        }
+        if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
+            shopping.setStatut(true);
+        }
+        System.out.println(shoppings);
+    }
+    List<Integer> numbers= new ArrayList<>();
+    for (Shopping shopping : shoppings){
+        Collection<Task> tasks= shopping.getTasks();
+        Collection<Task> tasks1=new ArrayList<>();
+
+        for (Task task:tasks){
+            if (task.getStatus() != null  && task.getStatus() == true){
+                tasks1.add(task);
+            }
+        }
+        int nombre = tasks1.size();
+        numbers.add(nombre);
+    }
+    Stream.of(numbers,userService.findAllUtilisateur(),shoppings).forEach(objects::addAll);
+
+    return objects;
+}*/
 
     @RequestMapping(value = "/{shopId}",
             method = RequestMethod.GET,
@@ -101,28 +158,7 @@ public class ShoppingRestController {
         shopping1.setArchived(Boolean.parseBoolean(archived));
         shopping1.setStatut(Boolean.parseBoolean(statut));
         shopping1.setSaverName(saverName);
-        /*if (shopping1.getName() != null)
-            shopping.setName(shopping1.getName());
-        if (shopping1.getName() != null)
-            shopping.setName(shopping1.getName());
-        if (shopping1.getName() != null)
-            shopping.setName(shopping1.getName());*/
 
-        /*log.debug("REST request to update shopping: {}", shopping1);
-        if (shopping1.getShopId() == null){
-
-        }
-
-        shopping1.setName(name);
-        shopping1.setComment(comment);
-        shopping1.setArchived(Boolean.parseBoolean(archived));
-        shopping1.setStatut(Boolean.parseBoolean(statut));
-        shopping1.setSaverName(saverName);
-        shopping1.setShared(Boolean.parseBoolean(shared));
-        Utilisateur user = userRepository.findByUsername(shopping1.getSaverName());
-        shopping1.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
-        Shopping shopping = shoppingService.updateShopping(shopping1);
-        return new ResponseEntity<>(shopping, null, HttpStatus.OK);*/
         shoppingService.updateShopping(shopping);
         return shopping1;
     }
