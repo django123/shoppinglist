@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 
-
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8100"})
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskRestController {

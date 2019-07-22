@@ -23,12 +23,6 @@ public class HomeController {
     private ShoppingRepository shoppingRepository;
     @GetMapping("/")
     public String home(Model model){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = userService.findUserByEmail(auth.getName());
-
-        model.addAttribute("userName", "Welcome " + user.getUsername());
-
-
         return "redirect:/shopping/all";
     }
 
