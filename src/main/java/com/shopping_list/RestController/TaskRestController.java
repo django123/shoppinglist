@@ -12,17 +12,15 @@ import org.slf4j.LoggerFactory;
 import com.shopping_list.service.ShoppingService;
 import com.shopping_list.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
+
 import java.util.List;
 
-import static org.hibernate.id.IdentifierGenerator.ENTITY_NAME;
+
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -70,28 +68,34 @@ public class TaskRestController {
     @RequestMapping(value = "/update/{taskId}",
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Task updateTask(@Valid @RequestBody Task task, @PathVariable Long taskId){
+    public Task updateTask(@Valid @RequestBody Task task, @PathVariable Long taskId,HttpSession session){
 
         Task  task1 = taskService.findTaskId(taskId);
+        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         if (task.getName() != null)
             task1.setName(task.getName());
         if (task.getStatus() != null)
             task1.setStatus(task.getStatus());
         if (task.getDescription() != null)
             task1.setDescription(task.getDescription());
+        if( task.getShopping() != null)
+            task1.setShopping(shopping);
         taskService.updateTask(task1);
         return task;
     }
 
-    @GetMapping("/active/{taskId}")
-    public Task activeTask(@PathVariable Long taskId){
+    @RequestMapping(value = "/active/{taskId}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public void activeTask(@PathVariable Long taskId){
         Task task = taskRepository.getOne(taskId);
+
         if (task.getStatus()== true){
             task.setStatus(false);
         }else {
             task.setStatus(true);
         }
-       return taskRepository.save(task);
+       taskRepository.save(task);
 
     }
 }

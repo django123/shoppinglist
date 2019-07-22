@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -31,7 +32,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+
 
 @RestController
 @RequestMapping("/api/shopping")
@@ -56,16 +58,19 @@ public class ShoppingRestController {
     private ShareRepository shareRepository;
 
 
-/*    @GetMapping
+  @GetMapping
     public List<Shopping> findAllShopping(){
         List<Shopping>shoppings = shoppingService.findAllShopping();
         return shoppings;
-    }*/
-@GetMapping
-public List<Object> findAllShopping(){
+    }
+
+/*@GetMapping
+public List<Object> findAllShopping(Authentication authentication){
     List<Object> objects= new ArrayList<Object>();
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    Utilisateur user = userService.findUserByEmail(auth.getName());
+   String username = authentication.getName();
+    System.out.println(username);
+
+    Utilisateur user = userService.findByUsername(username);
     List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
     List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
     System.out.println(shoppings2);
@@ -109,7 +114,7 @@ public List<Object> findAllShopping(){
     Stream.of(numbers,userService.findAllUtilisateur(),shoppings).forEach(objects::addAll);
 
     return objects;
-}
+}*/
 
     @RequestMapping(value = "/{shopId}",
             method = RequestMethod.GET,
@@ -153,7 +158,7 @@ public List<Object> findAllShopping(){
         shopping1.setArchived(Boolean.parseBoolean(archived));
         shopping1.setStatut(Boolean.parseBoolean(statut));
         shopping1.setSaverName(saverName);
-        
+
         shoppingService.updateShopping(shopping);
         return shopping1;
     }

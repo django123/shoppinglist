@@ -12,8 +12,8 @@ public interface UserService {
 
     public Utilisateur createUser(Utilisateur user);
 
-    Utilisateur addUser(Utilisateur user);
     public Utilisateur findByUsername(String name);
     public Utilisateur findUserByEmail(String email);
     List<Utilisateur>findAllUtilisateur();
+
 }
