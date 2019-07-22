@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -93,5 +94,17 @@ public class TaskRestController {
         }
        return taskRepository.save(task);
 
+    }
+
+    public List<Object> active(@PathVariable Long taskId, HttpSession session){
+        Task task = taskRepository.getOne(taskId);
+        if (task.getStatus()== true){
+            task.setStatus(false);
+        }else {
+            task.setStatus(true);
+        }
+        taskRepository.save(task);
+
+        return null;
     }
 }
