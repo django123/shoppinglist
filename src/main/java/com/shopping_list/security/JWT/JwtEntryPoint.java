@@ -1,4 +1,4 @@
-package com.shopping_list.security;
+package com.shopping_list.security.JWT;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Created By Zhu Lin on 1/1/2019.
+ */
 @Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
 
 
     private static final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
-
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,

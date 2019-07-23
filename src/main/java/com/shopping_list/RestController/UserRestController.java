@@ -1,10 +1,10 @@
 package com.shopping_list.RestController;
 
 import com.shopping_list.entities.Utilisateur;
-import com.shopping_list.security.JwtProvider;
+import com.shopping_list.security.JWT.JwtProvider;
 import com.shopping_list.service.UserService;
-import com.shopping_list.vo.JwtResponse;
-import com.shopping_list.vo.LoginForm;
+import com.shopping_list.vo.request.LoginForm;
+import com.shopping_list.vo.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +14,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
 public class UserRestController {
-
     @Autowired
-    private UserService userService;
+    UserService userService;
+
 
     @Autowired
     JwtProvider jwtProvider;
 
     @Autowired
     AuthenticationManager authenticationManager;
-
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginForm loginForm) {
@@ -42,19 +38,22 @@ public class UserRestController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtProvider.generate(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Utilisateur user = userService.findByUsername(userDetails.getUsername());
-            return ResponseEntity.ok(new JwtResponse(jwt, user.getUsername()));
+            Utilisateur user = userService.findOne(userDetails.getUsername());
+            return ResponseEntity.ok(new JwtResponse(jwt, user.getEmail(), user.getUsername(), user.getRole()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
+
     @PostMapping("/register")
-    public ResponseEntity<Utilisateur> createUser(@RequestBody Utilisateur user) {
+    public ResponseEntity<Utilisateur> save(@RequestBody Utilisateur user) {
         try {
             return ResponseEntity.ok(userService.createUser(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
 }

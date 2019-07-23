@@ -1,11 +1,12 @@
 package com.shopping_list.config;
 
-import com.shopping_list.security.JwtEntryPoint;
-import com.shopping_list.security.JwtFilter;
+import com.shopping_list.security.JWT.JwtEntryPoint;
+import com.shopping_list.security.JWT.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,13 +16,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@DependsOn("passwordEncoder")
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired
@@ -46,6 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return super.authenticationManagerBean();
     }
 
+    private static  final String[] PUBLIC_MATCHES = {
+            "/api**"
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.
@@ -61,7 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api**").access("hasAnyRole('USER')")
+
+                .antMatchers(PUBLIC_MATCHES).permitAll().anyRequest().authenticated()
+                .antMatchers("/api/shopping/**").access("hasAnyRole('USER')")
                 .anyRequest().permitAll()
 
                 .and()
@@ -70,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
+    }
        /* http.
 
                 authorizeRequests()
@@ -87,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .and().logout()
 
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));*/
-    }
+
 
 
 
@@ -99,7 +106,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .ignoring()
                 .antMatchers("/resources/**","/static/**","/css/**","/js/**","/images/**");
     }
-
-
 
 }

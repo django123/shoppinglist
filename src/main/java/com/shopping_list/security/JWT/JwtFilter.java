@@ -1,4 +1,4 @@
-package com.shopping_list.security;
+package com.shopping_list.security.JWT;
 
 import com.shopping_list.entities.Utilisateur;
 import com.shopping_list.service.UserService;
@@ -24,13 +24,12 @@ public class JwtFilter extends OncePerRequestFilter {
     private UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException, IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String jwt = getToken(httpServletRequest);
         if (jwt != null && jwtProvider.validate(jwt)) {
             try {
                 String userAccount = jwtProvider.getUserAccount(jwt);
-                Utilisateur user = userService.findUserByEmail(userAccount);
-
+                Utilisateur user = userService.findByUsername(userAccount);
                 SimpleGrantedAuthority sga = new SimpleGrantedAuthority(user.getRole());
                 ArrayList<SimpleGrantedAuthority> list = new ArrayList<>();
                 list.add(sga);
