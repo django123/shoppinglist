@@ -13,9 +13,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
+import static org.springframework.http.ResponseEntity.ok;
 
 @CrossOrigin
 @RestController
@@ -40,7 +48,7 @@ public class UserRestController {
             String jwt = jwtProvider.generate(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             Utilisateur user = userService.findOne(userDetails.getUsername());
-            return ResponseEntity.ok(new JwtResponse(jwt, user.getEmail(), user.getUsername(), user.getRole()));
+            return ok(new JwtResponse(jwt, user.getEmail(), user.getUsername(), user.getRole()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -50,10 +58,23 @@ public class UserRestController {
     @PostMapping("/register")
     public ResponseEntity<Utilisateur> save(@RequestBody Utilisateur user) {
         try {
-            return ResponseEntity.ok(userService.createUser(user));
+            return ok(userService.createUser(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    @GetMapping("/me")
+    public ResponseEntity currentUser(@AuthenticationPrincipal UserDetails userDetails){
+        Map<Object, Object> model = new HashMap<>();
+        model.put("username", userDetails.getUsername());
+        model.put("roles", userDetails.getAuthorities()
+                .stream()
+                .map(a -> ((GrantedAuthority) a).getAuthority())
+                .collect(toList())
+        );
+        return ok(model);
     }
 
 

@@ -26,9 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.Principal;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -59,13 +57,13 @@ public class ShoppingRestController {
     private ShareRepository shareRepository;
 
 
-     @GetMapping
+/*     @GetMapping
     public List<Shopping> findAllShopping(){
         List<Shopping>shoppings = shoppingService.findAllShopping();
         return shoppings;
-    }
-   /* @GetMapping
-    public List<Object> findAllShopping(){
+    }*/
+     @GetMapping
+     public List<Object> findAllShopping(){
         List<Object> objects= new ArrayList<Object>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
@@ -113,7 +111,7 @@ public class ShoppingRestController {
         Stream.of(numbers,userService.findAllUtilisateur(),shoppings).forEach(objects::addAll);
 
         return objects;
-    }*/
+    }
 
     @RequestMapping(value = "/{shopId}",
             method = RequestMethod.GET,
@@ -127,7 +125,9 @@ public class ShoppingRestController {
 
    @PostMapping
    public Shopping createShopping(@RequestBody Shopping shopping){
-
+       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+       Utilisateur user = userService.findUserByEmail(auth.getName());
+       shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
        shopping.setArchived(false);
        shopping.setStatut(false);
        shopping.setShared(false);

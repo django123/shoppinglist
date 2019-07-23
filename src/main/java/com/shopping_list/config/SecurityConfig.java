@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 import javax.sql.DataSource;
@@ -65,7 +66,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+
+        http.
+
+                authorizeRequests()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/user/registration").permitAll()
+                .antMatchers("/user/login").permitAll()
+                .antMatchers("/user/save").permitAll()
+                .antMatchers(PUBLIC_MATCHES).permitAll().anyRequest().authenticated()
+                .antMatchers("/api/shopping/**").access("hasAnyRole('USER')")
+                .antMatchers("/shopping/**").hasAuthority("USER").anyRequest()
+                .authenticated().and().csrf().disable().cors().disable().httpBasic().and().formLogin()
+                .loginPage("/login").failureUrl("/login?error=true")
+                .defaultSuccessUrl("/")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .and().logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .and()
+                .exceptionHandling().authenticationEntryPoint(accessDenyHandler)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+       /* http.cors().and().csrf().disable()
                 .authorizeRequests()
 
                 .antMatchers(PUBLIC_MATCHES).permitAll().anyRequest().authenticated()
@@ -77,24 +102,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);*/
     }
-       /* http.
 
-                authorizeRequests()
-                    .antMatchers("/login").permitAll()
-                     .antMatchers("/user/registration").permitAll()
-                     .antMatchers("/user/login").permitAll()
-                     .antMatchers("/user/save").permitAll()
-                     .antMatchers("/shopping/**").hasAuthority("USER").anyRequest()
-                     .authenticated().and().csrf().disable().cors().disable().httpBasic().and().formLogin()
-                .loginPage("/login").failureUrl("/login?error=true")
-                .defaultSuccessUrl("/")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .and().logout()
-
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));*/
 
 
 
