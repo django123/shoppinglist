@@ -1,4 +1,4 @@
-package com.shopping_list.RestController;
+package shopping_list.RestController;
 
 
 import com.shopping_list.Repository.ShareRepository;
@@ -126,8 +126,9 @@ public class ShoppingRestController {
     }
 
    @PostMapping
-   public Shopping createShopping(@RequestBody Shopping shopping){
-
+   public Shopping createShopping(@RequestBody Shopping shopping, Principal principal){
+       Utilisateur user = userService.findOne(principal.getName());
+       System.out.println(user);
        shopping.setArchived(false);
        shopping.setStatut(false);
        shopping.setShared(false);

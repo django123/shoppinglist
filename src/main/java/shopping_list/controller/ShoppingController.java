@@ -1,4 +1,4 @@
-package com.shopping_list.controller;
+package shopping_list.controller;
 
 import com.shopping_list.Repository.ShareRepository;
 import com.shopping_list.Repository.ShoppingRepository;

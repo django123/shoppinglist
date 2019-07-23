@@ -1,4 +1,4 @@
-package com.shopping_list.service;
+package shopping_list.service;
 
 import com.shopping_list.entities.Utilisateur;
 

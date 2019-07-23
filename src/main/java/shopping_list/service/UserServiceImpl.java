@@ -1,9 +1,10 @@
-package com.shopping_list.service;
+package shopping_list.service;
 
 import com.shopping_list.Repository.RoleRepository;
 import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Role;
 import com.shopping_list.entities.Utilisateur;
+import com.shopping_list.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by EDOUGA on 19/06/2019.
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements com.shopping_list.service.UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;

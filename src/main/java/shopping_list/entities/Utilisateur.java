@@ -1,6 +1,8 @@
-package com.shopping_list.entities;
+package shopping_list.entities;
 
 import com.fasterxml.jackson.annotation.*;
+import com.shopping_list.entities.Role;
+import com.shopping_list.entities.Shopping;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,16 +34,16 @@ public class Utilisateur implements Serializable,UserDetails{
     @JsonBackReference
     @ManyToMany
     @JoinTable(name = "utilisateur_role", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
-    private Collection<Role> roles;
+    private Collection<com.shopping_list.entities.Role> roles;
 
     @ManyToMany(mappedBy = "utilisateurs")
-    private Collection<Shopping> shoppings;
+    private Collection<com.shopping_list.entities.Shopping> shoppings;
 
 
     public Utilisateur() {
     }
 
-    public Utilisateur(@Email(message = "*Please enter a valid email") @NotEmpty(message = "*enter your email") String email, String username, String password, Boolean active, Collection<Role> roles, Collection<Shopping> shoppings) {
+    public Utilisateur(@Email(message = "*Please enter a valid email") @NotEmpty(message = "*enter your email") String email, String username, String password, Boolean active, Collection<com.shopping_list.entities.Role> roles, Collection<com.shopping_list.entities.Shopping> shoppings) {
         this.email = email;
         this.username = username;
         this.password = password;
@@ -69,7 +71,7 @@ public class Utilisateur implements Serializable,UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities= new HashSet<>();
-        for(Role role: roles) {
+        for(com.shopping_list.entities.Role role: roles) {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
             authorities.add(grantedAuthority);
         }
@@ -93,11 +95,11 @@ public class Utilisateur implements Serializable,UserDetails{
         this.active = active;
     }
 
-    public Collection<Role> getRoles() {
+    public Collection<com.shopping_list.entities.Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Collection<com.shopping_list.entities.Role> roles) {
         this.roles = roles;
     }
 
@@ -130,11 +132,11 @@ public class Utilisateur implements Serializable,UserDetails{
         this.username = username;
     }
 
-    public void addRoles(Role role){
+    public void addRoles(com.shopping_list.entities.Role role){
         roles.add(role);
     }
 
-    public void removeRelation(Role role) {
+    public void removeRelation(com.shopping_list.entities.Role role) {
         roles.remove(role);
         role.getUtilisateurs().remove(this);
     }
@@ -145,7 +147,7 @@ public class Utilisateur implements Serializable,UserDetails{
         roles.add(role);
     }
 
-    public Collection<Shopping> getShoppings() {
+    public Collection<com.shopping_list.entities.Shopping> getShoppings() {
         return shoppings;
     }
 

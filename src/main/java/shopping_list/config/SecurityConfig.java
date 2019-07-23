@@ -1,5 +1,4 @@
-package com.shopping_list.config;
-
+package shopping_list.config;
 
 import com.shopping_list.security.jwt.JwtEntryPoint;
 import com.shopping_list.security.jwt.JwtFilter;

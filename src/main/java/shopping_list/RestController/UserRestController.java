@@ -1,4 +1,4 @@
-package com.shopping_list.RestController;
+package shopping_list.RestController;
 
 import com.shopping_list.entities.Utilisateur;
 
