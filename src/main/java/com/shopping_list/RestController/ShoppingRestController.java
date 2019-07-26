@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 
 
-
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8100"})
 @RestController
 @RequestMapping("/api/shopping")
 public class ShoppingRestController {

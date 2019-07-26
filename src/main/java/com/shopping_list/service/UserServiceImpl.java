@@ -11,11 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-
-import static org.apache.logging.log4j.MarkerManager.exists;
 
 /**
  * Created by EDOUGA on 19/06/2019.
@@ -43,9 +42,10 @@ public class UserServiceImpl implements UserService {
             roleRepository.save(role);
             user.setRoles(new HashSet<Role>(Arrays.asList(role)));
         }
-       return userRepository.save(user);
+        return userRepository.save(user);
 
     }
+
 
     @Override
     public Utilisateur findByUsername(String name) {
@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
     public List<Utilisateur> findAllUtilisateur() {
         return userRepository.findAll();
     }
-
 
 
 }

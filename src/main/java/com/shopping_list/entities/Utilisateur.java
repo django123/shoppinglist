@@ -4,13 +4,10 @@ import com.fasterxml.jackson.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,23 +16,17 @@ import java.util.Set;
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "userId")
-public class Utilisateur implements Serializable{
+public class Utilisateur implements Serializable,UserDetails{
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long userId;
     @Email(message = "*Please enter a valid email")
-    @NotEmpty
+    @NotEmpty(message = "*enter your email")
     private String email;
-    @NotEmpty
     private String username;
-    @NotEmpty
-    @Size(min = 3, message = "Length must be more than 3")
     private String password;
-    @NotNull
     private Boolean active;
-    @NotEmpty
-    private String role = "USER";
     @JsonBackReference
     @ManyToMany
     @JoinTable(name = "utilisateur_role", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
@@ -73,6 +64,16 @@ public class Utilisateur implements Serializable{
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities= new HashSet<>();
+        for(Role role: roles) {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
+            authorities.add(grantedAuthority);
+        }
+
+        return authorities;
+    }
 
     public String getPassword() {
         return password;
@@ -103,6 +104,25 @@ public class Utilisateur implements Serializable{
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -131,15 +151,5 @@ public class Utilisateur implements Serializable{
         this.shoppings = shoppings;
     }
 
-    public void encodePassword(PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(this.password);
-    }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }

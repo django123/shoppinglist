@@ -109,7 +109,6 @@ public class TaskController {
         }else {
             task.setStatus(true);
         }
-
         Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         taskRepository.save(task);
         return "redirect:/shopping/detail/"+shopping.getShopId() ;
