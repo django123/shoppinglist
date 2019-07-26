@@ -1,45 +1,58 @@
 package com.shopping_list.config;
 
-import com.shopping_list.security.JWT.JwtEntryPoint;
-import com.shopping_list.security.JWT.JwtFilter;
+import com.shopping_list.AuthTokenConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-
-import javax.sql.DataSource;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
-@DependsOn("passwordEncoder")
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    JwtFilter jwtFilter;
-    @Autowired
-    private JwtEntryPoint accessDenyHandler;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Qualifier("customUserDetailsService")
+    private UserDetailsService customUserDetailsService;
 
     @Autowired
-    private DataSource dataSource;
+    @Qualifier("authTokenConfig")
+    private AuthTokenConfig authTokenConfig;
 
-    @Value("${spring.queries.users-query}")
-    private String usersQuery;
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        String [] methodSecured={"/users/*","/shopping/**", "/api/shopping/**"};
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        http.csrf().disable()
+                .authorizeRequests().antMatchers( "/login","/","/login/authenticate", "/api/shopping/all").permitAll()
+                .antMatchers("/users/signup").permitAll()
+                //.antMatchers("/api/shopping/**").hasAuthority("USER")
+                .antMatchers(methodSecured).authenticated()
+                .and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error=true").permitAll()
+                .and().logout().deleteCookies("JSESSIONID").logoutUrl("/logout").logoutSuccessUrl("/login");
 
-    @Value("${spring.queries.roles-query}")
-    private String rolesQuery;
+        http.apply(authTokenConfig);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
+        authManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder());
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     @Override
@@ -47,64 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return super.authenticationManagerBean();
     }
 
-    private static  final String[] PUBLIC_MATCHES = {
-            "/api**"
-    };
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.
-                jdbcAuthentication()
-                .usersByUsernameQuery(usersQuery)
-                .authoritiesByUsernameQuery(rolesQuery)
-                .dataSource(dataSource)
-                .passwordEncoder(passwordEncoder);
-    }
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .authorizeRequests()
-
-                .antMatchers(PUBLIC_MATCHES).permitAll().anyRequest().authenticated()
-                .antMatchers("/api/shopping/**").access("hasAnyRole('USER')")
-                .anyRequest().permitAll()
-
-                .and()
-                .exceptionHandling().authenticationEntryPoint(accessDenyHandler)
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-       /* http.
-
-                authorizeRequests()
-                    .antMatchers("/login").permitAll()
-                     .antMatchers("/user/registration").permitAll()
-                     .antMatchers("/user/login").permitAll()
-                     .antMatchers("/user/save").permitAll()
-                     .antMatchers("/shopping/**").hasAuthority("USER").anyRequest()
-                     .authenticated().and().csrf().disable().cors().disable().httpBasic().and().formLogin()
-                .loginPage("/login").failureUrl("/login?error=true")
-                .defaultSuccessUrl("/")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .and().logout()
-
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));*/
-
-
-
-
-
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
                 .antMatchers("/resources/**","/static/**","/css/**","/js/**","/images/**");
     }
-
 }

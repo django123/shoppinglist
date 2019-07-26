@@ -1,7 +1,6 @@
-package com.shopping_list.service;
+package com.shopping_list.service.serviceImpl;
 
 import com.shopping_list.Repository.TaskRepository;
-import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
 import com.shopping_list.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;

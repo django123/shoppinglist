@@ -1,59 +1,49 @@
 package com.shopping_list.RestController;
 
-import com.shopping_list.entities.Utilisateur;
-import com.shopping_list.security.JWT.JwtProvider;
+
+import com.shopping_list.entities.User;
 import com.shopping_list.service.UserService;
-import com.shopping_list.vo.request.LoginForm;
-import com.shopping_list.vo.response.JwtResponse;
+import com.shopping_list.util.CustomError;
+import javassist.tools.rmi.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
+@RequestMapping("/users")
 public class UserRestController {
-    @Autowired
-    UserService userService;
-
 
     @Autowired
-    JwtProvider jwtProvider;
+    private UserService userService;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginForm loginForm) {
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId) {
 
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtProvider.generate(authentication);
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Utilisateur user = userService.findOne(userDetails.getUsername());
-            return ResponseEntity.ok(new JwtResponse(jwt, user.getEmail(), user.getUsername(), user.getRole()));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            User user = userService.findById(userId);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+
+        } catch (ObjectNotFoundException onfe) {
+            onfe.printStackTrace();
+            CustomError error = new CustomError("User with id = " + userId + " is not found");
+            return new ResponseEntity<CustomError>(error, HttpStatus.UNPROCESSABLE_ENTITY);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            CustomError error = new CustomError("An error has occured");
+            return new ResponseEntity<CustomError>(error, HttpStatus.EXPECTATION_FAILED);
         }
+
     }
 
-
-    @PostMapping("/register")
-    public ResponseEntity<Utilisateur> save(@RequestBody Utilisateur user) {
+    @RequestMapping(value = "/signup", method = { RequestMethod.POST })
+    public ResponseEntity<User> save(@RequestBody User user) {
         try {
             return ResponseEntity.ok(userService.createUser(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
-
-
 }

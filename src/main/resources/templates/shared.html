@@ -72,8 +72,8 @@
                                 <div style="display: none">
                                     <input type="text"  name="shopId" th:value="${shopping.shopId}"/>
                                 </div>
-                                <select name="userId" type="text">
-                                    <option th:each="user : ${user}" th:value="${user.userId}" th:text="${user.name}">
+                                <select name="id" type="text">
+                                    <option th:each="user : ${user}" th:value="${user.id}" th:text="${user.name}">
                                     </option>
                                 </select>
                                 <div class="modal-footer">

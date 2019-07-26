@@ -7,7 +7,7 @@ import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
-import com.shopping_list.entities.Utilisateur;
+import com.shopping_list.entities.User;
 import com.shopping_list.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -43,9 +43,9 @@ public class ShoppingController {
     @GetMapping("/all")
     public String findAll(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = userService.findUserByEmail(auth.getName());
+        User user = userService.findByUsernameOrEmail(auth.getName());
         List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
-        List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+        List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
         List<Shopping> shoppings= new ArrayList<>();
         for (Shopping shopping : shoppings1){
             for (int i=0; i<shoppings2.size(); i++){
@@ -97,7 +97,7 @@ public class ShoppingController {
     public String getShop(Model model, @PathVariable Long shopId, HttpSession session){
         Optional<Shopping> optional=shoppingRepository.findById(shopId);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = userService.findUserByEmail(auth.getName());
+        User user = userService.findByUsernameOrEmail(auth.getName());
         session.setAttribute("shopId", optional.get().getShopId());
         model.addAttribute("shopping", optional.get());
         model.addAttribute("user", user);
@@ -113,10 +113,10 @@ public class ShoppingController {
     }
 
     @PostMapping("/save")
-    public String save(Shopping shopping, HttpSession session){
+    public String save(Shopping shopping){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = userService.findUserByEmail(auth.getName());
-        shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
+        User user = userService.findByUsernameOrEmail(auth.getName());
+        shopping.setUsers(new HashSet<User>(Arrays.asList(user)));
         shopping.setSaverName(user.getUsername());
         shopping.setArchived(false);
         shopping.setStatut(false);
@@ -154,8 +154,8 @@ public class ShoppingController {
         shopping.setShared(Boolean.parseBoolean(shared));
         shopping.setStatut(Boolean.parseBoolean(statut));
         shopping.setSaverName(saverName);
-        Utilisateur user = userRepository.findByUsername(shopping.getSaverName());
-        shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
+        User user = userRepository.findByUsername(shopping.getSaverName());
+        shopping.setUsers(new HashSet<User>(Arrays.asList(user)));
         shoppingRepository.save(shopping);
         return "redirect:/shopping/all";
     }
@@ -163,9 +163,9 @@ public class ShoppingController {
     @GetMapping("/shared")
     public String sharedShopping(Model model, HttpSession session){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = userService.findUserByEmail(auth.getName());
+        User user = userService.findByUsernameOrEmail(auth.getName());
         List<Shopping>shoppings1 = shoppingRepository.findByShared(true);
-        List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+        List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
         List<Shopping> shoppings3= new ArrayList<>();
         for (Shopping shopping: shoppings1){
             for (int i=0; i<shoppings2.size(); i++){
@@ -182,11 +182,11 @@ public class ShoppingController {
 
     @PostMapping("/share/user")
     public String shareShopping(Share share, String userId, String shopId){
-        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
+        User user = userRepository.getOne(Long.parseLong(userId));
         Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
         shopping.add(user);
         shopping.setShared(true);
-        share.setUserId(user.getUserId());
+        share.setId(user.getId());
         share.setShopId(shopping.getShopId());
         shoppingRepository.save(shopping);
         shareRepository.save(share);
@@ -211,9 +211,9 @@ public class ShoppingController {
     @GetMapping("/archive")
     public String findAllArchive(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur user = userService.findUserByEmail(auth.getName());
+        User user = userService.findByUsernameOrEmail(auth.getName());
         List<Shopping>shoppings = shoppingRepository.findByArchived(true);
-        List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
+        List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
         List<Shopping>shoppings1 = new ArrayList<>();
         for(Shopping shopping : shoppings){
             for (int i=0; i<shoppings2.size(); i++ ){
