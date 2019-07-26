@@ -1,5 +1,6 @@
 package com.shopping_list.service;
 
+
 import com.shopping_list.entities.Shopping;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ShoppingService {
      * gets all Shoppings from Database
      * @return  a List containing Shoppings
      */
-    List<Shopping>findAllShopping();
+    List<Shopping> findAllShopping();
 
 
 

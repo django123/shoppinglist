@@ -1,58 +1,39 @@
 package com.shopping_list.entities;
 
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import java.io.Serializable;
-import java.util.Collection;
+import javax.persistence.*;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "roleId")
-public class Role implements Serializable {
+public class Role {
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
-    private Long roleId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Integer id;
 
-    private String name;
+    @Column(name = "role_name", length = 65)
+    private String roleName;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<Utilisateur> utilisateurs;
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
 
     public Role() {
     }
 
-    public Role(String name) {
-        this.name = name;
+    public Integer getId() {
+        return id;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Collection<Utilisateur> getUtilisateurs() {
-        return utilisateurs;
-    }
-
-    public void setUtilisateurs(Collection<Utilisateur> utilisateurs) {
-        this.utilisateurs = utilisateurs;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

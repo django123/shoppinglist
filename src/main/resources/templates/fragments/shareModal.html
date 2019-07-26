@@ -14,9 +14,9 @@
                         <input type="text"  name="shopId" th:value="${shopping.shopId}"/>
                     </div>
                     <div></div>
-                    <select name="userId" type="text">
+                    <select name="id" type="text">
                         <option value="">--select user to share--</option>
-                        <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}">
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}">
                         </option>
                     </select>
                     <div class="modal-footer">

@@ -1,4 +1,4 @@
-package com.shopping_list.service;
+package com.shopping_list.service.serviceImpl;
 
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.entities.Shopping;

@@ -1,20 +1,15 @@
 package com.shopping_list.service;
 
-import com.shopping_list.entities.Utilisateur;
+import com.shopping_list.entities.User;
+import javassist.tools.rmi.ObjectNotFoundException;
 
 import java.util.List;
 
-/**
- * Created by EDOUGA on 19/06/2019.
- */
-
 public interface UserService {
-
-    public Utilisateur createUser(Utilisateur user);
-
-    public Utilisateur findByUsername(String name);
-    public Utilisateur findUserByEmail(String email);
-    Utilisateur findOne(String email);
-    List<Utilisateur>findAllUtilisateur();
+    User findByUsernameOrEmail(String usermaneOrEmail);
+    User findById(Long id) throws ObjectNotFoundException;
+    List<User> findAllUser();
+    User createUser(User user);
+    public User findByUsername(String name);
 
 }

@@ -1,63 +1,49 @@
 package com.shopping_list.RestController;
-import com.shopping_list.Repository.RoleRepository;
-import com.shopping_list.entities.Utilisateur;
-import com.shopping_list.exception.HeaderUtil;
+
+
+import com.shopping_list.entities.User;
 import com.shopping_list.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.shopping_list.util.CustomError;
+import javassist.tools.rmi.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/users")
 public class UserRestController {
-    private final Logger log = LoggerFactory.getLogger(UserRestController.class);
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId) {
 
-    /**
-     * POST /User : Creer un nouveau user.
-     *
-     * @param user the compte to create
-     * @return the ResponseEntity with status 201 (Created) and with body the
-     * new compte, or with status 400 (Bad Request) if the compte has already an
-     * ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
+        try {
+            User user = userService.findById(userId);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
 
-    @RequestMapping(value = "/auth",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Utilisateur> createUser(@RequestBody Utilisateur user) throws URISyntaxException {
-        log.debug("REST request to save user : {}", user);
-        if (user.getUserId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("compte", "idexists", "A new compte cannot already have an ID")).body(null);
+        } catch (ObjectNotFoundException onfe) {
+            onfe.printStackTrace();
+            CustomError error = new CustomError("User with id = " + userId + " is not found");
+            return new ResponseEntity<CustomError>(error, HttpStatus.UNPROCESSABLE_ENTITY);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            CustomError error = new CustomError("An error has occured");
+            return new ResponseEntity<CustomError>(error, HttpStatus.EXPECTATION_FAILED);
         }
-        System.out.println(user.getUsername());
-        Utilisateur result = userService.createUser(user);
 
-        return ResponseEntity.created(new URI("/api/user/" + result.getUserId()))
-                .headers(HeaderUtil.createEntityCreationAlert("livre", result.getUserId().toString()))
-                .body(result);
     }
 
-    @RequestMapping(value = "/all",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Utilisateur>> findAllUtilisateur() throws URISyntaxException{
-        log.debug("REST request to get a page of livre");
-        List<Utilisateur> user = userService.findAllUtilisateur();
-        return new ResponseEntity<>(user, null,HttpStatus.OK);
+    @RequestMapping(value = "/signup", method = { RequestMethod.POST })
+    public ResponseEntity<User> save(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.createUser(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

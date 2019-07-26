@@ -4,11 +4,8 @@ import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
-import com.shopping_list.entities.Utilisateur;
-import com.shopping_list.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
@@ -39,7 +35,7 @@ public class TaskController {
 
     @GetMapping("/form")
     public String form(Model model, Long shopId){
-        List<Shopping>shoppings=shoppingRepository.findAll();
+        List<Shopping> shoppings=shoppingRepository.findAll();
         model.addAttribute("task", new Task());
         model.addAttribute("shoppings", shoppings);
         return "tasks/new";

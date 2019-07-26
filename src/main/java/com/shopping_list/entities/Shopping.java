@@ -41,13 +41,13 @@ public class Shopping implements Serializable {
     private Collection<Task>tasks;
 
     @ManyToMany
-    @JoinTable(name = "shopping_utilisateur", joinColumns = @JoinColumn(name = "shopId"), inverseJoinColumns = @JoinColumn(name = "userId"))
-    private Collection<Utilisateur> utilisateurs;
+    @JoinTable(name = "shopping_user", joinColumns = @JoinColumn(name = "shopId"), inverseJoinColumns = @JoinColumn(name = "id"))
+    private Collection<User> users;
 
     public Shopping() {
     }
 
-    public Shopping(String name, String comment, Boolean statut, Boolean archived, Boolean shared, String saverName, Date date, Collection<Task> tasks, Collection<Utilisateur> utilisateurs) {
+    public Shopping(String name, String comment, Boolean statut, Boolean archived, Boolean shared, String saverName, Date date, Collection<Task> tasks, Collection<User> users) {
         this.name = name;
         this.comment = comment;
         this.statut = statut;
@@ -56,7 +56,7 @@ public class Shopping implements Serializable {
         this.saverName = saverName;
         this.date = date;
         this.tasks = tasks;
-        this.utilisateurs = utilisateurs;
+        this.users = users;
     }
 
     public Long getShopId() {
@@ -116,22 +116,22 @@ public class Shopping implements Serializable {
         this.archived = archived;
     }
 
-    public Collection<Utilisateur> getUtilisateurs() {
-        return utilisateurs;
+    public Collection<User> getUsers() {
+        return users;
     }
 
-    public void setUtilisateurs(Collection<Utilisateur> utilisateurs) {
-        this.utilisateurs = utilisateurs;
+    public void setUsers(Collection<User> utilisateurs) {
+        this.users = users;
     }
 
-    public void add(Utilisateur utilisateur){
-        utilisateurs.add(utilisateur);
+    public void add(User utilisateur){
+        users.add(utilisateur);
 
     }
 
-    public void remove(Utilisateur utilisateur){
-        utilisateurs.remove(utilisateur);
-        utilisateur.getShoppings().remove(this);
+    public void remove(User user){
+        users.remove(user);
+        user.getShoppings().remove(this);
     }
 
     public String getSaverName() {

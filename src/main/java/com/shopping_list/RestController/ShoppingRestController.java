@@ -1,18 +1,14 @@
 package com.shopping_list.RestController;
 
-
 import com.shopping_list.Repository.ShareRepository;
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
 import com.shopping_list.Repository.UserRepository;
 import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
-import com.shopping_list.entities.Task;
-import com.shopping_list.entities.Utilisateur;
-
+import com.shopping_list.entities.User;
 import com.shopping_list.service.ShoppingService;
 import com.shopping_list.service.UserService;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,20 +17,19 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.net.URI;
+
 import java.net.URISyntaxException;
+
 import java.util.*;
-import java.util.stream.Stream;
+
 
 import org.slf4j.Logger;
 
 
-@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:8100"})
 @RestController
 @RequestMapping("/api/shopping")
 public class ShoppingRestController {
@@ -58,63 +53,58 @@ public class ShoppingRestController {
     private ShareRepository shareRepository;
 
 
-  @GetMapping
-    public List<Shopping> findAllShopping(){
-        List<Shopping>shoppings = shoppingService.findAllShopping();
-        return shoppings;
-    }
-
-/*@GetMapping
-public List<Object> findAllShopping(Authentication authentication){
-    List<Object> objects= new ArrayList<Object>();
-   String username = authentication.getName();
-    System.out.println(username);
-
-    Utilisateur user = userService.findByUsername(username);
-    List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
-    List<Shopping>shoppings2 = shoppingRepository.findByUtilisateurs_UserId(user.getUserId());
-    System.out.println(shoppings2);
-    List<Shopping> shoppings= new ArrayList<>();
-    for (Shopping shopping : shoppings1){
-        for (int i=0; i<shoppings2.size(); i++){
-            if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
-                shoppings.add(shoppings2.get(i));
-
-            }
-        }
-
-    }
-    for(Shopping shopping: shoppings){
-        List<Task>tasks = new ArrayList<>();
-        tasks.addAll(shopping.getTasks());
-        List<Task>tasks1=new ArrayList<>();
-        for (Task task:tasks){
-            if (task.getStatus()!=null && task.getStatus()){
-                tasks1.add(task);
-            }
-        }
-        if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
-            shopping.setStatut(true);
-        }
+    @RequestMapping(value = "/all", method = { RequestMethod.GET })
+    public ResponseEntity<List<Shopping>> getAllShopping(Authentication authentication) throws URISyntaxException {
+        List<Shopping> shoppings = shoppingService.findAllShopping();
         System.out.println(shoppings);
-    }
-    List<Integer> numbers= new ArrayList<>();
-    for (Shopping shopping : shoppings){
-        Collection<Task> tasks= shopping.getTasks();
-        Collection<Task> tasks1=new ArrayList<>();
+        return new ResponseEntity(shoppings, null, HttpStatus.OK);//essai un peut
+       /* UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        System.out.println(userDetails);
+        List<Object> objects= new ArrayList<Object>();
+        User user = userService.findByUsernameOrEmail(userDetails.getUsername());
+        List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
+        List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
+        List<Shopping> shoppings= new ArrayList<>();
+        for (Shopping shopping : shoppings1){
+            for (int i=0; i<shoppings2.size(); i++){
+                if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                    shoppings.add(shoppings2.get(i));
 
-        for (Task task:tasks){
-            if (task.getStatus() != null  && task.getStatus() == true){
-                tasks1.add(task);
+                }
             }
-        }
-        int nombre = tasks1.size();
-        numbers.add(nombre);
-    }
-    Stream.of(numbers,userService.findAllUtilisateur(),shoppings).forEach(objects::addAll);
 
-    return objects;
-}*/
+        }
+        for(Shopping shopping: shoppings){
+            List<Task>tasks = new ArrayList<>();
+            tasks.addAll(shopping.getTasks());
+            List<Task>tasks1=new ArrayList<>();
+            for (Task task:tasks){
+                if (task.getStatus()!=null && task.getStatus()){
+                    tasks1.add(task);
+                }
+            }
+            if ((tasks.size() != 0) && tasks.size()==tasks1.size()){
+                shopping.setStatut(true);
+            }
+            System.out.println(shoppings);
+        }
+        List<Integer> numbers= new ArrayList<>();
+        for (Shopping shopping : shoppings){
+            Collection<Task> tasks= shopping.getTasks();
+            Collection<Task> tasks1=new ArrayList<>();
+
+            for (Task task:tasks){
+                if (task.getStatus() != null  && task.getStatus() == true){
+                    tasks1.add(task);
+                }
+            }
+            int nombre = tasks1.size();
+            numbers.add(nombre);
+        }
+        //Stream.of(numbers,userService.findAllUtilisateur(),shoppings).forEach(objects::addAll);
+
+        return  new ResponseEntity(shoppings, null, HttpStatus.OK);*/
+    }
 
     @RequestMapping(value = "/{shopId}",
             method = RequestMethod.GET,
@@ -126,7 +116,7 @@ public List<Object> findAllShopping(Authentication authentication){
         return new ResponseEntity<>(shopping, null,HttpStatus.OK);
     }
 
-   @PostMapping
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
    public Shopping createShopping(@RequestBody Shopping shopping){
        shopping.setArchived(false);
        shopping.setStatut(false);
@@ -170,17 +160,38 @@ public List<Object> findAllShopping(Authentication authentication){
        shoppingService.deleteShopping(shopId);
     }
 
-    @PostMapping("/share/user")
+
+    @RequestMapping(value = "/share/user",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Shopping>shareShopping(Share share, String userId, String shopId){
-        Utilisateur user = userRepository.getOne(Long.parseLong(userId));
+        User user = userRepository.getOne(Long.parseLong(userId));
         Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
         shopping.add(user);
         shopping.setShared(true);
-        share.setUserId(user.getUserId());
+        share.setId(user.getId());
         share.setShopId(shopping.getShopId());
         shoppingRepository.save(shopping);
         shareRepository.save(share);
         return shoppingService.findAllShopping();
+    }
+    @RequestMapping(value = "/archive",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Shopping>findAllArchive(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUsernameOrEmail(auth.getName());
+        List<Shopping>shoppings = shoppingRepository.findByArchived(true);
+        List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
+        List<Shopping>shoppings1 = new ArrayList<>();
+        for(Shopping shopping : shoppings){
+            for (int i=0; i<shoppings2.size(); i++ ){
+                if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                    shoppings1.add(shopping);
+                }
+            }
+        }
+        return shoppings1;
     }
 
 }

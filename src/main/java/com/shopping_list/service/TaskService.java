@@ -1,5 +1,6 @@
 package com.shopping_list.service;
 
+
 import com.shopping_list.entities.Task;
 
 import java.util.List;

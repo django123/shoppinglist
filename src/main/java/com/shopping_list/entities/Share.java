@@ -13,18 +13,26 @@ public class Share implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long shareId;
 
-    private Long userId;
+    private Long id;
 
     private Long shopId;
 
     public Share() {
     }
 
-    public Share(Long shopId, Long userId) {
+    public Share(Long shopId, Long id) {
         this.shopId = shopId;
-        this.userId = userId;
+        this.id = id;
+    }
+
+    public Long getShareId() {
+        return shareId;
+    }
+
+    public void setShareId(Long shareId) {
+        this.shareId = shareId;
     }
 
     public Long getId() {
@@ -33,14 +41,6 @@ public class Share implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Long getShopId() {
