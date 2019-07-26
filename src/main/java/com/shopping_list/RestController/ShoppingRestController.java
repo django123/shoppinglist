@@ -59,10 +59,7 @@ public class ShoppingRestController {
 
 
   @GetMapping
-    public List<Shopping> findAllShopping(Authentication authentication){
-      List<Object> objects= new ArrayList<Object>();
-      String username = authentication.getName();
-      System.out.println(username);
+    public List<Shopping> findAllShopping(){
         List<Shopping>shoppings = shoppingService.findAllShopping();
         return shoppings;
     }

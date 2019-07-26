@@ -27,6 +27,8 @@ public class Utilisateur implements Serializable,UserDetails{
     private String username;
     private String password;
     private Boolean active;
+    @NotEmpty
+    private String role = "USER";
     @JsonBackReference
     @ManyToMany
     @JoinTable(name = "utilisateur_role", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
@@ -151,5 +153,11 @@ public class Utilisateur implements Serializable,UserDetails{
         this.shoppings = shoppings;
     }
 
+    public String getRole() {
+        return role;
+    }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

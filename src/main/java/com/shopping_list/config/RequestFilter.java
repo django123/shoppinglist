@@ -1,6 +1,5 @@
 package com.shopping_list.config;
 
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -23,6 +22,7 @@ public class RequestFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, x-auth-token");

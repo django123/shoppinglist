@@ -113,7 +113,7 @@ public class ShoppingController {
     }
 
     @PostMapping("/save")
-    public String save(Shopping shopping, HttpSession session){
+    public String save(Shopping shopping){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Utilisateur user = userService.findUserByEmail(auth.getName());
         shopping.setUtilisateurs(new HashSet<Utilisateur>(Arrays.asList(user)));
