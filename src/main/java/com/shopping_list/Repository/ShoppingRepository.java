@@ -15,4 +15,5 @@ public interface ShoppingRepository extends JpaRepository<Shopping,Long> {
     List<Shopping> findByArchived(Boolean archived);
     List<Shopping> findByShared(Boolean shared);
 
+
 }

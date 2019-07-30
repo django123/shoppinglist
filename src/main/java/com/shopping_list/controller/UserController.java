@@ -43,18 +43,19 @@ public class UserController {
 
     @PostMapping("/save")
     public String save(AppUser user,  BindingResult bindingResult, Model model){
-        AppUser userExists = userService1.findByUsername(user.getUsername());
+        AppUser userExists = userService.findUserByUsername(user.getUsername());
         if (userExists != null) {
             bindingResult
-                    .rejectValue("email", "error.user",
-                            "there is already a user registered with a email provided");
+                    .rejectValue("username", "error.user",
+                            "there is already a user registered with a username provided");
         }
 
         if(bindingResult.hasErrors()) {
             return  "user/form";
         }else{
             System.out.println(user.getUsername());
-            userService1.createUser(user);
+            userService.saveUser(user);
+            userService.addRoleToUser(user.getUsername(), "USER");
 
         }
 

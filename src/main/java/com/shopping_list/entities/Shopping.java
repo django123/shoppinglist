@@ -19,9 +19,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "shopId")
 public class Shopping {
 
@@ -57,5 +54,83 @@ public class Shopping {
     }
 
 
+    public Long getShopId() {
+        return shopId;
+    }
 
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Boolean getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Boolean statut) {
+        this.statut = statut;
+    }
+
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
+    }
+
+    public Boolean getShared() {
+        return shared;
+    }
+
+    public void setShared(Boolean shared) {
+        this.shared = shared;
+    }
+
+    public String getSaverName() {
+        return saverName;
+    }
+
+    public void setSaverName(String saverName) {
+        this.saverName = saverName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Collection<AppUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Collection<AppUser> users) {
+        this.users = users;
+    }
+
+    public Collection<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
+    }
 }

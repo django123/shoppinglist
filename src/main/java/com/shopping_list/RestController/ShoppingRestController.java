@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.*;
-import java.util.stream.Stream;
+
 
 
 import org.slf4j.Logger;
@@ -37,12 +38,16 @@ public class ShoppingRestController {
     private ShoppingRepository shoppingRepository;
     @Autowired
     private AppUserRepository appUserRepository;
+    @Autowired
+    private ShoppingService shoppingService;
 
+    @Autowired
+    private AccountService accountService;
     @GetMapping("/shoppings")
-    public List<Object> listShopping(){
-        List<Object> objects= new ArrayList<Object>();
+    public ResponseEntity<Collection<Shopping>> listShopping()
+            throws URISyntaxException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        AppUser user = appUserRepository.findByUsername(auth.getName());
+        AppUser user = accountService.findUserByUsername(auth.getName());
         System.out.println(user);
         List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
         List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
@@ -83,13 +88,24 @@ public class ShoppingRestController {
             int nombre = tasks1.size();
             numbers.add(nombre);
         }
-        Stream.of(numbers,appUserRepository.findAll(),shoppings).forEach(objects::addAll);
-        return objects;
+
+        log.debug("REST request to get a page of shopping");
+        //Collection<Shopping> collection = shoppingService.findAllShopping();
+        return new ResponseEntity<>(shoppings, null, HttpStatus.OK);
     }
 
     @PostMapping("/shoppings/create")
-    public Shopping save(@RequestBody Shopping shopping) {
-        return shoppingRepository.save(shopping);
+    public ResponseEntity<Object> createShopping(@RequestBody Shopping shopping) throws URISyntaxException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AppUser user = accountService.findUserByUsername(auth.getName());
+        shopping.setUsers(new HashSet<AppUser>(Arrays.asList(user)));
+        shopping.setSaverName(user.getUsername());
+        shopping.setArchived(false);
+        shopping.setStatut(false);
+        shopping.setShared(false);
+        Shopping shopping1=shoppingService.createShopping(shopping);
+
+        return ResponseEntity.created(new URI("/shoppings" + shopping1.getShopId())).body(shopping1);
     }
     @GetMapping("/shoppings/{shopId}")
     public ResponseEntity<Shopping> findShopping(@PathVariable Long shopId, HttpSession session){
@@ -113,12 +129,12 @@ public class ShoppingRestController {
         shopping1.setName(name);
         shopping1.setComment(comment);
 
-        shoppingRepository.save(shopping);
+        shoppingService.createShopping(shopping);
         return shopping1;
     }
 
     @DeleteMapping("/shoppings/{shopId}")
     public void deleteShopping(@PathVariable("shopId") Long shopId){
-        shoppingRepository.deleteById(shopId);
+        shoppingService.deleteShopping(shopId);
     }
 }

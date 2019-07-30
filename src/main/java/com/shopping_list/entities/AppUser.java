@@ -12,9 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-
-@Data
-@AllArgsConstructor @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class AppUser {
 
     @Id
@@ -27,6 +26,7 @@ public class AppUser {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AppRole> roles = new ArrayList<>();
     @ManyToMany(mappedBy = "users")
+    @JsonBackReference
     private Collection<Shopping> shoppings;
 
     public String getUsername() {
@@ -43,5 +43,29 @@ public class AppUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Collection<AppRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<AppRole> roles) {
+        this.roles = roles;
+    }
+
+    public Collection<Shopping> getShoppings() {
+        return shoppings;
+    }
+
+    public void setShoppings(Collection<Shopping> shoppings) {
+        this.shoppings = shoppings;
     }
 }

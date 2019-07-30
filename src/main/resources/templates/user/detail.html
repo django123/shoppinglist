@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>formulaire d'ajout d'un utilisateur</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/bootstrap-4.1/bootstrap.min.css}">
+    <link th:href="@{/css/user.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body class="alert alert-warning">
+<div th:replace="fragments/header.html:: nav"></div>
+<div class=" container main-secction">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 image-section">
+            <img src="https://png.pngtree.com/thumb_back/fw800/back_pic/00/08/57/41562ad4a92b16a.jpg">
+        </div>
+        <div class="row user-left-part">
+            <div class="col-md-3 col-sm-3 col-xs-12 user-profil-part pull-left">
+                <div class="row ">
+                    <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
+                        <button id="btn-contact" (click)="clearModal()" data-toggle="modal" data-target="#contact" class="btn btn-success btn-block follow">Contactarme</button>
+                        <a class="btn btn-warning btn-block" th:href="@{/utilisateur/update/}+${utilisateur.id}" style="width: 100%; height: 40px">Modifier</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section">
+                <div class="row profile-right-section-row">
+                    <div class="col-md-12 profile-header">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-6 col-xs-6 profile-header-section1 pull-left">
+                                <h1><span th:text="${utilisateur.username}"></span></h1>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-6 profile-header-section1 text-right pull-rigth">
+                                <a th:href="@{/utilisateurs}" class="btn btn-primary btn-block">Utilisateur</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#profile" role="tab" data-toggle="tab"><i class="fas fa-user-circle"></i> Autres informations</a>
+                                    </li>
+                                </ul>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade show active" id="profile">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label>Email</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><span th:text="${utilisateur.email}"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 img-main-rightPart">
+                                <div class="row">
+                                    <div class="col-md-12 image-right">
+                                        <h4 class=" alert alert-secondary"> Roles</h4>
+                                        <ul>
+                                            <li th:each="role : ${roles}" >
+                                                <span  th:text="${role.roleName}" class="card-body"></span>
+                                            </li>
+                                        </ul>
+                                        <a class="btn btn-success" th:href="@{/utilisateur/role/form/}+${utilisateur.user_id}" style="width: 100%">Ajouter un role</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="contact" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contact">Contacta me</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p for="msj">Se enviará este mensaje a la persona que desea contactar, indicando que te quieres comunicar con el. Para esto debes de ingresar tu información personal.</p>
+                </div>
+                <div class="form-group">
+                    <label for="txtFullname">Nombre completo</label>
+                    <input type="text" id="txtFullname" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="txtEmail">Email</label>
+                    <input type="text" id="txtEmail" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="txtPhone">Teléfono</label>
+                    <input type="text" id="txtPhone" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="openModal()" data-dismiss="modal">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fragments/head"></th:block>
+<body>
+
+<div id="wrapper">
+    <th:block th:include="fragments/sidebar"></th:block>
+
+    <div class="main-panel">
+        <th:block th:include="fragments/navbar"></th:block>
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <th:block th:include="taskTemplate/editTask"></th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <th:block th:include="fragments/footer"></th:block>
+</div>
+
+<th:block th:include="fragments/scripts"></th:block>
+<div></div>
+</body>
+</html>
