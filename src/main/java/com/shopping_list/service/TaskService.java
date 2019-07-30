@@ -9,8 +9,6 @@ import java.util.List;
  * Created by EDOUGA on 21/06/2019.
  */
 public interface TaskService {
-
-
     /**
      * gets all Tasks from Database
      * @return  a List containing Tasks

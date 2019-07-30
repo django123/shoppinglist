@@ -1,13 +1,13 @@
 package com.shopping_list.controller;
 
 
-import com.shopping_list.Repository.RoleRepository;
-import com.shopping_list.Repository.UserRepository;
-import com.shopping_list.entities.User;
+import com.shopping_list.Repository.AppRoleRepository;
+import com.shopping_list.Repository.AppUserRepository;
+import com.shopping_list.entities.AppUser;
+import com.shopping_list.service.AccountService;
 import com.shopping_list.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,30 +22,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
 
     @Autowired
-    private RoleRepository roleRepository;
+    private AppRoleRepository roleRepository;
 
     @Autowired
-    private UserService userService;
-
-
+    private AccountService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
+     private UserService userService1;
     @Autowired
-    private PasswordEncoder bCryptPasswordEncoder;
+    private AppUserRepository userRepository;
+
+
 
     @GetMapping("/registration")
     public String form(Model model){
-        model.addAttribute("user",  new User());
+        model.addAttribute("user",  new AppUser());
         return "user/form";
     }
 
 
     @PostMapping("/save")
-    public String save(User utilisateur, BindingResult bindingResult, Model model){
-
-        User userExists = userService.findByUsername(utilisateur.getUsername());
+    public String save(AppUser user,  BindingResult bindingResult, Model model){
+        AppUser userExists = userService1.findByUsername(user.getUsername());
         if (userExists != null) {
             bindingResult
                     .rejectValue("email", "error.user",
@@ -55,8 +53,8 @@ public class UserController {
         if(bindingResult.hasErrors()) {
             return  "user/form";
         }else{
-            System.out.println(utilisateur.getUsername());
-            userService.createUser(utilisateur);
+            System.out.println(user.getUsername());
+            userService1.createUser(user);
 
         }
 

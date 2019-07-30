@@ -1,11 +1,12 @@
 package com.shopping_list.Repository;
 
 
-import com.shopping_list.entities.Role;
+import com.shopping_list.entities.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Integer> {
-    Role findByRoleName(String roleName);
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+
+    AppUser findByUsername(String username);
 }

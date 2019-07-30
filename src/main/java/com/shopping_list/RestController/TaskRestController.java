@@ -25,7 +25,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskRestController {
-
     private final Logger log = LoggerFactory.getLogger(TaskRestController.class);
     private static final String ENTITY_NAME = "task";
     @Autowired
@@ -35,74 +34,53 @@ public class TaskRestController {
     private TaskRepository taskRepository;
     @Autowired
     private ShoppingRepository shoppingRepository;
-    @Autowired
-    private ShoppingService shoppingService;
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Task>findTasks(){
-       return  taskService.findAllTask();
+    @GetMapping("/tasks")
+    public List<Task> findTasks(){
+        return  taskService.findAllTask();
     }
 
-    @RequestMapping(value = "/{taskId}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/tasks/{taskId}")
     public Task findTaskById(@PathVariable Long taskId){
         return taskService.findTaskId(taskId);
     }
-
-   @RequestMapping(value = "/{shopId}/task",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/tasks/{shopId}/task")
     public Task createTask(@Valid @RequestBody Task task, @PathVariable Long shopId){
 
         return shoppingRepository.findById(shopId)
                 .map(shopping -> {
-                    //task.setStatus(false);
                     task.setShopping(shopping);
                     return taskRepository.save(task);
                 }).orElseThrow(() -> new NotFoundException("Shopping not found!"));
     }
-
-
-
-    @DeleteMapping("/{taskId}")
-    public void deleteTask(@PathVariable Long taskId){
-        taskService.deleteTask(taskId);
-    }
-
-    @RequestMapping(value = "/update/{taskId}",
-            method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping("/tasks/update/{taskId}")
     public Task updateTask(@Valid @RequestBody Task task, @PathVariable Long taskId,HttpSession session){
 
         Task  task1 = taskService.findTaskId(taskId);
-        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
+//        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         if (task.getName() != null)
             task1.setName(task.getName());
         if (task.getStatus() != null)
             task1.setStatus(task.getStatus());
         if (task.getDescription() != null)
             task1.setDescription(task.getDescription());
-        if( task.getShopping() != null)
-            task1.setShopping(shopping);
         taskService.updateTask(task1);
         return task;
     }
-
-
-
-    @RequestMapping(value = "/active/{taskId}", method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Task activeTask(@PathVariable Long taskId){
+    @DeleteMapping("/tasks/{taskId}")
+    public void deleteTask(@PathVariable Long taskId){
+        taskService.deleteTask(taskId);
+    }
+    @GetMapping("/tasks/active/{taskId}")
+    public Task activeTask(@PathVariable Long taskId, HttpSession session){
         Task task = taskRepository.getOne(taskId);
         if (task.getStatus()== true){
             task.setStatus(false);
         }else {
             task.setStatus(true);
         }
+        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         return taskRepository.save(task);
 
     }
-
 }

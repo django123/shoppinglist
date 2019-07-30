@@ -1,14 +1,14 @@
 package com.shopping_list.controller;
 
+import com.shopping_list.Repository.AppUserRepository;
 import com.shopping_list.Repository.ShareRepository;
 import com.shopping_list.Repository.ShoppingRepository;
 import com.shopping_list.Repository.TaskRepository;
-import com.shopping_list.Repository.UserRepository;
+import com.shopping_list.entities.AppUser;
 import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
-import com.shopping_list.entities.User;
-import com.shopping_list.service.UserService;
+import com.shopping_list.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,15 +35,15 @@ public class ShoppingController {
     private ShareRepository shareRepository;
 
     @Autowired
-    private UserService userService;
+    private AccountService userService;
 
     @Autowired
-    private UserRepository userRepository;
+    private AppUserRepository userRepository;
 
     @GetMapping("/all")
     public String findAll(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsernameOrEmail(auth.getName());
+        AppUser user = userService.findUserByUsername(auth.getName());
         List<Shopping>shoppings1 = shoppingRepository.findByArchived(false);
         List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
         List<Shopping> shoppings= new ArrayList<>();
@@ -97,7 +97,7 @@ public class ShoppingController {
     public String getShop(Model model, @PathVariable Long shopId, HttpSession session){
         Optional<Shopping> optional=shoppingRepository.findById(shopId);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsernameOrEmail(auth.getName());
+        AppUser user = userService.findUserByUsername(auth.getName());
         session.setAttribute("shopId", optional.get().getShopId());
         model.addAttribute("shopping", optional.get());
         model.addAttribute("user", user);
@@ -115,8 +115,8 @@ public class ShoppingController {
     @PostMapping("/save")
     public String save(Shopping shopping){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsernameOrEmail(auth.getName());
-        shopping.setUsers(new HashSet<User>(Arrays.asList(user)));
+        AppUser user = userService.findUserByUsername(auth.getName());
+        shopping.setUsers(new HashSet<AppUser>(Arrays.asList(user)));
         shopping.setSaverName(user.getUsername());
         shopping.setArchived(false);
         shopping.setStatut(false);
@@ -154,8 +154,8 @@ public class ShoppingController {
         shopping.setShared(Boolean.parseBoolean(shared));
         shopping.setStatut(Boolean.parseBoolean(statut));
         shopping.setSaverName(saverName);
-        User user = userRepository.findByUsername(shopping.getSaverName());
-        shopping.setUsers(new HashSet<User>(Arrays.asList(user)));
+        AppUser user = userRepository.findByUsername(shopping.getSaverName());
+        shopping.setUsers(new HashSet<AppUser>(Arrays.asList(user)));
         shoppingRepository.save(shopping);
         return "redirect:/shopping/all";
     }
@@ -163,7 +163,7 @@ public class ShoppingController {
     @GetMapping("/shared")
     public String sharedShopping(Model model, HttpSession session){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsernameOrEmail(auth.getName());
+        AppUser user = userService.findUserByUsername(auth.getName());
         List<Shopping>shoppings1 = shoppingRepository.findByShared(true);
         List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
         List<Shopping> shoppings3= new ArrayList<>();
@@ -182,7 +182,7 @@ public class ShoppingController {
 
     @PostMapping("/share/user")
     public String shareShopping(Share share, String userId, String shopId){
-        User user = userRepository.getOne(Long.parseLong(userId));
+        AppUser user = userRepository.getOne(Long.parseLong(userId));
         Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
         shopping.add(user);
         shopping.setShared(true);
@@ -211,7 +211,7 @@ public class ShoppingController {
     @GetMapping("/archive")
     public String findAllArchive(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsernameOrEmail(auth.getName());
+        AppUser user = userService.findUserByUsername(auth.getName());
         List<Shopping>shoppings = shoppingRepository.findByArchived(true);
         List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
         List<Shopping>shoppings1 = new ArrayList<>();

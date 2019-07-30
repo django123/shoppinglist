@@ -1,72 +1,41 @@
 package com.shopping_list.service.serviceImpl;
 
-import com.shopping_list.Repository.RoleRepository;
-import com.shopping_list.Repository.UserRepository;
-import com.shopping_list.entities.Role;
-import com.shopping_list.entities.User;
+import com.shopping_list.Repository.AppRoleRepository;
+import com.shopping_list.Repository.AppUserRepository;
+import com.shopping_list.entities.AppRole;
+import com.shopping_list.entities.AppUser;
 import com.shopping_list.service.UserService;
-import javassist.tools.rmi.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
 
-@Service("userService")
-@Transactional
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserRepository userRepository;
-
+    private AppUserRepository appUserRepository;
     @Autowired
-    private RoleRepository roleRepository;
-
+    private AppRoleRepository appRoleRepository;
     @Override
-    @Transactional(readOnly = true)
-    public User findByUsernameOrEmail(String usernameOrEmail) {
-        try {
-            User user = userRepository.findByUsernameOrEmail(usernameOrEmail);
-            return user;
-        } catch (Exception e) {
-            throw e;
-        }
-
+    public AppUser findByUsername(String username) {
+        return appUserRepository.findByUsername(username);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public User findById(Long id) throws ObjectNotFoundException {
-        User user = userRepository.findById(id).get();
-        if (user == null) {
-            throw new ObjectNotFoundException("User not found");
-        }
-        return user;
-    }
-
-    @Override
-    public List<User> findAllUser() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User createUser(User user) {
-        BCryptPasswordEncoder encoder = new  BCryptPasswordEncoder();
+    public AppUser createUser(AppUser user) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
-        Role userRole = roleRepository.findByRoleName("USER");
-        if (userRole != null) {
-            user.setRole(userRole);
+        AppRole userRole = appRoleRepository.findByRole("USER");
+        if (userRole != null){
+            user.setRoles(new HashSet<AppRole>(Arrays.asList(userRole)));
         }else{
-            Role role=new Role("USER");
-            roleRepository.save(role);
-            user.setRole(role);
+            AppRole role=new AppRole(null,"USER");
+            appRoleRepository.save(role);
+            user.setRoles(new HashSet<AppRole>(Arrays.asList(role)));
         }
-        return userRepository.save(user);
+        return appUserRepository.save(user);
     }
-    @Override
-    public User findByUsername(String name) {
-        return  userRepository.findByUsername(name);
-    }
-
 }

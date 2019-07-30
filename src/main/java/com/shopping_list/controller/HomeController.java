@@ -1,7 +1,7 @@
 package com.shopping_list.controller;
 
 import com.shopping_list.Repository.ShoppingRepository;
-import com.shopping_list.service.UserService;
+import com.shopping_list.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 public class HomeController {
 
     @Autowired
-    private UserService userService;
+    private AccountService userService;
 
     @Autowired
     private ShoppingRepository shoppingRepository;

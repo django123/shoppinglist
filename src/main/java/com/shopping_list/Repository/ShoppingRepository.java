@@ -13,6 +13,6 @@ public interface ShoppingRepository extends JpaRepository<Shopping,Long> {
 
     List<Shopping> findByUsers_Id(Long id);
     List<Shopping> findByArchived(Boolean archived);
-    List<Shopping>findByShared(Boolean shared);
+    List<Shopping> findByShared(Boolean shared);
 
 }

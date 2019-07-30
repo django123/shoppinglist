@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 public class ShoppingListApplication implements CommandLineRunner {
-    public final static Logger logger = LoggerFactory.getLogger(ShoppingListApplication.class);
+
 
     public static void main(String[] args) {
         SpringApplication.run(ShoppingListApplication.class, args);
