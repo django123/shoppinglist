@@ -175,7 +175,7 @@ public class ShoppingRestController {
         shoppingService.deleteShopping(shopId);
     }
 
-    @GetMapping("/shoppings/archived/{shopId}")
+    @GetMapping("/shoppings/archive/{shopId}")
     public ResponseEntity<Object>  archived(@PathVariable Long shopId) throws URISyntaxException {
         List<Shopping> shoppings = shoppingRepository.findByArchived(true);
         Shopping shopping = shoppingRepository.getOne(shopId);
