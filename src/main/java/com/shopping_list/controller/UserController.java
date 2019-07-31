@@ -43,20 +43,28 @@ public class UserController {
 
     @PostMapping("/save")
     public String save(AppUser user,  BindingResult bindingResult, Model model){
+        String username = user.getUsername();
+        String password = user.getPassword();
+        String repassword = user.getRepassword();
         AppUser userExists = userService.findUserByUsername(user.getUsername());
         if (userExists != null) {
             bindingResult
                     .rejectValue("username", "error.user",
                             "there is already a user registered with a username provided");
         }
+        if (!password.equals(repassword))
+            throw new RuntimeException("You must confirm your password");
 
         if(bindingResult.hasErrors()) {
             return  "user/form";
         }else{
-            System.out.println(user.getUsername());
+
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setActive(true);
             userService.saveUser(user);
             userService.addRoleToUser(user.getUsername(), "USER");
-
+            System.out.println(user.getUsername());
         }
 
         return "redirect:/login";

@@ -37,7 +37,7 @@ public class Shopping {
     @ManyToMany
     @JoinTable(name = "shopping_user", joinColumns = @JoinColumn(name = "shopId"), inverseJoinColumns = @JoinColumn(name = "id"))
     private Collection<AppUser> users;
-    @OneToMany(mappedBy = "shopping", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "shopping", cascade=CascadeType.ALL,fetch = FetchType.LAZY)
     @OnDelete(action= OnDeleteAction.NO_ACTION)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Collection<Task>tasks;

@@ -32,6 +32,8 @@ public class AuthRestController {
         AppUser u = new AppUser();
         u.setUsername(data.getUsername());
         u.setPassword(data.getPassword());
+        u.setRepassword(data.getRepassword());
+        u.setActive(true);
         userService.saveUser(u);
         userService.addRoleToUser(data.getUsername(), "USER");
         return u;

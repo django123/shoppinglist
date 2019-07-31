@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -44,46 +45,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void  configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-/*        auth.
-                jdbcAuthentication()
-                .usersByUsernameQuery(usersQuery)
-                .authoritiesByUsernameQuery(rolesQuery)
-                .dataSource(dataSource)
-                .passwordEncoder(passwordEncoder());*/
 
+    }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void  configure(HttpSecurity http) throws Exception{
-
+        String [] methodSecured={"/users/*","/shopping/**"};
         http.csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf().disable()
+                .authorizeRequests().antMatchers( "/login/**","/login","/").permitAll()
+                .antMatchers().permitAll()
+                .antMatchers("/shoppings/**", "/shopping/**").hasAuthority("USER")
+                .antMatchers(methodSecured).authenticated()
+                .and().formLogin().loginPage("/login").defaultSuccessUrl("/").failureUrl("/login?error=true").permitAll()
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login")
+                .and()
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+     /*   http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users/**", "/login/**")
+                .antMatchers("/users/**", "/login/**","/user/save","/user/registration")
                 .permitAll()
                 .antMatchers("/shoppings/**","/tasks/**").hasAuthority("USER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        http.
-                authorizeRequests()
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/vendor/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/user/registration").permitAll()
-                .antMatchers("/user/save").permitAll()
-                .antMatchers("/shopping/**").hasAuthority("USER").anyRequest()
-                .authenticated().and().csrf().disable().formLogin()
-                .loginPage("/login").failureUrl("/login?error=true")
-                .defaultSuccessUrl("/")
-              /*  .usernameParameter("username")
-                .passwordParameter("password")*/
-                .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
-
+                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);*/
 
     }
 

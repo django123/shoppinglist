@@ -12,18 +12,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
+import java.net.URISyntaxException;
 import java.util.List;
 
 
-@CrossOrigin
+
 @RestController
-@RequestMapping("/api/tasks")
 public class TaskRestController {
     private final Logger log = LoggerFactory.getLogger(TaskRestController.class);
     private static final String ENTITY_NAME = "task";
@@ -44,20 +44,22 @@ public class TaskRestController {
     public Task findTaskById(@PathVariable Long taskId){
         return taskService.findTaskId(taskId);
     }
-    @PostMapping("/tasks/{shopId}/task")
+   @PostMapping("/tasks/create/{shopId}/task")
     public Task createTask(@Valid @RequestBody Task task, @PathVariable Long shopId){
 
         return shoppingRepository.findById(shopId)
                 .map(shopping -> {
+                    task.setStatus(false);
                     task.setShopping(shopping);
                     return taskRepository.save(task);
                 }).orElseThrow(() -> new NotFoundException("Shopping not found!"));
     }
+
+
     @PutMapping("/tasks/update/{taskId}")
     public Task updateTask(@Valid @RequestBody Task task, @PathVariable Long taskId,HttpSession session){
 
         Task  task1 = taskService.findTaskId(taskId);
-//        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
         if (task.getName() != null)
             task1.setName(task.getName());
         if (task.getStatus() != null)
@@ -71,16 +73,17 @@ public class TaskRestController {
     public void deleteTask(@PathVariable Long taskId){
         taskService.deleteTask(taskId);
     }
+
     @GetMapping("/tasks/active/{taskId}")
-    public Task activeTask(@PathVariable Long taskId, HttpSession session){
-        Task task = taskRepository.getOne(taskId);
+    public ResponseEntity<Object> activeTask(@PathVariable Long taskId) throws URISyntaxException {
+        Task task = taskRepository.findById(taskId).get();
         if (task.getStatus()== true){
             task.setStatus(false);
         }else {
             task.setStatus(true);
         }
-        Shopping shopping = shoppingRepository.getOne((Long)session.getAttribute("shopId"));
-        return taskRepository.save(task);
+        taskRepository.save(task);
+        return new ResponseEntity<>(task, null, HttpStatus.OK);
 
     }
 }

@@ -42,6 +42,9 @@ public class ShoppingRestController {
     private ShoppingService shoppingService;
 
     @Autowired
+    private ShareRepository shareRepository;
+
+    @Autowired
     private AccountService accountService;
     @GetMapping("/shoppings")
     public ResponseEntity<Collection<Shopping>> listShopping()
@@ -115,6 +118,7 @@ public class ShoppingRestController {
         return new ResponseEntity<>(shopping, null,HttpStatus.OK);
     }
 
+
     @PutMapping("/shoppings/{shopId}")
     public Shopping updateShopping(@Valid @RequestBody Shopping shopping1, @PathVariable("shopId") Long shopId, String name,
                                    String comment)throws URISyntaxException {
@@ -133,8 +137,72 @@ public class ShoppingRestController {
         return shopping1;
     }
 
+    @GetMapping("/shoppings/shared")
+    public ResponseEntity<Object> sharedShopping( HttpSession session) throws URISyntaxException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AppUser user = accountService.findUserByUsername(auth.getName());
+        List<Shopping>shoppings1 = shoppingRepository.findByShared(true);
+        List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
+        List<Shopping> shoppings3= new ArrayList<>();
+        for (Shopping shopping: shoppings1){
+            for (int i=0; i<shoppings2.size(); i++){
+                if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                    shoppings3.add(shoppings2.get(i));
+
+                }
+            }
+
+        }
+       return new ResponseEntity<>(shoppings3, null, HttpStatus.OK);
+    }
+
+    @PostMapping("/shoppings/share/user")
+    public ResponseEntity<Object> shareShopping(Share share, String userId, String shopId)
+            throws URISyntaxException {
+        AppUser user = appUserRepository.getOne(Long.parseLong(userId));
+        Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
+        shopping.add(user);
+        shopping.setShared(true);
+        share.setId(user.getId());
+        share.setShopId(shopping.getShopId());
+        shoppingRepository.save(shopping);
+        shareRepository.save(share);
+        return new ResponseEntity<>(shopping, null,HttpStatus.OK);
+
+    }
     @DeleteMapping("/shoppings/{shopId}")
-    public void deleteShopping(@PathVariable("shopId") Long shopId){
+    public void deleteShopping(@PathVariable Long shopId){
         shoppingService.deleteShopping(shopId);
+    }
+
+    @GetMapping("/shoppings/archived/{shopId}")
+    public ResponseEntity<Object>  archived(@PathVariable Long shopId) throws URISyntaxException {
+        List<Shopping> shoppings = shoppingRepository.findByArchived(true);
+        Shopping shopping = shoppingRepository.getOne(shopId);
+        if ( shopping.getArchived() == true){
+            shopping.setArchived(false);
+        }else {
+            shopping.setArchived(true);
+        }
+
+        shoppingRepository.save(shopping);
+        return new ResponseEntity<>(shoppings, null,HttpStatus.OK);
+    }
+
+    @GetMapping("/shoppings/archive")
+    public ResponseEntity<Collection<Shopping>> findAllArchive() throws URISyntaxException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AppUser user = accountService.findUserByUsername(auth.getName());
+        List<Shopping>shoppings = shoppingRepository.findByArchived(true);
+        List<Shopping>shoppings2 = shoppingRepository.findByUsers_Id(user.getId());
+        List<Shopping>shoppings1 = new ArrayList<>();
+        for(Shopping shopping : shoppings){
+            for (int i=0; i<shoppings2.size(); i++ ){
+                if (shopping.getShopId().equals(shoppings2.get(i).getShopId())){
+                    shoppings1.add(shopping);
+                }
+            }
+        }
+        return new ResponseEntity<>(shoppings1, null, HttpStatus.OK);
     }
 }

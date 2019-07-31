@@ -30,6 +30,7 @@ public class AccountServiceImpl implements AccountService {
     public AppUser saveUser(AppUser user) {
         BCryptPasswordEncoder encoder = new  BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRepassword(encoder.encode(user.getRepassword()));
         return userRepository.save(user);
     }
 

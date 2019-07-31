@@ -20,8 +20,11 @@ public class AppUser {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String username;
     private String password;
+    private Boolean active;
+    private String repassword;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AppRole> roles = new ArrayList<>();
@@ -67,5 +70,21 @@ public class AppUser {
 
     public void setShoppings(Collection<Shopping> shoppings) {
         this.shoppings = shoppings;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getRepassword() {
+        return repassword;
+    }
+
+    public void setRepassword(String repassword) {
+        this.repassword = repassword;
     }
 }
