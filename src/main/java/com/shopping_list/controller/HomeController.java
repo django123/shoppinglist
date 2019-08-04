@@ -22,9 +22,15 @@ public class HomeController {
     @Autowired
     private ShoppingRepository shoppingRepository;
     @GetMapping("/")
-    public String home(){
+    public String home(Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AppUser user = userService.findUserByUsername(auth.getName());
 
-        return "redirect:/login";
+        model.addAttribute("userName", "Welcome " + user.getUsername());
+
+
+        return "redirect:/shopping/all";
+
     }
 
     @GetMapping("/login")
@@ -39,4 +45,5 @@ public class HomeController {
         session.invalidate();
         return "redirect:/login";
     }
+
 }

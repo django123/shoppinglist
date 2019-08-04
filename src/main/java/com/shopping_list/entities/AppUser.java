@@ -27,6 +27,7 @@ public class AppUser {
     private String repassword;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "app_user_role", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Collection<AppRole> roles = new ArrayList<>();
     @ManyToMany(mappedBy = "users")
     @JsonBackReference

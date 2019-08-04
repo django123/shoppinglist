@@ -25,17 +25,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser createUser(AppUser user) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    public void createUser(AppUser user) {
+        BCryptPasswordEncoder encoder = new  BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRepassword(encoder.encode(user.getRepassword()));
+        user.setActive(true);
         AppRole userRole = appRoleRepository.findByRole("USER");
-        if (userRole != null){
+        if (userRole != null) {
             user.setRoles(new HashSet<AppRole>(Arrays.asList(userRole)));
         }else{
-            AppRole role=new AppRole(null,"USER");
+            AppRole role=new AppRole("USER");
             appRoleRepository.save(role);
             user.setRoles(new HashSet<AppRole>(Arrays.asList(role)));
         }
-        return appUserRepository.save(user);
+        appUserRepository.save(user);
+
     }
 }

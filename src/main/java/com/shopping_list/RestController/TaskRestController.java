@@ -22,7 +22,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 
-
+@CrossOrigin(origins={"http://localhost:8080","http://localhost:8100" })
 @RestController
 public class TaskRestController {
     private final Logger log = LoggerFactory.getLogger(TaskRestController.class);

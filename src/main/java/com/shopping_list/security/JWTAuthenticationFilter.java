@@ -3,16 +3,22 @@ package com.shopping_list.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopping_list.entities.AppUser;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.var;
+import org.codehaus.groovy.syntax.TokenUtil;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import io.jsonwebtoken.Jwts;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,12 +33,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.authenticationManager = authenticationManager;
     }
 
+
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+
         AppUser user = null;
+
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), AppUser.class);
+
         }catch (Exception e) {
             throw  new RuntimeException(e);
         }

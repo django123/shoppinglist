@@ -29,7 +29,7 @@ import java.util.*;
 
 import org.slf4j.Logger;
 
-
+@CrossOrigin(origins={"http://localhost:8080","http://localhost:8100" })
 @RestController
 public class ShoppingRestController {
     private final Logger log = LoggerFactory.getLogger(ShoppingRestController.class);
@@ -156,11 +156,11 @@ public class ShoppingRestController {
        return new ResponseEntity<>(shoppings3, null, HttpStatus.OK);
     }
 
-    @PostMapping("/shoppings/share/user")
-    public ResponseEntity<Object> shareShopping(Share share, String userId, String shopId)
+    @PostMapping("/shoppings/share/{id}/{shopId}")
+    public ResponseEntity<Object> shareShopping(Share share, @PathVariable Long id,@PathVariable Long shopId)
             throws URISyntaxException {
-        AppUser user = appUserRepository.getOne(Long.parseLong(userId));
-        Shopping shopping = shoppingRepository.getOne(Long.parseLong(shopId));
+        AppUser user = appUserRepository.getOne(id);
+        Shopping shopping = shoppingRepository.getOne(shopId);
         shopping.add(user);
         shopping.setShared(true);
         share.setId(user.getId());

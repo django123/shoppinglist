@@ -5,5 +5,5 @@ import com.shopping_list.entities.AppUser;
 public interface UserService {
 
     AppUser findByUsername(String username);
-    AppUser createUser(AppUser user);
+    void createUser(AppUser user);
 }
