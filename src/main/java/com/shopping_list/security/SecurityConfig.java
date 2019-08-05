@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 
 public class SecurityConfig {
 
-    @Order(2)
+    @Order(1)
     @Configuration
     public static class ApiConfiguration extends WebSecurityConfigurerAdapter {
         @Autowired

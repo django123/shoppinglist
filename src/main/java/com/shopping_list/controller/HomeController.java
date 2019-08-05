@@ -26,7 +26,7 @@ public class HomeController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUser user = userService.findUserByUsername(auth.getName());
 
-        model.addAttribute("userName", "Welcome " + user.getUsername());
+        //model.addAttribute("userName", "Welcome " + user.getUsername());
 
 
         return "redirect:/shopping/all";

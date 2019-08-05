@@ -8,6 +8,8 @@ import com.shopping_list.entities.Task;
 import com.shopping_list.messages.NotFoundException;
 import com.shopping_list.service.ShoppingService;
 import com.shopping_list.service.TaskService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +24,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 
-@CrossOrigin(origins={"http://localhost:8080","http://localhost:8100" })
+@Api(description = "Gestion des tâches")
 @RestController
 public class TaskRestController {
     private final Logger log = LoggerFactory.getLogger(TaskRestController.class);
@@ -35,15 +37,19 @@ public class TaskRestController {
     @Autowired
     private ShoppingRepository shoppingRepository;
 
+    @ApiOperation(value = "liste toutes les tâche de l'utilisateur qui les a créé")
     @GetMapping("/tasks")
     public List<Task> findTasks(){
         return  taskService.findAllTask();
     }
 
+    @ApiOperation(value = "recupère une course par rapport à son id")
     @GetMapping("/tasks/{taskId}")
     public Task findTaskById(@PathVariable Long taskId){
         return taskService.findTaskId(taskId);
     }
+
+    @ApiOperation(value = "créé une tâche par rapport à un shopping")
    @PostMapping("/tasks/create/{shopId}/task")
     public Task createTask(@Valid @RequestBody Task task, @PathVariable Long shopId){
 
@@ -74,6 +80,7 @@ public class TaskRestController {
         taskService.deleteTask(taskId);
     }
 
+    @ApiOperation(value = "change le status d'une tâche")
     @GetMapping("/tasks/active/{taskId}")
     public ResponseEntity<Object> activeTask(@PathVariable Long taskId) throws URISyntaxException {
         Task task = taskRepository.findById(taskId).get();

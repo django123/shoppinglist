@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 
 public class ConfigWeb {
 
-    @Order(1)
+    @Order(2)
     @Configuration
     public static class ActuatorConfiguration  extends WebSecurityConfigurerAdapter {
 

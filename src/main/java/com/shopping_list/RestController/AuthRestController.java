@@ -4,15 +4,15 @@ package com.shopping_list.RestController;
 import com.shopping_list.Repository.AppRoleRepository;
 import com.shopping_list.entities.AppUser;
 import com.shopping_list.service.AccountService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
 
-@CrossOrigin(origins={"http://localhost:8080","http://localhost:8100" })
+@Api(description = "gestion des utilisateurs")
 @RestController
 public class AuthRestController {
     @Autowired
