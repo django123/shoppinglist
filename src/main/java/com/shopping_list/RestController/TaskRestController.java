@@ -37,19 +37,19 @@ public class TaskRestController {
     @Autowired
     private ShoppingRepository shoppingRepository;
 
-    @ApiOperation(value = "liste toutes les tâche de l'utilisateur qui les a créé")
+    
     @GetMapping("/tasks")
     public List<Task> findTasks(){
         return  taskService.findAllTask();
     }
 
-    @ApiOperation(value = "recupère une course par rapport à son id")
+
     @GetMapping("/tasks/{taskId}")
     public Task findTaskById(@PathVariable Long taskId){
         return taskService.findTaskId(taskId);
     }
 
-    @ApiOperation(value = "créé une tâche par rapport à un shopping")
+
    @PostMapping("/tasks/create/{shopId}/task")
     public Task createTask(@Valid @RequestBody Task task, @PathVariable Long shopId){
 
@@ -80,7 +80,7 @@ public class TaskRestController {
         taskService.deleteTask(taskId);
     }
 
-    @ApiOperation(value = "change le status d'une tâche")
+
     @GetMapping("/tasks/active/{taskId}")
     public ResponseEntity<Object> activeTask(@PathVariable Long taskId) throws URISyntaxException {
         Task task = taskRepository.findById(taskId).get();

@@ -49,7 +49,7 @@ public class ShoppingRestController {
     @Autowired
     private AccountService accountService;
 
-    @ApiOperation(value = "liste toutes les courses de l'utilisateur qui les a créé")
+
     @GetMapping("/shoppings")
     public ResponseEntity<Collection<Shopping>> listShopping()
             throws URISyntaxException {
@@ -101,7 +101,7 @@ public class ShoppingRestController {
         return new ResponseEntity<>(shoppings, null, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Créationd'une course")
+
     @PostMapping("/shoppings/create")
     public ResponseEntity<Object> createShopping(@RequestBody Shopping shopping) throws URISyntaxException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -115,7 +115,7 @@ public class ShoppingRestController {
 
         return ResponseEntity.created(new URI("/shoppings" + shopping1.getShopId())).body(shopping1);
     }
-    @ApiOperation(value = "récupération d'une course par rapport à son id")
+
     @GetMapping("/shoppings/{shopId}")
     public ResponseEntity<Shopping> findShopping(@PathVariable Long shopId, HttpSession session){
         log.debug("REST request to get shopping: {}", shopId);
