@@ -53,7 +53,7 @@ public class SecurityConfig {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            String[] methodSecured = {"/users/*", "/shopping/**"};
+            String[] methodSecured = {"/shopping/**"};
             http.csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
             http.csrf().disable()

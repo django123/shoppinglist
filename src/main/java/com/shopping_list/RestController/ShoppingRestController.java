@@ -162,7 +162,8 @@ public class ShoppingRestController {
        return new ResponseEntity<>(shoppings3, null, HttpStatus.OK);
     }
 
-    @PostMapping("/shoppings/share/{id}/{shopId}")
+    @CrossOrigin
+    @PostMapping("/shoppings/share/{shopId}/{id}")
     public ResponseEntity<Object> shareShopping(Share share, @PathVariable Long id,@PathVariable Long shopId)
             throws URISyntaxException {
         AppUser user = appUserRepository.getOne(id);
@@ -194,6 +195,7 @@ public class ShoppingRestController {
         shoppingRepository.save(shopping);
         return new ResponseEntity<>(shoppings, null,HttpStatus.OK);
     }
+
 
     @GetMapping("/shoppings/archive")
     public ResponseEntity<Collection<Shopping>> findAllArchive() throws URISyntaxException {

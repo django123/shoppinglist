@@ -37,7 +37,7 @@ public class TaskRestController {
     @Autowired
     private ShoppingRepository shoppingRepository;
 
-    
+
     @GetMapping("/tasks")
     public List<Task> findTasks(){
         return  taskService.findAllTask();
@@ -63,9 +63,12 @@ public class TaskRestController {
 
 
     @PutMapping("/tasks/update/{taskId}")
-    public Task updateTask(@Valid @RequestBody Task task, @PathVariable Long taskId,HttpSession session){
+    public Task updateTask(@Valid @RequestBody Task task, @PathVariable Long taskId,String name, String description, String status){
 
         Task  task1 = taskService.findTaskId(taskId);
+        task.setName(name);
+        task.setDescription(description);
+        task.setStatus(Boolean.parseBoolean(status));
         if (task.getName() != null)
             task1.setName(task.getName());
         if (task.getStatus() != null)
