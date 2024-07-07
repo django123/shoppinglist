@@ -4,6 +4,7 @@ package com.shopping_list.entities;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerator;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import org.hibernate.annotations.Cache;
-import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;

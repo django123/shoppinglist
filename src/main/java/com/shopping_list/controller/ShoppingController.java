@@ -9,6 +9,8 @@ import com.shopping_list.entities.Share;
 import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
 import com.shopping_list.service.AccountService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,8 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+
 import java.util.*;
 
 

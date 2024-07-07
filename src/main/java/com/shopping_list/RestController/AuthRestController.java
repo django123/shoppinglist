@@ -4,7 +4,8 @@ package com.shopping_list.RestController;
 import com.shopping_list.Repository.AppRoleRepository;
 import com.shopping_list.entities.AppUser;
 import com.shopping_list.service.AccountService;
-import io.swagger.annotations.Api;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.tools.rmi.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 
 
-@Api(description = "gestion des utilisateurs")
+@Tag(name = "gestion des utilisateurs")
 @RestController
 public class AuthRestController {
     private final Logger log = LoggerFactory.getLogger(AuthRestController.class);

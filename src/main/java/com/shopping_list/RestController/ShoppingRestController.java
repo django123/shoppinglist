@@ -7,8 +7,10 @@ import com.shopping_list.entities.Shopping;
 import com.shopping_list.entities.Task;
 import com.shopping_list.service.AccountService;
 import com.shopping_list.service.ShoppingService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,7 +32,7 @@ import java.util.*;
 
 import org.slf4j.Logger;
 
-@Api(description = "gestion des shoppingsList ")
+@Tag(name = "gestion des shoppingsList ")
 @RestController
 public class ShoppingRestController {
     private final Logger log = LoggerFactory.getLogger(ShoppingRestController.class);
